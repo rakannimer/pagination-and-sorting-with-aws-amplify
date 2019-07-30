@@ -1,10 +1,14 @@
 import * as React from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native-web";
-
 import { colors } from "../theme";
 import { FlexSpacer } from "./utils";
 
 export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
+  const [value, setValue] = React.useState("");
+  const submit = () => {
+    onSubmit(value);
+    setValue("");
+  };
   return (
     <View
       style={{
@@ -18,6 +22,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
       <FlexSpacer />
       <TextInput
         placeholder={placeholder}
+        value={value}
         style={{
           flex: 3,
           height: "50%",
@@ -26,7 +31,13 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
           borderRadius: 3,
           backgroundColor: "white"
         }}
-        placeholderTextColor={colors.primaryOpaque(0.7)}
+        onChangeText={v => {
+          setValue(v);
+        }}
+        placeholderTextColor={colors.primaryOpaque(0.6)}
+        onSubmitEditing={() => {
+          submit();
+        }}
       />
       <FlexSpacer />
       <View
@@ -37,7 +48,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
       >
         <TouchableOpacity
           onPress={() => {
-            console.warn("Creating new topic");
+            submit();
           }}
           style={{
             backgroundColor: colors.highlight,

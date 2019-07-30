@@ -1,10 +1,15 @@
 import * as React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native-web";
-import { withRouter } from "react-router-dom";
+import { __RouterContext } from "react-router";
 
 import { colors } from "../theme";
+import { ChannelType } from "../types";
 
-const ChannelCard = withRouter(props => {
+type Props = { channel: ChannelType };
+
+const ChannelCard = (props: Props) => {
+  const { channel } = props;
+  const router = React.useContext(__RouterContext);
   return (
     <TouchableOpacity
       style={{
@@ -19,31 +24,36 @@ const ChannelCard = withRouter(props => {
         borderRadius: 12
       }}
       accessibilityRole="link"
+      {...{
+        // Being dishonest with typescript because of the lack of react-native-web types
+        href: `/channel/${1}`
+      }}
       onPress={() => {
-        props.history.push(`/channel/${1}`);
+        router.history.push(`/channel/${1}`);
       }}
     >
       <View style={{ flex: 10 }}>
         <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
-          Channel name
+          {channel.name}
         </Text>
         <Text style={{ color: "white" }}>Last Message</Text>
       </View>
     </TouchableOpacity>
   );
-});
+};
 
-export const Channels = () => {
+export const Channels = ({ channels }: { channels: ChannelType[] }) => {
   return (
     <FlatList
-      inverted
+      inverted={false}
       style={{
         height: "80%"
       }}
-      data={Array.from({ length: 200 }, (v, i) => ({
-        key: `${i}`
-      }))}
-      renderItem={({ item }) => <ChannelCard {...item} />}
+      // data={Array.from({ length: 200 }, (v, i) => ({
+      //   key: `${i}`
+      // }))}
+      data={channels}
+      renderItem={({ item: channel }) => <ChannelCard channel={channel} />}
     />
   );
 };

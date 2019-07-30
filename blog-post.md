@@ -50,7 +50,7 @@ git init # Optional but recommended
 printf "node_modules\n.cache\ndist" > .gitignore
 mkdir src && touch src/index.html src/index.tsx
 npm i -D parcel @types/react @types/react-dom typescript
-npm i react react-dom immer
+npm i react react-dom immer nanoid
 ```
 
 > [Parcel](https://parceljs.org/) is a "blazing fast, zero configuration web application bundler"
