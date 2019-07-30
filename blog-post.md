@@ -7,7 +7,7 @@ tags: aws, amplify, javascript, graphql
 
 In my previous post, [Server-Side Rendered Real-time Web App with Next.js, AWS Amplify & Next.js](https://dev.to/rakannimer/server-side-rendered-real-time-web-app-with-next-js-aws-amplify-graphql-2j49) we went into the details of setting up a Next.js React app and connecting it to Amplify on both the server and client-side.
 
-In this post we'll be going through how to build a small topic-oriented chat app with Amplify that needs to fetch, paginate and sort large lists of data.
+In this post we'll be going through how to build a small channel-oriented chat app with Amplify that needs to fetch, paginate and sort large lists of data.
 
 We will be using React for rendering and updating our UI, but the same code and logic can be applied with any framework.
 
@@ -15,9 +15,9 @@ We will be using React for rendering and updating our UI, but the same code and 
 
 The chat app should consist of 3 routes :
 
-###1. `/conversation/[topicId]`
+###1. `/channel/[topicId]`
 
-The topic conversation route to browse and discuss
+The topic channel route to browse and discuss
 
 Consists of :
 
@@ -25,11 +25,11 @@ Consists of :
 - A text input field with a submit button
 - A button at the top to load more messages
 
-###2. `/conversations`
+###2. `/channels`
 
-The user's dashboard route. A list of all the topics sorted by last update date in descending order (newest always at the top)
+The user's dashboard route. A list of all the channels sorted by last update date in descending order (newest always at the top)
 
-Consists of a scroll view with a list of conversations with the latest message and a button and a text field to create new topic
+Consists of a scroll view with a list of channel with the latest message and a button and a text field to create new topic
 
 ###3. `/me`
 
@@ -39,7 +39,7 @@ A form with 3 fields username, url, bio
 
 ## Creating our app skeleton
 
-Let's start by creating our app's skeleton :
+Let's start by setting up a directory as a project
 
 ```sh
 
