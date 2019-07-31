@@ -1,0 +1,30 @@
+type Message @model {
+  id: ID!
+  text: String!
+  createdAt: String
+  senderId: String
+  channel: Channel @connection(name: "SortedMessages")
+}
+
+type Channel @model {
+  id: ID!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+  messages: [Message]
+    @connection(name: "SortedMessages", sortField: "createdAt")
+  channelList: ChannelList @connection(name: "SortedChannels")
+}
+
+type ChannelList @model {
+  id: ID!
+  channels: [Channel]
+    @connection(name: "SortedChannels", sortField: "updatedAt")
+}
+
+type User @model {
+  id: ID!
+  name: String
+  bio: String
+  url: String
+}
