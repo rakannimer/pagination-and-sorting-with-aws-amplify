@@ -2,7 +2,7 @@ import produce from "immer";
 import nanoid from "nanoid";
 import * as React from "react";
 import { render } from "react-dom";
-import { View } from "react-native-web";
+import { View, Text } from "react-native-web";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { colors } from "./theme";
@@ -10,8 +10,8 @@ import { InputZone } from "./components/InputZone";
 import { Header } from "./components/Header";
 import { MyProfile } from "./components/MyProfile";
 
-import { Channels } from "./components/Channels";
-import { Channel } from "./components/Channel";
+import { Channels, ChannelsRoute } from "./components/Channels";
+import { Channel, ChannelRoute } from "./components/Channel";
 import { State, Action } from "./types";
 
 const reducer = (state: State, action: Action) => {
@@ -36,18 +36,33 @@ const reducer = (state: State, action: Action) => {
         s.channels[channelIndex].messages.push(action.payload);
       });
     }
+    case "set-my-info": {
+      return produce(state, s => {
+        for (let key of Object.keys(action.payload)) {
+          s.me[key] = action.payload[key];
+        }
+      });
+    }
     default: {
       console.error(`Received unrecognized action `, action);
     }
   }
 };
 const getInitialState = () => {
+  let id = localStorage.getItem("my-id");
+  if (!id) {
+    id = nanoid();
+    localStorage.setItem("my-id", id);
+  }
+  const url = localStorage.getItem("url") || "";
+  const bio = localStorage.getItem("bio") || "";
+  const name = localStorage.getItem("name") || "";
   return {
     me: {
-      id: "",
-      url: "",
-      bio: "",
-      name: ""
+      id,
+      url,
+      bio,
+      name
     },
     channels: []
   };
@@ -66,47 +81,40 @@ const App = () => {
       >
         <Header />
 
-        <Route exact path="/me" render={() => <MyProfile />} />
+        <Route
+          exact
+          path="/me"
+          render={() => (
+            <MyProfile
+              me={state.me}
+              onSubmit={me => {
+                console.warn("Received me ", me);
+                dispatch({ type: "set-my-info", payload: me });
+              }}
+            />
+          )}
+        />
         <Route
           exact
           path="/channels"
           render={() => (
-            <>
-              <Channels channels={state.channels} />
-              <InputZone
-                placeholder={"Create a new channel"}
-                onSubmit={content => {
-                  dispatch({
-                    type: "append-channel",
-                    payload: {
-                      id: nanoid(),
-                      name: content,
-                      createdAt: `${Date.now()}`,
-                      updatedAt: `${Date.now()}`,
-                      messages: []
-                    }
-                  });
-                }}
-                buttonText={"Create channel"}
-              />
-            </>
+            <ChannelsRoute channels={state.channels} dispatch={dispatch} />
           )}
         />
         <Route
           exact
           path="/channel/:id"
-          render={() => (
-            <>
-              <Channel />
-              <InputZone
-                placeholder={"Create a new message"}
-                onSubmit={content => {
-                  console.warn("Submitted ", content);
-                }}
-                buttonText={"Send message"}
+          render={({ match }) => {
+            const channelId = match.params.id;
+            return (
+              <ChannelRoute
+                dispatch={dispatch}
+                me={state.me}
+                channels={state.channels}
+                channelId={channelId}
               />
-            </>
-          )}
+            );
+          }}
         />
       </View>
     </Router>

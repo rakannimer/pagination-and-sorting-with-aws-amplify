@@ -20,7 +20,7 @@ export type State = {
 };
 
 export type ChannelType = State["channels"][0];
-export type Message = ChannelType["messages"][0];
+export type MessageType = ChannelType["messages"][0];
 
 export type Action =
   | { type: "set-my-info"; payload: Partial<State["me"]> }
@@ -46,7 +46,7 @@ export type Action =
     }
   | {
       type: "append-message";
-      payload: Message & { messageChannelId: string };
+      payload: MessageType & { messageChannelId: string };
     };
 
 export type Dispatcher = React.Dispatch<Action>;

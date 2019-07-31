@@ -8,10 +8,12 @@ const primaryOpaque = opacity => `rgba(18, 25, 50, ${opacity})`;
 const primaryText = "white";
 
 const highlight = "#61dafb";
+const highlightOpaque = opacity => `rgba(97,218,251,${opacity})`;
 
 const colors = {
   primary,
   highlight,
+  highlightOpaque,
   primaryLight,
   primaryDark,
   primaryOpaque,

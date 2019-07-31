@@ -3,6 +3,7 @@ import { View, TouchableOpacity, TextInput } from "react-native-web";
 
 import { colors } from "../theme";
 import { ImportantText, StaticSpacer, NormalText } from "./utils";
+import { State } from "../types";
 
 const textInputStyle = {
   backgroundColor: "white",
@@ -11,8 +12,18 @@ const textInputStyle = {
   padding: 20,
   borderRadius: 12
 };
-
-export const MyProfile = () => {
+type Props = { me: State["me"]; onSubmit: (me: State["me"]) => void };
+export const MyProfile = ({ me, onSubmit }: Props) => {
+  const [name, setName] = React.useState(me.name);
+  const [url, setUrl] = React.useState(me.url);
+  const [bio, setBio] = React.useState(me.bio);
+  const submit = () => {
+    localStorage.setItem("name", name);
+    localStorage.setItem("url", url);
+    localStorage.setItem("bio", bio);
+    onSubmit({ name: name, url, bio, id: me.id });
+  };
+  const isSubmittable = name !== me.name || url !== me.url || bio !== me.bio;
   return (
     <>
       <View
@@ -26,12 +37,24 @@ export const MyProfile = () => {
         <StaticSpacer />
         <NormalText>Username</NormalText>
         <StaticSpacer />
-        <TextInput style={textInputStyle} placeholder={"Username"} />
+        <TextInput
+          style={textInputStyle}
+          placeholder={"Username"}
+          value={name}
+          onChangeText={setName}
+          onSubmitEditing={submit}
+        />
 
         <StaticSpacer />
         <NormalText>Bio</NormalText>
         <StaticSpacer />
-        <TextInput style={textInputStyle} placeholder={"Bio"} />
+        <TextInput
+          style={textInputStyle}
+          placeholder={"Bio"}
+          value={bio}
+          onChangeText={setBio}
+          onSubmitEditing={submit}
+        />
 
         <StaticSpacer />
         <NormalText>Link</NormalText>
@@ -39,6 +62,9 @@ export const MyProfile = () => {
         <TextInput
           style={textInputStyle}
           placeholder={"Twitter/Github/Medium/..."}
+          value={url}
+          onChangeText={setUrl}
+          onSubmitEditing={submit}
         />
 
         <StaticSpacer />
@@ -51,10 +77,15 @@ export const MyProfile = () => {
       >
         <TouchableOpacity
           style={{
-            backgroundColor: colors.highlight,
-            padding: 20
+            backgroundColor: isSubmittable
+              ? colors.highlight
+              : colors.highlightOpaque(0.3),
+            padding: 20,
+            borderRadius: 12
           }}
-          onPress={() => {}}
+          onPress={() => {
+            submit();
+          }}
         >
           <NormalText style={{ textAlign: "center" }}>Save</NormalText>
         </TouchableOpacity>

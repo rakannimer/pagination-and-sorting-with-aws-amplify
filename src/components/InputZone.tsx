@@ -4,11 +4,14 @@ import { colors } from "../theme";
 import { FlexSpacer } from "./utils";
 
 export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
+  const textinputRef = React.useRef<TextInput>(null);
   const [value, setValue] = React.useState("");
   const submit = () => {
     onSubmit(value);
     setValue("");
+    textinputRef.current.focus();
   };
+  const isSubmittable = value !== "";
   return (
     <View
       style={{
@@ -21,6 +24,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
     >
       <FlexSpacer />
       <TextInput
+        ref={textinputRef}
         placeholder={placeholder}
         value={value}
         style={{
@@ -48,10 +52,13 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
       >
         <TouchableOpacity
           onPress={() => {
+            if (!isSubmittable) return;
             submit();
           }}
           style={{
-            backgroundColor: colors.highlight,
+            backgroundColor: isSubmittable
+              ? colors.highlight
+              : colors.highlightOpaque(0.3),
             height: "100%",
             display: "flex",
             alignItems: "center",
