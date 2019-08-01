@@ -6,6 +6,7 @@ import { __RouterContext } from "react-router";
 import { InputZone } from "./InputZone";
 import { colors } from "../theme";
 import { ChannelType, Dispatcher } from "../types";
+import { createChannel } from "../models/Channels";
 
 type Props = { channel: ChannelType };
 
@@ -81,23 +82,39 @@ export const ChannelsRoute = ({
   dispatch: Dispatcher;
 }) => {
   const [shouldScrollDown, setScrollDown] = React.useState(0);
+  const addChannel = (name: string) => {
+    const channel = {
+      id: nanoid(),
+      name,
+      createdAt: `${Date.now()}`,
+      updatedAt: `${Date.now()}`,
+      messages: []
+    };
+    setScrollDown(Date.now());
+    dispatch({
+      type: "append-channel",
+      payload: channel
+    });
+    createChannel(channel);
+  };
   return (
     <>
       <Channels channels={channels} shouldScrollDown={shouldScrollDown} />
       <InputZone
         placeholder={"Create a new channel"}
         onSubmit={content => {
-          setScrollDown(Date.now());
-          dispatch({
-            type: "append-channel",
-            payload: {
-              id: nanoid(),
-              name: content,
-              createdAt: `${Date.now()}`,
-              updatedAt: `${Date.now()}`,
-              messages: []
-            }
-          });
+          addChannel(content);
+          // setScrollDown(Date.now());
+          // dispatch({
+          //   type: "append-channel",
+          //   payload: {
+          //     id: nanoid(),
+          //     name: content,
+          //     createdAt: `${Date.now()}`,
+          //     updatedAt: `${Date.now()}`,
+          //     messages: []
+          //   }
+          // });
         }}
         buttonText={"Create channel"}
       />

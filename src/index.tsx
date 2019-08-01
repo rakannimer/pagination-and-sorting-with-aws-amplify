@@ -12,6 +12,7 @@ import { MyProfile } from "./components/MyProfile";
 import { createUserIfNotExists } from "./models/User";
 import { colors } from "./theme";
 import { Action, State } from "./types";
+import { getChannels } from "./models/Channels";
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -24,6 +25,11 @@ const reducer = (state: State, action: Action) => {
       return produce(state, s => {
         // Insert at position 0, without deleting, the elements of payload
         s.channels.splice(0, 0, ...action.payload);
+      });
+    }
+    case "set-channels": {
+      return produce(state, s => {
+        s.channels = action.payload;
       });
     }
     case "append-message": {
@@ -44,34 +50,68 @@ const reducer = (state: State, action: Action) => {
     }
     default: {
       console.error(`Received unrecognized action `, action);
+      throw new Error(
+        `Received unrecognized action ${JSON.stringify(action, null, 2)}`
+      );
     }
   }
 };
-const getInitialState = () => {
-  let id = localStorage.getItem("my-id");
-  if (!id) {
-    id = nanoid();
-    localStorage.setItem("my-id", id);
+
+function parseJson<T = unknown>(jsonString: string, defaultVal?: T): T {
+  try {
+    const result = JSON.parse(jsonString);
+    return result;
+  } catch (err) {
+    console.warn("Could not parse jsonString ", jsonString);
+    return defaultVal;
   }
-  const url = localStorage.getItem("url") || "";
-  const bio = localStorage.getItem("bio") || "";
-  const name = localStorage.getItem("name") || "";
+}
+
+const getInitialState = () => {
+  const me = parseJson<State["me"]>(localStorage.getItem("me"));
+  const channels = parseJson(localStorage.getItem("channels"), []);
+
+  const hasId = Boolean(me["id"]);
+  if (!hasId) {
+    localStorage.setItem("me", JSON.stringify({ id: nanoid() }));
+  }
   return {
-    me: {
-      id,
-      url,
-      bio,
-      name
-    },
-    channels: []
+    me,
+    channels
+  };
+};
+
+const withCache = (reducer: React.Reducer<State, Action>) => {
+  return (state, action) => {
+    const newState = reducer(state, action);
+    const stateKeys = Object.keys(state);
+    for (let stateKey of stateKeys) {
+      if (state[stateKey] !== newState[stateKey]) {
+        localStorage.setItem(stateKey, JSON.stringify(newState[stateKey]));
+      }
+    }
+    return newState;
   };
 };
 
 const App = () => {
   const initialState = getInitialState();
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = React.useReducer(withCache(reducer), initialState);
   React.useEffect(() => {
+    let isMounted = true;
     createUserIfNotExists(initialState.me);
+    getChannels()
+      .then(channels => {
+        if (!isMounted) return;
+        dispatch({ type: "set-channels", payload: channels });
+        console.warn({ channels });
+      })
+      .catch(err => {
+        console.warn("Error fetching channels ", err);
+      });
+    return () => {
+      isMounted = false;
+    };
   }, []);
   return (
     <Router>

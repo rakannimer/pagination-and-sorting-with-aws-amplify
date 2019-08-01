@@ -1,9 +1,9 @@
 export type State = {
   me: {
-    id: string;
-    name: string;
-    bio: string;
-    url: string;
+    id?: string;
+    name?: string;
+    bio?: string;
+    url?: string;
   };
   channels: {
     id: string;
