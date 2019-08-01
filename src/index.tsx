@@ -69,7 +69,10 @@ function parseJson<T = unknown>(jsonString: string, defaultVal?: T): T {
 
 const getInitialState = () => {
   const me = parseJson<State["me"]>(localStorage.getItem("me"));
-  const channels = parseJson(localStorage.getItem("channels"), []);
+  const channels = parseJson<State["channels"]>(
+    localStorage.getItem("channels"),
+    []
+  );
 
   const hasId = Boolean(me["id"]);
   if (!hasId) {
@@ -104,7 +107,6 @@ const App = () => {
       .then(channels => {
         if (!isMounted) return;
         dispatch({ type: "set-channels", payload: channels });
-        console.warn({ channels });
       })
       .catch(err => {
         console.warn("Error fetching channels ", err);
@@ -123,7 +125,13 @@ const App = () => {
         }}
       >
         <Header />
-
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <ChannelsRoute channels={state.channels} dispatch={dispatch} />
+          )}
+        />
         <Route
           exact
           path="/me"
