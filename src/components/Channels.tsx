@@ -42,6 +42,16 @@ const ChannelCard = (props: Props) => {
         <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
           {channel.name}
         </Text>
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "bold",
+            marginTop: 5,
+            marginBottom: 5
+          }}
+        >
+          Last updated on {new Date(Number(channel.updatedAt)).toLocaleString()}
+        </Text>
         <Text style={{ color: "white" }}>{lastMessage}</Text>
       </View>
     </TouchableOpacity>
@@ -90,7 +100,7 @@ export const ChannelsRoute = ({
       updatedAt: `${Date.now()}`,
       messages: []
     };
-    setScrollDown(Date.now());
+    // setScrollDown(Date.now());
     dispatch({
       type: "append-channel",
       payload: channel

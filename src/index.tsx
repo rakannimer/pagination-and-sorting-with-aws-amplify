@@ -60,6 +60,7 @@ const reducer = (state: State, action: Action) => {
 function parseJson<T = unknown>(jsonString: string, defaultVal?: T): T {
   try {
     const result = JSON.parse(jsonString);
+    if (result === null || result === undefined) return defaultVal;
     return result;
   } catch (err) {
     console.warn("Could not parse jsonString ", jsonString);
@@ -74,8 +75,8 @@ const getInitialState = () => {
     []
   );
 
-  const hasId = Boolean(me["id"]);
-  if (!hasId) {
+  const hasId = Boolean(me && me["id"]);
+  if (hasId === false) {
     localStorage.setItem("me", JSON.stringify({ id: nanoid() }));
   }
   return {

@@ -4,8 +4,8 @@ import { FlatList, Text, View } from "react-native-web";
 
 import { colors } from "../theme";
 import { ChannelType, MessageType, Dispatcher, State } from "../types";
-import { RouteComponentProps } from "react-router";
 import { InputZone } from "./InputZone";
+import { createMessage } from "../models/Channel";
 
 export const Message = ({ message }: { message: MessageType }) => {
   return (
@@ -80,6 +80,21 @@ export const ChannelRoute = ({
   if (channelIndex === -1) {
     return <Text>Channel {channelId} doesn't exist yet</Text>;
   }
+  const addMessage = (content: string, dispatch: Dispatcher) => {
+    const message = {
+      text: content,
+      createdAt: `${Date.now()}`,
+      id: nanoid(),
+      senderId: me.id,
+      messageChannelId: channelId
+    };
+    dispatch({
+      type: "append-message",
+      payload: message
+    });
+    setScrollDown(Date.now());
+    createMessage(message);
+  };
   return (
     <>
       <Channel
@@ -89,17 +104,7 @@ export const ChannelRoute = ({
       <InputZone
         placeholder={"Create a new message"}
         onSubmit={content => {
-          dispatch({
-            type: "append-message",
-            payload: {
-              text: content,
-              createdAt: `${Date.now()}`,
-              id: nanoid(),
-              senderId: me.id,
-              messageChannelId: channelId
-            }
-          });
-          setScrollDown(Date.now());
+          addMessage(content, dispatch);
         }}
         buttonText={"Send message"}
       />

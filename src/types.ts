@@ -12,6 +12,7 @@ export type State = {
       text: string;
       createdAt: string;
       senderId: string;
+      messageChannelId: string;
     }[];
     name: string;
     createdAt: string;

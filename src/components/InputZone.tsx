@@ -9,8 +9,10 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
   const submit = () => {
     onSubmit(value);
     setValue("");
-    textinputRef.current.focus();
   };
+  React.useEffect(() => {
+    if (value === "") textinputRef.current.focus();
+  }, [value]);
   const isSubmittable = value !== "";
   return (
     <View
