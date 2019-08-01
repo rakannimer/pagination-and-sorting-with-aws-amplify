@@ -2,17 +2,16 @@ import produce from "immer";
 import nanoid from "nanoid";
 import * as React from "react";
 import { render } from "react-dom";
-import { View, Text } from "react-native-web";
+import { View } from "react-native-web";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { colors } from "./theme";
-import { InputZone } from "./components/InputZone";
+import { ChannelRoute } from "./components/Channel";
+import { ChannelsRoute } from "./components/Channels";
 import { Header } from "./components/Header";
 import { MyProfile } from "./components/MyProfile";
-
-import { Channels, ChannelsRoute } from "./components/Channels";
-import { Channel, ChannelRoute } from "./components/Channel";
-import { State, Action } from "./types";
+import { createUserIfNotExists } from "./models/User";
+import { colors } from "./theme";
+import { Action, State } from "./types";
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -23,7 +22,7 @@ const reducer = (state: State, action: Action) => {
     }
     case "prepend-channels": {
       return produce(state, s => {
-        // Insert at position 0 without deleting the elements of payload
+        // Insert at position 0, without deleting, the elements of payload
         s.channels.splice(0, 0, ...action.payload);
       });
     }
@@ -69,7 +68,11 @@ const getInitialState = () => {
 };
 
 const App = () => {
-  const [state, dispatch] = React.useReducer(reducer, getInitialState());
+  const initialState = getInitialState();
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+  React.useEffect(() => {
+    createUserIfNotExists(initialState.me);
+  }, []);
   return (
     <Router>
       <View
@@ -88,7 +91,6 @@ const App = () => {
             <MyProfile
               me={state.me}
               onSubmit={me => {
-                console.warn("Received me ", me);
                 dispatch({ type: "set-my-info", payload: me });
               }}
             />

@@ -18,6 +18,7 @@ export type State = {
     updatedAt: string;
   }[];
 };
+export type UserType = State["me"];
 
 export type ChannelType = State["channels"][0];
 export type MessageType = ChannelType["messages"][0];

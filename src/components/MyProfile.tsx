@@ -5,6 +5,8 @@ import { colors } from "../theme";
 import { ImportantText, StaticSpacer, NormalText } from "./utils";
 import { State } from "../types";
 
+import { upsertUser } from "../models/User";
+
 const textInputStyle = {
   backgroundColor: "white",
   color: colors.primaryDark,
@@ -12,6 +14,7 @@ const textInputStyle = {
   padding: 20,
   borderRadius: 12
 };
+
 type Props = { me: State["me"]; onSubmit: (me: State["me"]) => void };
 export const MyProfile = ({ me, onSubmit }: Props) => {
   const [name, setName] = React.useState(me.name);
@@ -21,7 +24,9 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
     localStorage.setItem("name", name);
     localStorage.setItem("url", url);
     localStorage.setItem("bio", bio);
-    onSubmit({ name: name, url, bio, id: me.id });
+    const user = { name: name, url, bio, id: me.id };
+    onSubmit(user);
+    upsertUser(user);
   };
   const isSubmittable = name !== me.name || url !== me.url || bio !== me.bio;
   return (
