@@ -5,7 +5,7 @@ import { FlatList, Text, View } from "react-native-web";
 import { colors } from "../theme";
 import { ChannelType, MessageType, Dispatcher, State } from "../types";
 import { InputZone } from "./InputZone";
-import { createMessage } from "../models/Channel";
+import { createMessage, getChannelMessages } from "../models/Channel";
 
 export const Message = ({ message }: { message: MessageType }) => {
   return (
@@ -38,17 +38,22 @@ export const Message = ({ message }: { message: MessageType }) => {
 };
 
 export const Channel = ({
-  messages,
-  shouldScrollDown
+  messages = { items: [], nextToken: "" },
+  shouldScrollDown,
+  channelId,
+  dispatch
 }: {
-  messages: MessageType[];
+  messages: State["channels"]["items"][0]["messages"];
   shouldScrollDown?: number;
+  channelId: string;
+  dispatch: Dispatcher;
 }) => {
   const flatlistRef = React.useRef<null | FlatList<MessageType>>(null);
   React.useEffect(() => {
     if (flatlistRef.current === null) return;
     flatlistRef.current.scrollToEnd();
   }, [shouldScrollDown]);
+
   return (
     <FlatList
       ref={flatlistRef}
@@ -56,7 +61,7 @@ export const Channel = ({
         height: "80%"
       }}
       keyExtractor={item => item.id}
-      data={messages}
+      data={messages.items}
       renderItem={({ item }) => <Message key={item.id} message={item} />}
     />
   );
@@ -64,7 +69,7 @@ export const Channel = ({
 
 type ChannelRouteProps = {
   channelId: string;
-  channels: ChannelType[];
+  channels: State["channels"];
   dispatch: Dispatcher;
   me: State["me"];
 };
@@ -76,7 +81,17 @@ export const ChannelRoute = ({
   me
 }: ChannelRouteProps) => {
   const [shouldScrollDown, setScrollDown] = React.useState(0);
-  const channelIndex = channels.findIndex(channel => channel.id === channelId);
+
+  const channelIndex = channels.items.findIndex(
+    channel => channel.id === channelId
+  );
+
+  React.useEffect(() => {
+    getChannelMessages(channelId, "").then(messages => {
+      dispatch({ type: "set-messages", payload: { channelId, messages } });
+    });
+  }, [channelId]);
+
   if (channelIndex === -1) {
     return <Text>Channel {channelId} doesn't exist yet</Text>;
   }
@@ -95,11 +110,14 @@ export const ChannelRoute = ({
     setScrollDown(Date.now());
     createMessage(message);
   };
+
   return (
     <>
       <Channel
-        messages={channels[channelIndex].messages}
+        messages={channels.items[channelIndex].messages} //{items:[]} }}
         shouldScrollDown={shouldScrollDown}
+        channelId={channelId}
+        dispatch={dispatch}
       />
       <InputZone
         placeholder={"Create a new message"}

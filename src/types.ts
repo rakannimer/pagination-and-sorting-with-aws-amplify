@@ -5,38 +5,45 @@ export type State = {
     bio?: string;
     url?: string;
   };
-  channels: {
+  channels: List<{
     id: string;
-    messages: {
+    messages: List<{
       id: string;
       text: string;
       createdAt: string;
       senderId: string;
-      messageChannelId: string;
-    }[];
+    }>;
     name: string;
     createdAt: string;
     updatedAt: string;
-  }[];
+  }>;
+};
+
+export type List<T extends unknown> = {
+  items: T[];
+  nextToken: string;
 };
 export type UserType = State["me"];
-
-export type ChannelType = State["channels"][0];
-export type MessageType = ChannelType["messages"][0];
+export type ChannelType = State["channels"]["items"][0];
+export type MessageType = ChannelType["messages"]["items"][0];
 
 export type Action =
   | { type: "set-my-info"; payload: Partial<State["me"]> }
   | {
-      type: "append-channel";
+      type: "append-channels";
+      payload: State["channels"];
+    }
+  | {
+      type: "prepend-channel";
       payload: ChannelType;
     }
   | {
       type: "prepend-channels";
-      payload: ChannelType[];
+      payload: List<ChannelType>;
     }
   | {
       type: "set-channels";
-      payload: ChannelType[];
+      payload: State["channels"];
     }
   | {
       type: "update-channel";
@@ -49,6 +56,10 @@ export type Action =
   | {
       type: "append-message";
       payload: MessageType & { messageChannelId: string };
+    }
+  | {
+      type: "set-messages";
+      payload: { messages: List<MessageType>; channelId: string };
     };
 
 export type Dispatcher = React.Dispatch<Action>;

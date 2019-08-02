@@ -16,29 +16,87 @@ import { getChannels } from "./models/Channels";
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
-    case "append-channel": {
+    case "append-channels": {
+      const { items, nextToken } = action.payload;
       return produce(state, s => {
-        s.channels.push(action.payload);
+        s.channels.items.splice(items.length - 1, 0, ...items);
+        s.channels.nextToken = nextToken;
+      });
+    }
+    case "prepend-channel": {
+      return produce(state, s => {
+        // Insert at position 0, without deleting, the elements of payload
+        s.channels.items.splice(
+          0, //action.payload.items.length - 1,
+          0,
+          action.payload
+        );
+        // s.channels.nextToken = action.payload.nextToken;
       });
     }
     case "prepend-channels": {
       return produce(state, s => {
         // Insert at position 0, without deleting, the elements of payload
-        s.channels.splice(0, 0, ...action.payload);
+        s.channels.items.splice(
+          0, //action.payload.items.length - 1,
+          0,
+          ...action.payload.items
+        );
+        s.channels.nextToken = action.payload.nextToken;
       });
     }
     case "set-channels": {
       return produce(state, s => {
-        s.channels = action.payload;
+        if (s.channels.items.length === 0) {
+          s.channels = action.payload;
+          return;
+        }
+        const channels = action.payload.items;
+        const nextToken = action.payload.nextToken;
+        s.channels.nextToken = nextToken;
+        for (let channel of channels) {
+          const currentChannelIndex = s.channels.items.findIndex(
+            v => v.id === channel.id
+          );
+          if (currentChannelIndex === -1) {
+            s.channels.items.push(channel);
+          } else {
+            s.channels.items[currentChannelIndex].updatedAt = channel.updatedAt;
+            s.channels.items[currentChannelIndex].createdAt = channel.createdAt;
+            s.channels.items[currentChannelIndex].name = channel.name;
+            s.channels.items[currentChannelIndex].id = channel.id;
+          }
+        }
+      });
+    }
+    case "set-messages": {
+      const { messages, channelId } = action.payload;
+
+      const channelIndex = state.channels.items.findIndex(
+        channel => channel.id === channelId
+      );
+      return produce(state, s => {
+        if (channelIndex === -1) {
+          s.channels.items.push({
+            id: channelId,
+            messages,
+            createdAt: "",
+            updatedAt: "",
+            name: ""
+          });
+          return;
+        }
+
+        s.channels.items[channelIndex].messages = messages;
       });
     }
     case "append-message": {
-      const channelIndex = state.channels.findIndex(
+      const channelIndex = state.channels.items.findIndex(
         channel => channel.id === action.payload.messageChannelId
       );
       if (channelIndex === -1) return state;
       return produce(state, s => {
-        s.channels[channelIndex].messages.push(action.payload);
+        s.channels.items[channelIndex].messages.items.push(action.payload);
       });
     }
     case "set-my-info": {
@@ -68,32 +126,23 @@ function parseJson<T = unknown>(jsonString: string, defaultVal?: T): T {
   }
 }
 
-const getInitialState = () => {
-  const me = parseJson<State["me"]>(localStorage.getItem("me"));
-  const channels = parseJson<State["channels"]>(
-    localStorage.getItem("channels"),
-    []
-  );
+const STATE_KEY = "my-state- 4" + Date.now();
 
-  const hasId = Boolean(me && me["id"]);
-  if (hasId === false) {
-    localStorage.setItem("me", JSON.stringify({ id: nanoid() }));
+const getInitialState = () => {
+  const state = parseJson<State>(localStorage.getItem(STATE_KEY), {
+    me: {},
+    channels: { items: [], nextToken: "" }
+  });
+  if (Boolean(state.me.id) === false) {
+    state.me = { ...state.me, id: nanoid() };
   }
-  return {
-    me,
-    channels
-  };
+  return state;
 };
 
 const withCache = (reducer: React.Reducer<State, Action>) => {
   return (state, action) => {
     const newState = reducer(state, action);
-    const stateKeys = Object.keys(state);
-    for (let stateKey of stateKeys) {
-      if (state[stateKey] !== newState[stateKey]) {
-        localStorage.setItem(stateKey, JSON.stringify(newState[stateKey]));
-      }
-    }
+    localStorage.setItem(STATE_KEY, JSON.stringify(newState));
     return newState;
   };
 };
@@ -101,9 +150,14 @@ const withCache = (reducer: React.Reducer<State, Action>) => {
 const App = () => {
   const initialState = getInitialState();
   const [state, dispatch] = React.useReducer(withCache(reducer), initialState);
+  const [channelsNextToken, setChannelsNextToken] = React.useState("");
+  const [shouldFetchChannels, setShouldFetchChannels] = React.useState<
+    false | number
+  >(0);
+
   React.useEffect(() => {
+    if (shouldFetchChannels === false) return;
     let isMounted = true;
-    createUserIfNotExists(initialState.me);
     getChannels()
       .then(channels => {
         if (!isMounted) return;
@@ -115,7 +169,12 @@ const App = () => {
     return () => {
       isMounted = false;
     };
+  }, [shouldFetchChannels]);
+
+  React.useEffect(() => {
+    createUserIfNotExists(initialState.me);
   }, []);
+
   return (
     <Router>
       <View

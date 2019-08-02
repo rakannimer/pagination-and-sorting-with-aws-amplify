@@ -5,17 +5,19 @@ import { __RouterContext } from "react-router";
 
 import { InputZone } from "./InputZone";
 import { colors } from "../theme";
-import { ChannelType, Dispatcher } from "../types";
-import { createChannel } from "../models/Channels";
+import { ChannelType, Dispatcher, State } from "../types";
+import { createChannel, getChannels } from "../models/Channels";
 
 type Props = { channel: ChannelType };
 
 const ChannelCard = (props: Props) => {
   const { channel } = props;
   const router = React.useContext(__RouterContext);
-  const { messages } = channel;
+  const { messages = { items: [] } } = channel;
   const lastMessage =
-    messages.length > 0 ? messages[messages.length - 1].text : "";
+    messages.items.length > 0
+      ? messages.items[messages.items.length - 1].text
+      : "";
   return (
     <TouchableOpacity
       style={{
@@ -60,14 +62,16 @@ const ChannelCard = (props: Props) => {
 
 export const Channels = ({
   channels,
-  shouldScrollDown
+  shouldScrollDown,
+  dispatch
 }: {
-  channels: ChannelType[];
-  shouldScrollDown: number;
+  channels: State["channels"];
+  shouldScrollDown: number | false;
+  dispatch: Dispatcher;
 }) => {
   const flatlistRef = React.useRef<null | FlatList<ChannelType>>(null);
   React.useEffect(() => {
-    if (flatlistRef.current === null) return;
+    if (flatlistRef.current === null || shouldScrollDown === false) return;
     flatlistRef.current.scrollToEnd();
   }, [shouldScrollDown]);
   return (
@@ -77,9 +81,17 @@ export const Channels = ({
         height: "80%"
       }}
       ref={flatlistRef}
-      keyExtractor={item => item.id}
-      data={channels}
+      keyExtractor={item => {
+        return item.id;
+      }}
+      data={channels.items}
       renderItem={({ item: channel }) => <ChannelCard channel={channel} />}
+      onEndReached={() => {
+        if (channels.nextToken === null) return;
+        getChannels(channels.nextToken).then(nextChannels => {
+          dispatch({ type: "append-channels", payload: nextChannels });
+        });
+      }}
     />
   );
 };
@@ -88,43 +100,34 @@ export const ChannelsRoute = ({
   channels,
   dispatch
 }: {
-  channels: ChannelType[];
+  channels: State["channels"];
   dispatch: Dispatcher;
 }) => {
-  const [shouldScrollDown, setScrollDown] = React.useState(0);
   const addChannel = (name: string) => {
-    const channel = {
+    const channel: ChannelType = {
       id: nanoid(),
       name,
       createdAt: `${Date.now()}`,
       updatedAt: `${Date.now()}`,
-      messages: []
+      messages: { items: [], nextToken: "" }
     };
-    // setScrollDown(Date.now());
     dispatch({
-      type: "append-channel",
+      type: "prepend-channel",
       payload: channel
     });
     createChannel(channel);
   };
   return (
     <>
-      <Channels channels={channels} shouldScrollDown={shouldScrollDown} />
+      <Channels
+        channels={channels}
+        shouldScrollDown={false}
+        dispatch={dispatch}
+      />
       <InputZone
         placeholder={"Create a new channel"}
         onSubmit={content => {
           addChannel(content);
-          // setScrollDown(Date.now());
-          // dispatch({
-          //   type: "append-channel",
-          //   payload: {
-          //     id: nanoid(),
-          //     name: content,
-          //     createdAt: `${Date.now()}`,
-          //     updatedAt: `${Date.now()}`,
-          //     messages: []
-          //   }
-          // });
         }}
         buttonText={"Create channel"}
       />
