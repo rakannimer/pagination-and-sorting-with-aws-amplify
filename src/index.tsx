@@ -19,7 +19,7 @@ const reducer = (state: State, action: Action) => {
     case "append-channels": {
       const { items, nextToken } = action.payload;
       return produce(state, s => {
-        s.channels.items.splice(items.length - 1, 0, ...items);
+        s.channels.items.splice(items.length, 0, ...items);
         s.channels.nextToken = nextToken;
       });
     }
@@ -27,7 +27,7 @@ const reducer = (state: State, action: Action) => {
       return produce(state, s => {
         // Insert at position 0, without deleting, the elements of payload
         s.channels.items.splice(
-          0, //action.payload.items.length - 1,
+          -1, //action.payload.items.length - 1,
           0,
           action.payload
         );
@@ -38,7 +38,7 @@ const reducer = (state: State, action: Action) => {
       return produce(state, s => {
         // Insert at position 0, without deleting, the elements of payload
         s.channels.items.splice(
-          0, //action.payload.items.length - 1,
+          -1, //action.payload.items.length - 1,
           0,
           ...action.payload.items
         );
@@ -86,7 +86,6 @@ const reducer = (state: State, action: Action) => {
           });
           return;
         }
-
         s.channels.items[channelIndex].messages = messages;
       });
     }
@@ -97,6 +96,31 @@ const reducer = (state: State, action: Action) => {
       if (channelIndex === -1) return state;
       return produce(state, s => {
         s.channels.items[channelIndex].messages.items.push(action.payload);
+      });
+    }
+    case "prepend-message": {
+      const channelIndex = state.channels.items.findIndex(
+        channel => channel.id === action.payload.messageChannelId
+      );
+      if (channelIndex === -1) return state;
+      return produce(state, s => {
+        s.channels.items[channelIndex].messages.items.unshift(action.payload);
+      });
+    }
+    case "append-messages": {
+      const { messages, channelId } = action.payload;
+
+      const channelIndex = state.channels.items.findIndex(
+        channel => channel.id === channelId
+      );
+      if (channelIndex === -1) return state;
+      return produce(state, s => {
+        s.channels.items[channelIndex].messages.items.splice(
+          s.channels.items[channelIndex].messages.items.length,
+          0,
+          ...messages.items
+        );
+        s.channels.items[channelIndex].messages.nextToken = messages.nextToken;
       });
     }
     case "set-my-info": {

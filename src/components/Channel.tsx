@@ -51,11 +51,11 @@ export const Channel = ({
   const flatlistRef = React.useRef<null | FlatList<MessageType>>(null);
   React.useEffect(() => {
     if (flatlistRef.current === null) return;
-    flatlistRef.current.scrollToEnd();
+    // flatlistRef.current.scrollToEnd();
   }, [shouldScrollDown]);
-
   return (
     <FlatList
+      inverted={true}
       ref={flatlistRef}
       style={{
         height: "80%"
@@ -63,6 +63,16 @@ export const Channel = ({
       keyExtractor={item => item.id}
       data={messages.items}
       renderItem={({ item }) => <Message key={item.id} message={item} />}
+      onEndReached={() => {
+        if (messages.nextToken === null) return;
+        getChannelMessages(channelId, messages.nextToken).then(messages => {
+          dispatch({
+            type: "append-messages",
+            payload: { channelId, messages }
+          });
+        });
+      }}
+      onEndReachedThreshold={0.01}
     />
   );
 };
@@ -104,7 +114,7 @@ export const ChannelRoute = ({
       messageChannelId: channelId
     };
     dispatch({
-      type: "append-message",
+      type: "prepend-message",
       payload: message
     });
     setScrollDown(Date.now());
@@ -114,7 +124,7 @@ export const ChannelRoute = ({
   return (
     <>
       <Channel
-        messages={channels.items[channelIndex].messages} //{items:[]} }}
+        messages={channels.items[channelIndex].messages}
         shouldScrollDown={shouldScrollDown}
         channelId={channelId}
         dispatch={dispatch}

@@ -92,6 +92,7 @@ export const Channels = ({
           dispatch({ type: "append-channels", payload: nextChannels });
         });
       }}
+      onEndReachedThreshold={0.1}
     />
   );
 };

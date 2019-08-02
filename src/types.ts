@@ -28,6 +28,17 @@ export type ChannelType = State["channels"]["items"][0];
 export type MessageType = ChannelType["messages"]["items"][0];
 
 export type Action =
+  | {
+      type: "append-messages";
+      payload: {
+        messages: List<MessageType & { messageChannelId?: string }>;
+        channelId: string;
+      };
+    }
+  | {
+      type: "prepend-message";
+      payload: MessageType & { messageChannelId: string };
+    }
   | { type: "set-my-info"; payload: Partial<State["me"]> }
   | {
       type: "append-channels";
@@ -48,10 +59,6 @@ export type Action =
   | {
       type: "update-channel";
       payload: Omit<ChannelType, "messages">;
-    }
-  | {
-      type: "prepend-messages";
-      payload: ChannelType;
     }
   | {
       type: "append-message";
