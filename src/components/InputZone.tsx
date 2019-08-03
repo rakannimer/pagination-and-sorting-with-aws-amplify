@@ -3,7 +3,12 @@ import { View, Text, TouchableOpacity, TextInput } from "react-native-web";
 import { colors } from "../theme";
 import { FlexSpacer } from "./utils";
 
-export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
+type Props = {
+  onSubmit: (s: string) => void;
+  placeholder: string;
+  buttonText: string;
+};
+export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
   const textinputRef = React.useRef<TextInput>(null);
   const [value, setValue] = React.useState("");
   const submit = () => {
@@ -11,6 +16,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }) => {
     setValue("");
   };
   React.useEffect(() => {
+    if (textinputRef.current === null) return;
     if (value === "") textinputRef.current.focus();
   }, [value]);
   const isSubmittable = value !== "";
