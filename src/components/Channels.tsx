@@ -1,19 +1,19 @@
-import nanoid from "nanoid";
 import * as React from "react";
 import {
-  View,
-  Text,
+  ActivityIndicator,
   FlatList,
+  Text,
   TouchableOpacity,
-  ActivityIndicator
+  View
 } from "react-native-web";
 import { __RouterContext } from "react-router";
 
-import { InputZone } from "./InputZone";
-import { colors } from "../theme";
-import { ChannelType, Dispatcher, State } from "../types";
-import { createChannel, getChannels } from "../models/Channels";
+import { getActions } from "../actions";
+import { getChannels } from "../models/Channels";
 import { DispatcherContext } from "../state";
+import { colors } from "../theme";
+import { ChannelType, State } from "../types";
+import { InputZone } from "./InputZone";
 
 type Props = { channel: ChannelType };
 
@@ -21,10 +21,7 @@ const ChannelCard = (props: Props) => {
   const { channel } = props;
   const router = React.useContext(__RouterContext);
   const { messages = { items: [] } } = channel;
-  const lastMessage =
-    messages.items.length > 0
-      ? messages.items[messages.items.length - 1].text
-      : "";
+  const lastMessage = messages.items.length > 0 ? messages.items[0].text : "";
   return (
     <TouchableOpacity
       style={{
@@ -88,11 +85,11 @@ export const Channels = ({ channels }: { channels: State["channels"] }) => {
       .catch(err => {
         console.warn("Error fetching channels ", err);
       });
+
     return () => {
       isMounted = false;
     };
   }, []);
-  // console.warn(channels.items.map(c => c.id));
   return (
     <>
       {isLoadingPosition === "top" && (
@@ -136,27 +133,14 @@ export const ChannelsRoute = ({
   channels: State["channels"];
 }) => {
   const dispatch = React.useContext(DispatcherContext);
-  const addChannel = (name: string) => {
-    const channel: ChannelType = {
-      id: nanoid(),
-      name,
-      createdAt: `${Date.now()}`,
-      updatedAt: `${Date.now()}`,
-      messages: { items: [], nextToken: "" }
-    };
-    dispatch({
-      type: "prepend-channel",
-      payload: channel
-    });
-    createChannel(channel);
-  };
+  const actions = getActions(dispatch);
   return (
     <>
       <Channels channels={channels} />
       <InputZone
         placeholder={"Create a new channel"}
         onSubmit={content => {
-          addChannel(content);
+          actions.addChannel(content);
         }}
         buttonText={"Create channel"}
       />

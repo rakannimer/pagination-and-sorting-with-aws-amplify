@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/memoize-one": "^4.1.1",
+    "@types/nanoid": "^2.0.0",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.5",
     "@types/react-native-web": "npm:@types/react-native@^0.60.3",
@@ -23,6 +25,7 @@
   "dependencies": {
     "aws-amplify": "^1.1.33",
     "immer": "^3.1.3",
+    "memoize-one": "^5.0.5",
     "nanoid": "^2.0.3",
     "react": ">=16.5.1",
     "react-dom": ">=16.5.1",

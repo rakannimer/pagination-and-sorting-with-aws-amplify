@@ -85,3 +85,5 @@ query GetChannel($id: ID!) {
   }
 }
 `;
+
+export const onCreateChannel = () => {};

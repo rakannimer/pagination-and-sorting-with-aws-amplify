@@ -3,9 +3,10 @@ import * as React from "react";
 import { FlatList, Text, View } from "react-native-web";
 
 import { colors } from "../theme";
-import { ChannelType, MessageType, Dispatcher, State } from "../types";
+import { MessageType, Dispatcher, State } from "../types";
 import { InputZone } from "./InputZone";
 import { createMessage, getChannelMessages } from "../models/Channel";
+import { DispatcherContext } from "../state";
 
 export const Message = ({ message }: { message: MessageType }) => {
   return (
@@ -40,14 +41,13 @@ export const Message = ({ message }: { message: MessageType }) => {
 export const Channel = ({
   messages = { items: [], nextToken: "" },
   shouldScrollDown,
-  channelId,
-  dispatch
+  channelId
 }: {
   messages: State["channels"]["items"][0]["messages"];
   shouldScrollDown?: number;
   channelId: string;
-  dispatch: Dispatcher;
 }) => {
+  const dispatch = React.useContext(DispatcherContext);
   const flatlistRef = React.useRef<null | FlatList<MessageType>>(null);
   React.useEffect(() => {
     if (flatlistRef.current === null) return;
@@ -80,25 +80,23 @@ export const Channel = ({
 type ChannelRouteProps = {
   channelId: string;
   channels: State["channels"];
-  dispatch: Dispatcher;
   me: State["me"];
 };
 
 export const ChannelRoute = ({
   channelId,
   channels,
-  dispatch,
   me
 }: ChannelRouteProps) => {
+  const dispatch = React.useContext(DispatcherContext);
   const [shouldScrollDown, setScrollDown] = React.useState(0);
-
   const channelIndex = channels.items.findIndex(
     channel => channel.id === channelId
   );
 
   React.useEffect(() => {
     getChannelMessages(channelId, "").then(messages => {
-      dispatch({ type: "set-messages", payload: { channelId, messages } });
+      dispatch({ type: "append-messages", payload: { channelId, messages } });
     });
   }, [channelId]);
 
@@ -127,7 +125,6 @@ export const ChannelRoute = ({
         messages={channels.items[channelIndex].messages}
         shouldScrollDown={shouldScrollDown}
         channelId={channelId}
-        dispatch={dispatch}
       />
       <InputZone
         placeholder={"Create a new message"}

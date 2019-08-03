@@ -64,6 +64,24 @@ export const onDeleteMessage = `subscription OnDeleteMessage {
   }
 }
 `;
+export const onCreateTemp = `subscription OnCreateTemp {
+  onCreateTemp {
+    id
+  }
+}
+`;
+export const onUpdateTemp = `subscription OnUpdateTemp {
+  onUpdateTemp {
+    id
+  }
+}
+`;
+export const onDeleteTemp = `subscription OnDeleteTemp {
+  onDeleteTemp {
+    id
+  }
+}
+`;
 export const onCreateChannel = `subscription OnCreateChannel {
   onCreateChannel {
     id

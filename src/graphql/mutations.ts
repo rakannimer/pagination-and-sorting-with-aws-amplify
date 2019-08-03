@@ -64,6 +64,24 @@ export const deleteMessage = `mutation DeleteMessage($input: DeleteMessageInput!
   }
 }
 `;
+export const createTemp = `mutation CreateTemp($input: CreateTempInput!) {
+  createTemp(input: $input) {
+    id
+  }
+}
+`;
+export const updateTemp = `mutation UpdateTemp($input: UpdateTempInput!) {
+  updateTemp(input: $input) {
+    id
+  }
+}
+`;
+export const deleteTemp = `mutation DeleteTemp($input: DeleteTempInput!) {
+  deleteTemp(input: $input) {
+    id
+  }
+}
+`;
 export const createChannel = `mutation CreateChannel($input: CreateChannelInput!) {
   createChannel(input: $input) {
     id

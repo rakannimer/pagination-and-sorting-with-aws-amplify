@@ -38,9 +38,7 @@ const App = () => {
           <Route
             exact
             path="/"
-            render={() => (
-              <ChannelsRoute channels={state.channels}  />
-            )}
+            render={() => <ChannelsRoute channels={state.channels} />}
           />
           <Route
             exact
@@ -57,9 +55,7 @@ const App = () => {
           <Route
             exact
             path="/channels"
-            render={() => (
-              <ChannelsRoute channels={state.channels} />
-            )}
+            render={() => <ChannelsRoute channels={state.channels} />}
           />
           <Route
             exact
@@ -68,7 +64,6 @@ const App = () => {
               const channelId = match.params.id;
               return (
                 <ChannelRoute
-                  dispatch={dispatch}
                   me={state.me}
                   channels={state.channels}
                   channelId={channelId}
@@ -78,7 +73,7 @@ const App = () => {
           />
         </View>
       </Router>
-    </DispatcherContext>
+    </DispatcherContext.Provider>
   );
 };
 

@@ -5,6 +5,7 @@ import {
   createChannel as createChannelQuery
 } from "../graphql/mutations";
 import { State, ChannelType, List } from "../types";
+// @ts-ignore
 import config from "../aws-exports.js";
 import { getChannelList as getChannelListQuery } from "../graphql/custom-queries";
 

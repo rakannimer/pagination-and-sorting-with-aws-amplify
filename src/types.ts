@@ -1,6 +1,6 @@
 export type State = {
   me: {
-    id?: string;
+    id: string;
     name?: string;
     bio?: string;
     url?: string;
@@ -39,7 +39,7 @@ export type Action =
       type: "prepend-message";
       payload: MessageType & { messageChannelId: string };
     }
-  | { type: "set-my-info"; payload: Partial<State["me"]> }
+  | { type: "set-my-info"; payload: State["me"] }
   | {
       type: "append-channels";
       payload: State["channels"];
@@ -47,10 +47,6 @@ export type Action =
   | {
       type: "prepend-channel";
       payload: ChannelType;
-    }
-  | {
-      type: "prepend-channels";
-      payload: List<ChannelType>;
     }
   | {
       type: "set-channels";

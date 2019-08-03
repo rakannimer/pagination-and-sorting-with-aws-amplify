@@ -4,44 +4,38 @@ import * as React from "react";
 
 import { Action, State, Dispatcher } from "./types";
 
+const addOrUpdate = <T extends { id: string }>(
+  list: T[],
+  id: string,
+  newItem: T,
+  operation: "push" | "unshift"
+) => {
+  const itemIndex = list.findIndex(v => v.id === id);
+  if (itemIndex === -1) {
+    if (operation === "push") {
+      list.push(newItem);
+    } else {
+      list.unshift(newItem);
+    }
+  } else {
+    list[itemIndex] = newItem;
+  }
+};
+
 export const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case "append-channels": {
       const { items, nextToken } = action.payload;
       return produce(state, s => {
         for (let channel of items) {
-          const currentChannelIndex = s.channels.items.findIndex(
-            v => v.id === channel.id
-          );
-          if (currentChannelIndex === -1) {
-            s.channels.items.push(channel);
-          } else {
-            s.channels.items[currentChannelIndex] = channel;
-          }
+          addOrUpdate(s.channels.items, channel.id, channel, "push");
         }
         s.channels.nextToken = nextToken;
       });
     }
     case "prepend-channel": {
       return produce(state, s => {
-        // Insert at position 0, without deleting, the elements of payload
-        s.channels.items.splice(
-          -1, //action.payload.items.length - 1,
-          0,
-          action.payload
-        );
-        // s.channels.nextToken = action.payload.nextToken;
-      });
-    }
-    case "prepend-channels": {
-      return produce(state, s => {
-        // Insert at position 0, without deleting, the elements of payload
-        s.channels.items.splice(
-          -1, //action.payload.items.length - 1,
-          0,
-          ...action.payload.items
-        );
-        s.channels.nextToken = action.payload.nextToken;
+        s.channels.items.unshift(action.payload);
       });
     }
     case "set-channels": {
@@ -50,19 +44,11 @@ export const reducer = (state: State, action: Action) => {
           s.channels = action.payload;
           return;
         }
-
         const channels = action.payload.items;
         const nextToken = action.payload.nextToken;
         s.channels.nextToken = nextToken;
         for (let channel of channels) {
-          const currentChannelIndex = s.channels.items.findIndex(
-            v => v.id === channel.id
-          );
-          if (currentChannelIndex === -1) {
-            s.channels.items.push(channel);
-          } else {
-            s.channels.items[currentChannelIndex] = channel;
-          }
+          addOrUpdate(s.channels.items, channel.id, channel, "push");
         }
       });
     }
@@ -86,15 +72,6 @@ export const reducer = (state: State, action: Action) => {
         s.channels.items[channelIndex].messages = messages;
       });
     }
-    case "append-message": {
-      const channelIndex = state.channels.items.findIndex(
-        channel => channel.id === action.payload.messageChannelId
-      );
-      if (channelIndex === -1) return state;
-      return produce(state, s => {
-        s.channels.items[channelIndex].messages.items.push(action.payload);
-      });
-    }
     case "prepend-message": {
       const channelIndex = state.channels.items.findIndex(
         channel => channel.id === action.payload.messageChannelId
@@ -110,20 +87,26 @@ export const reducer = (state: State, action: Action) => {
       const channelIndex = state.channels.items.findIndex(
         channel => channel.id === channelId
       );
-      if (channelIndex === -1) return state;
+      // console.warn("appending messages ", channelIndex, action.payload);
+
       return produce(state, s => {
-        // const messages = messages.
+        if (channelIndex === -1) {
+          s.channels.items.push({
+            id: channelId,
+            messages,
+            createdAt: "",
+            updatedAt: "",
+            name: ""
+          });
+          return;
+        }
         for (let message of messages.items) {
-          const currentMessageIndex = s.channels.items[
-            channelIndex
-          ].messages.items.findIndex(v => v.id === message.id);
-          if (currentMessageIndex === -1) {
-            s.channels.items[channelIndex].messages.items.push(message);
-          } else {
-            s.channels.items[channelIndex].messages.items[
-              currentMessageIndex
-            ] = message;
-          }
+          addOrUpdate(
+            s.channels.items[channelIndex].messages.items,
+            message.id,
+            message,
+            "push"
+          );
         }
         s.channels.items[channelIndex].messages.nextToken = messages.nextToken;
       });
@@ -157,11 +140,13 @@ export function parseJson<T = unknown>(
   }
 }
 
-const STATE_KEY = "my-state- 4" + Date.now();
+const STATE_KEY = "my-state-9" + Date.now();
 
 export const getInitialState = () => {
   const state = parseJson<State>(localStorage.getItem(STATE_KEY), {
-    me: {},
+    me: {
+      id: ""
+    },
     channels: { items: [], nextToken: "" }
   });
   if (Boolean(state.me.id) === false) {
