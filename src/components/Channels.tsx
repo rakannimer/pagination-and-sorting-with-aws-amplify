@@ -9,7 +9,7 @@ import {
 import { __RouterContext } from "react-router";
 
 import { getActions } from "../actions";
-import { getChannels } from "../models/Channels";
+import { getChannels, onCreateChannel } from "../models/Channels";
 import { DispatcherContext } from "../state";
 import { colors } from "../theme";
 import { ChannelType, State } from "../types";
@@ -72,10 +72,18 @@ export const Channels = ({ channels }: { channels: State["channels"] }) => {
   const [isLoadingPosition, setIsLoadingPosition] = React.useState<
     "none" | "top" | "bottom"
   >("none");
-
   React.useEffect(() => {
     let isMounted = true;
     setIsLoadingPosition("top");
+    const subscription = onCreateChannel().subscribe(
+      channel => {
+        console.warn("On create channel ", channel);
+      },
+      err => {
+        console.warn("Subscription error ", err);
+      }
+    );
+
     getChannels()
       .then(channels => {
         if (!isMounted) return;
@@ -88,6 +96,7 @@ export const Channels = ({ channels }: { channels: State["channels"] }) => {
 
     return () => {
       isMounted = false;
+      subscription.unsubscribe();
     };
   }, []);
   return (

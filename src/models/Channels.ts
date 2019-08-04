@@ -4,10 +4,14 @@ import {
   createChannelList,
   createChannel as createChannelQuery
 } from "../graphql/mutations";
-import { State, ChannelType, List } from "../types";
+import {
+  onCreateChannelInList,
+  onCreateChannel as onCreateChannelQuery
+} from "../graphql/subscriptions";
+import { State, ChannelType, List, Listener, Observable } from "../types";
 // @ts-ignore
 import config from "../aws-exports.js";
-import { getChannelList as getChannelListQuery } from "../graphql/custom-queries";
+import { getChannelList as getChannelListQuery } from "./custom-queries";
 
 API.configure(config);
 
@@ -70,4 +74,11 @@ export const createChannel = async (channel: ChannelType) => {
   } catch (err) {
     console.warn("Could not create channel", channel, err);
   }
+};
+
+export const onCreateChannel = (channelId: string = "global") => {
+  const listener: Listener<ChannelType> = API.graphql(
+    graphqlOperation(onCreateChannelInList, { channelListId: channelId })
+  );
+  return listener;
 };

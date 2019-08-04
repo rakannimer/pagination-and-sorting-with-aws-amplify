@@ -44,25 +44,6 @@ export const listMessages = `query ListMessages(
   }
 }
 `;
-export const getTemp = `query GetTemp($id: ID!) {
-  getTemp(id: $id) {
-    id
-  }
-}
-`;
-export const listTemps = `query ListTemps(
-  $filter: ModelTempFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listTemps(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-    }
-    nextToken
-  }
-}
-`;
 export const getChannel = `query GetChannel($id: ID!) {
   getChannel(id: $id) {
     id

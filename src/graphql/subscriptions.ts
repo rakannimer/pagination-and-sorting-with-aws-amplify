@@ -1,6 +1,30 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
+export const onCreateChannelInList = `subscription OnCreateChannelInList($channelListId: ID!) {
+  onCreateChannelInList(channelListId: $channelListId) {
+    id
+    name
+    createdAt
+    updatedAt
+    messages {
+      items {
+        id
+        text
+        createdAt
+        senderId
+      }
+      nextToken
+    }
+    channelList {
+      id
+      channels {
+        nextToken
+      }
+    }
+  }
+}
+`;
 export const onCreateMessage = `subscription OnCreateMessage {
   onCreateMessage {
     id
@@ -61,24 +85,6 @@ export const onDeleteMessage = `subscription OnDeleteMessage {
         id
       }
     }
-  }
-}
-`;
-export const onCreateTemp = `subscription OnCreateTemp {
-  onCreateTemp {
-    id
-  }
-}
-`;
-export const onUpdateTemp = `subscription OnUpdateTemp {
-  onUpdateTemp {
-    id
-  }
-}
-`;
-export const onDeleteTemp = `subscription OnDeleteTemp {
-  onDeleteTemp {
-    id
   }
 }
 `;

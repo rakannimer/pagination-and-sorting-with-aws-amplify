@@ -28,3 +28,8 @@ type User @model {
   bio: String
   url: String
 }
+
+type Subscription {
+  onCreateChannelInList(channelListId: ID!): Channel
+    @aws_subscribe(mutations: ["createChannel"])
+}

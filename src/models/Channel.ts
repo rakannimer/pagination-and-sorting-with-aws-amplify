@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from "aws-amplify";
 
-import { getMessageList } from "../graphql/custom-queries";
+import { getMessageList } from "./custom-queries";
 
 import {
   createMessage as createMessageQuery,

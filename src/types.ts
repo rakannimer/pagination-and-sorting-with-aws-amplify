@@ -66,3 +66,12 @@ export type Action =
     };
 
 export type Dispatcher = React.Dispatch<Action>;
+
+export type Observable<Value = unknown, Error = {}> = {
+  subscribe: (
+    cb?: (v: Value) => void,
+    errorCb?: (e: Error) => void,
+    completeCallback?: () => void
+  ) => { unsubscribe: Function };
+};
+export type Listener<T> = Observable<{ value: { data: T } }>;
