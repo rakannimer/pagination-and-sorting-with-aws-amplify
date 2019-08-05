@@ -106,9 +106,11 @@ export const Channel = ({
             <ActivityIndicator
               animating={true}
               color={colors.highlight}
-              style={{ marginTop: 15, marginBottom: 15 }}
+              style={{ marginTop: 15, marginBottom: 15, height: 30 }}
             />
-          ) : null
+          ) : (
+            <View style={{ height: 30 }}></View>
+          )
         }
         keyExtractor={item => item.id}
         data={messages.items}

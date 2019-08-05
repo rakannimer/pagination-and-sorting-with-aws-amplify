@@ -83,14 +83,14 @@ const ChannelCard = (props: Props) => {
         <Text
           style={{
             color: "white",
-            fontWeight: "bold",
+            // fontWeight: "bold",
             marginTop: 5,
             marginBottom: 5
           }}
         >
           Last updated on {new Date(Number(channel.updatedAt)).toLocaleString()}
         </Text>
-        <Text style={{ color: "white" }}>{lastMessage}</Text>
+        <Text style={{ color: "white", marginTop: 5 }}>{lastMessage}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -179,20 +179,24 @@ export const Channels = ({
         ListHeaderComponent={() =>
           isLoadingPosition === "top" ? (
             <ActivityIndicator
-              style={{ marginTop: 15 }}
+              style={{ height: 30 }}
               animating={true}
               color={colors.highlight}
             />
-          ) : null
+          ) : (
+            <View style={{ height: 30 }}></View>
+          )
         }
         ListFooterComponent={() =>
           isLoadingPosition === "bottom" ? (
             <ActivityIndicator
-              style={{ marginTop: 15 }}
+              style={{ marginTop: 15, height: 30 }}
               animating={true}
               color={colors.highlight}
             />
-          ) : null
+          ) : (
+            <View style={{ height: 30 }}></View>
+          )
         }
         ref={flatlistRef}
         keyExtractor={item => {
