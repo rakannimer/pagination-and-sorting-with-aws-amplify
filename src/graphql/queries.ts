@@ -12,13 +12,16 @@ export const getMessage = `query GetMessage($id: ID!) {
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -38,7 +41,10 @@ export const listMessages = `query ListMessages(
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
+      messageChannelId
     }
     nextToken
   }
@@ -50,12 +56,14 @@ export const getChannel = `query GetChannel($id: ID!) {
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -65,6 +73,7 @@ export const getChannel = `query GetChannel($id: ID!) {
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -79,12 +88,14 @@ export const listChannels = `query ListChannels(
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
     nextToken
   }
@@ -99,6 +110,8 @@ export const getChannelList = `query GetChannelList($id: ID!) {
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }

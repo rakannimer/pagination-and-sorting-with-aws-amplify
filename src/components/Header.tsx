@@ -37,7 +37,9 @@ export const Header = withRouter(props => (
     <Link
       style={[
         styles.headerLink,
-        props.history.location.pathname === "/channels" && styles.headerSelected
+        (props.history.location.pathname === "/channels" ||
+          props.history.location.pathname === "/") &&
+          styles.headerSelected
       ]}
       href="/channels"
       accessible={true}

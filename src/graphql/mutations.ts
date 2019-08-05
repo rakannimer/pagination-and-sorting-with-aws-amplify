@@ -12,13 +12,16 @@ export const createMessage = `mutation CreateMessage($input: CreateMessageInput!
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -33,13 +36,16 @@ export const updateMessage = `mutation UpdateMessage($input: UpdateMessageInput!
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -54,13 +60,16 @@ export const deleteMessage = `mutation DeleteMessage($input: DeleteMessageInput!
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -70,12 +79,14 @@ export const createChannel = `mutation CreateChannel($input: CreateChannelInput!
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -85,6 +96,7 @@ export const createChannel = `mutation CreateChannel($input: CreateChannelInput!
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -94,12 +106,14 @@ export const updateChannel = `mutation UpdateChannel($input: UpdateChannelInput!
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -109,6 +123,7 @@ export const updateChannel = `mutation UpdateChannel($input: UpdateChannelInput!
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -118,12 +133,14 @@ export const deleteChannel = `mutation DeleteChannel($input: DeleteChannelInput!
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -133,6 +150,7 @@ export const deleteChannel = `mutation DeleteChannel($input: DeleteChannelInput!
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -145,6 +163,8 @@ export const createChannelList = `mutation CreateChannelList($input: CreateChann
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }
@@ -160,6 +180,8 @@ export const updateChannelList = `mutation UpdateChannelList($input: UpdateChann
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }
@@ -175,6 +197,8 @@ export const deleteChannelList = `mutation DeleteChannelList($input: DeleteChann
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }

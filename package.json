@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "graphiql": "npx parcel ./graphiql/index.html",
-    "dev": "parcel src/index.html",
+    "graphiql": "npx parcel ./graphiql/index.html -p 1235",
+    "dev": "npx parcel src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,6 +21,7 @@
     "@types/react-router-dom": "^4.3.4",
     "graphiql": "^0.13.2",
     "parcel": "^1.12.3",
+    "prettier": "^1.18.2",
     "typescript": "^3.5.3"
   },
   "dependencies": {

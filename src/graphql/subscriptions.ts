@@ -1,18 +1,20 @@
 // tslint:disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateChannelInList = `subscription OnCreateChannelInList($channelListId: ID!) {
-  onCreateChannelInList(channelListId: $channelListId) {
+export const onCreateChannelInList = `subscription OnCreateChannelInList($channelChannelListId: ID!) {
+  onCreateChannelInList(channelChannelListId: $channelChannelListId) {
     id
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -22,6 +24,58 @@ export const onCreateChannelInList = `subscription OnCreateChannelInList($channe
         nextToken
       }
     }
+    channelChannelListId
+  }
+}
+`;
+export const onUpdateChannelInList = `subscription OnUpdateChannelInList($channelChannelListId: ID!) {
+  onUpdateChannelInList(channelChannelListId: $channelChannelListId) {
+    id
+    name
+    createdAt
+    updatedAt
+    creatorId
+    messages {
+      items {
+        id
+        text
+        createdAt
+        senderId
+        messageChannelId
+      }
+      nextToken
+    }
+    channelList {
+      id
+      channels {
+        nextToken
+      }
+    }
+    channelChannelListId
+  }
+}
+`;
+export const onCreateMessageInChannel = `subscription OnCreateMessageInChannel($messageChannelId: ID!) {
+  onCreateMessageInChannel(messageChannelId: $messageChannelId) {
+    id
+    text
+    createdAt
+    senderId
+    channel {
+      id
+      name
+      createdAt
+      updatedAt
+      creatorId
+      messages {
+        nextToken
+      }
+      channelList {
+        id
+      }
+      channelChannelListId
+    }
+    messageChannelId
   }
 }
 `;
@@ -36,13 +90,16 @@ export const onCreateMessage = `subscription OnCreateMessage {
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -57,13 +114,16 @@ export const onUpdateMessage = `subscription OnUpdateMessage {
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -78,13 +138,16 @@ export const onDeleteMessage = `subscription OnDeleteMessage {
       name
       createdAt
       updatedAt
+      creatorId
       messages {
         nextToken
       }
       channelList {
         id
       }
+      channelChannelListId
     }
+    messageChannelId
   }
 }
 `;
@@ -94,12 +157,14 @@ export const onCreateChannel = `subscription OnCreateChannel {
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -109,6 +174,7 @@ export const onCreateChannel = `subscription OnCreateChannel {
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -118,12 +184,14 @@ export const onUpdateChannel = `subscription OnUpdateChannel {
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -133,6 +201,7 @@ export const onUpdateChannel = `subscription OnUpdateChannel {
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -142,12 +211,14 @@ export const onDeleteChannel = `subscription OnDeleteChannel {
     name
     createdAt
     updatedAt
+    creatorId
     messages {
       items {
         id
         text
         createdAt
         senderId
+        messageChannelId
       }
       nextToken
     }
@@ -157,6 +228,7 @@ export const onDeleteChannel = `subscription OnDeleteChannel {
         nextToken
       }
     }
+    channelChannelListId
   }
 }
 `;
@@ -169,6 +241,8 @@ export const onCreateChannelList = `subscription OnCreateChannelList {
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }
@@ -184,6 +258,8 @@ export const onUpdateChannelList = `subscription OnUpdateChannelList {
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }
@@ -199,6 +275,8 @@ export const onDeleteChannelList = `subscription OnDeleteChannelList {
         name
         createdAt
         updatedAt
+        creatorId
+        channelChannelListId
       }
       nextToken
     }

@@ -1,12 +1,20 @@
 import { API, graphqlOperation } from "aws-amplify";
+import {
+  OnCreateChannelInListSubscription,
+  OnUpdateChannelInListSubscription,
+  OnCreateChannelSubscription,
+  OnUpdateChannelSubscription
+} from "../API";
 
 import {
   createChannelList,
   createChannel as createChannelQuery
 } from "../graphql/mutations";
 import {
+  // onCr,
   onCreateChannelInList,
-  onCreateChannel as onCreateChannelQuery
+  onUpdateChannelInList,
+  onUpdateChannel as onUpdateChannelQuery
 } from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, Observable } from "../types";
 // @ts-ignore
@@ -24,6 +32,7 @@ type CustomChannelList = {
         name: string;
         createdAt: string;
         updatedAt: string;
+        creatorId: string;
         messages: List<{
           id: string;
           text: string;
@@ -76,9 +85,20 @@ export const createChannel = async (channel: ChannelType) => {
   }
 };
 
-export const onCreateChannel = (channelId: string = "global") => {
-  const listener: Listener<ChannelType> = API.graphql(
-    graphqlOperation(onCreateChannelInList, { channelListId: channelId })
+export const onCreateChannel = (channelListId: string = "global") => {
+  const listener: Listener<OnCreateChannelInListSubscription> = API.graphql(
+    graphqlOperation(onCreateChannelInList, {
+      channelChannelListId: channelListId
+    })
+  );
+  return listener;
+};
+
+export const onUpdateChannel = (channelListId: string = "global") => {
+  const listener: Listener<OnUpdateChannelInListSubscription> = API.graphql(
+    graphqlOperation(onUpdateChannelInList, {
+      channelChannelListId: channelListId
+    })
   );
   return listener;
 };

@@ -65,6 +65,7 @@ export const reducer = (state: State, action: Action) => {
             messages,
             createdAt: "",
             updatedAt: "",
+            creatorId: "",
             name: ""
           });
           return;
@@ -96,7 +97,8 @@ export const reducer = (state: State, action: Action) => {
             messages,
             createdAt: "",
             updatedAt: "",
-            name: ""
+            name: "",
+            creatorId: ""
           });
           return;
         }
@@ -114,6 +116,31 @@ export const reducer = (state: State, action: Action) => {
     case "set-my-info": {
       return produce(state, s => {
         s.me = action.payload;
+      });
+    }
+    case "update-channel": {
+      const channelIndex = state.channels.items.findIndex(
+        v => v.id === action.payload.id
+      );
+      if (channelIndex === -1) {
+        return state;
+      }
+      return produce(state, s => {
+        s.channels.items[channelIndex].updatedAt = action.payload.updatedAt;
+        s.channels.items[channelIndex].name = action.payload.name;
+        s.channels.items[channelIndex].creatorId = action.payload.creatorId;
+      });
+    }
+    case "move-to-front": {
+      const channelIndex = state.channels.items.findIndex(
+        v => v.id === action.payload.channelId
+      );
+      if (channelIndex === -1) {
+        return state;
+      }
+      return produce(state, s => {
+        const [channel] = s.channels.items.splice(channelIndex, 1);
+        s.channels.items.unshift(channel);
       });
     }
     default: {
@@ -145,13 +172,11 @@ const STATE_KEY = "my-state-9" + Date.now();
 export const getInitialState = () => {
   const state = parseJson<State>(localStorage.getItem(STATE_KEY), {
     me: {
-      id: ""
+      id: localStorage.getItem("user-id") || nanoid()
     },
     channels: { items: [], nextToken: "" }
   });
-  if (Boolean(state.me.id) === false) {
-    state.me = { ...state.me, id: nanoid() };
-  }
+  localStorage.setItem("user-id", state.me.id);
   return state;
 };
 

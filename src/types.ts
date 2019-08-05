@@ -1,9 +1,10 @@
+type OrNull<T> = T | null;
 export type State = {
   me: {
     id: string;
-    name?: string;
-    bio?: string;
-    url?: string;
+    name?: OrNull<string>;
+    bio?: OrNull<string>;
+    url?: OrNull<string>;
   };
   channels: List<{
     id: string;
@@ -13,6 +14,7 @@ export type State = {
       createdAt: string;
       senderId: string;
     }>;
+    creatorId: string;
     name: string;
     createdAt: string;
     updatedAt: string;
@@ -26,7 +28,7 @@ export type List<T extends unknown> = {
 export type UserType = State["me"];
 export type ChannelType = State["channels"]["items"][0];
 export type MessageType = ChannelType["messages"]["items"][0];
-
+import { CreateMessageInput } from "./API";
 export type Action =
   | {
       type: "append-messages";
@@ -37,9 +39,10 @@ export type Action =
     }
   | {
       type: "prepend-message";
-      payload: MessageType & { messageChannelId: string };
+      payload: CreateMessageInput;
     }
   | { type: "set-my-info"; payload: State["me"] }
+  | { type: "move-to-front"; payload: { channelId: string } }
   | {
       type: "append-channels";
       payload: State["channels"];

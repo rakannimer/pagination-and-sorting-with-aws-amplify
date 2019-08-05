@@ -4,6 +4,7 @@ type Message @model {
   createdAt: String
   senderId: String
   channel: Channel @connection(name: "SortedMessages")
+  messageChannelId: String
 }
 
 type Channel @model {
@@ -11,9 +12,11 @@ type Channel @model {
   name: String!
   createdAt: String!
   updatedAt: String!
+  creatorId: String
   messages: [Message]
     @connection(name: "SortedMessages", sortField: "createdAt")
   channelList: ChannelList @connection(name: "SortedChannels")
+  channelChannelListId: String
 }
 
 type ChannelList @model {
@@ -30,6 +33,12 @@ type User @model {
 }
 
 type Subscription {
-  onCreateChannelInList(channelListId: ID!): Channel
+  onCreateChannelInList(channelChannelListId: ID!): Channel
     @aws_subscribe(mutations: ["createChannel"])
+
+  onUpdateChannelInList(channelChannelListId: ID!): Channel
+    @aws_subscribe(mutations: ["updateChannel"])
+
+  onCreateMessageInChannel(messageChannelId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
 }

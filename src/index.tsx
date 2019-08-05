@@ -7,7 +7,7 @@ import { ChannelRoute } from "./components/Channel";
 import { ChannelsRoute } from "./components/Channels";
 import { Header } from "./components/Header";
 import { MyProfile } from "./components/MyProfile";
-import { createUserIfNotExists } from "./models/User";
+import { createUserIfNotExists, getUser } from "./models/User";
 import {
   getInitialState,
   reducer,
@@ -23,7 +23,24 @@ const App = () => {
   React.useEffect(() => {
     createUserIfNotExists(initialState.me);
   }, []);
+  React.useEffect(() => {
+    let isMounted = true;
+    getUser;
+    getUser(state.me.id).then(getUserResponse => {
+      if (isMounted === false) return;
+      let meFromServer = getUserResponse.data.getUser;
+      if (meFromServer === null) return;
+      console.warn("set-my-info", meFromServer);
 
+      dispatch({ type: "set-my-info", payload: meFromServer });
+      // setName(meFromServer.name || "");
+      // setUrl(meFromServer.url || "");
+      // setBio(meFromServer.bio || "");
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   return (
     <DispatcherContext.Provider value={dispatch}>
       <Router>
@@ -38,7 +55,9 @@ const App = () => {
           <Route
             exact
             path="/"
-            render={() => <ChannelsRoute channels={state.channels} />}
+            render={() => (
+              <ChannelsRoute channels={state.channels} me={state.me} />
+            )}
           />
           <Route
             exact
@@ -55,7 +74,9 @@ const App = () => {
           <Route
             exact
             path="/channels"
-            render={() => <ChannelsRoute channels={state.channels} />}
+            render={() => (
+              <ChannelsRoute channels={state.channels} me={state.me} />
+            )}
           />
           <Route
             exact

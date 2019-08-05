@@ -1,6 +1,6 @@
 import nanoid from "nanoid";
 import * as React from "react";
-import { FlatList, Text, View } from "react-native-web";
+import { FlatList, Text, View, ActivityIndicator } from "react-native-web";
 
 import { colors } from "../theme";
 import { MessageType, Dispatcher, State } from "../types";
@@ -53,27 +53,49 @@ export const Channel = ({
     if (flatlistRef.current === null) return;
     // flatlistRef.current.scrollToEnd();
   }, [shouldScrollDown]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    setIsLoading(true);
+    getChannelMessages(channelId, "").then(messages => {
+      setIsLoading(false);
+      dispatch({ type: "append-messages", payload: { channelId, messages } });
+    });
+  }, [channelId]);
   return (
-    <FlatList
-      inverted={true}
-      ref={flatlistRef}
+    <View
       style={{
         height: "80%"
       }}
-      keyExtractor={item => item.id}
-      data={messages.items}
-      renderItem={({ item }) => <Message key={item.id} message={item} />}
-      onEndReached={() => {
-        if (messages.nextToken === null) return;
-        getChannelMessages(channelId, messages.nextToken).then(messages => {
-          dispatch({
-            type: "append-messages",
-            payload: { channelId, messages }
+    >
+      <FlatList
+        inverted={true}
+        ref={flatlistRef}
+        ListFooterComponent={() =>
+          isLoading ? (
+            <ActivityIndicator
+              animating={true}
+              color={colors.highlight}
+              style={{ marginTop: 15, marginBottom: 15 }}
+            />
+          ) : null
+        }
+        keyExtractor={item => item.id}
+        data={messages.items}
+        renderItem={({ item }) => <Message key={item.id} message={item} />}
+        onEndReached={() => {
+          if (messages.nextToken === null) return;
+          setIsLoading(true);
+          getChannelMessages(channelId, messages.nextToken).then(messages => {
+            setIsLoading(false);
+            dispatch({
+              type: "append-messages",
+              payload: { channelId, messages }
+            });
           });
-        });
-      }}
-      onEndReachedThreshold={0.01}
-    />
+        }}
+        onEndReachedThreshold={0.01}
+      />
+    </View>
   );
 };
 
@@ -94,15 +116,6 @@ export const ChannelRoute = ({
     channel => channel.id === channelId
   );
 
-  React.useEffect(() => {
-    getChannelMessages(channelId, "").then(messages => {
-      dispatch({ type: "append-messages", payload: { channelId, messages } });
-    });
-  }, [channelId]);
-
-  if (channelIndex === -1) {
-    return <Text>Channel {channelId} doesn't exist yet</Text>;
-  }
   const addMessage = (content: string, dispatch: Dispatcher) => {
     const message = {
       text: content,
@@ -115,14 +128,22 @@ export const ChannelRoute = ({
       type: "prepend-message",
       payload: message
     });
+    dispatch({
+      type: "move-to-front",
+      payload: { channelId }
+    });
     setScrollDown(Date.now());
     createMessage(message);
   };
+  const messages =
+    channelIndex === -1
+      ? { items: [], nextToken: "" }
+      : channels.items[channelIndex].messages;
 
   return (
     <>
       <Channel
-        messages={channels.items[channelIndex].messages}
+        messages={messages}
         shouldScrollDown={shouldScrollDown}
         channelId={channelId}
       />

@@ -1,11 +1,10 @@
 import * as React from "react";
-import { View, TouchableOpacity, TextInput } from "react-native-web";
-
-import { colors } from "../theme";
-import { ImportantText, StaticSpacer, NormalText } from "./utils";
-import { State } from "../types";
+import { TextInput, TouchableOpacity, View } from "react-native-web";
 
 import { upsertUser } from "../models/User";
+import { colors } from "../theme";
+import { State } from "../types";
+import { ImportantText, NormalText, StaticSpacer } from "./utils";
 
 const textInputStyle = {
   backgroundColor: "white",
@@ -17,9 +16,15 @@ const textInputStyle = {
 
 type Props = { me: State["me"]; onSubmit: (me: State["me"]) => void };
 export const MyProfile = ({ me, onSubmit }: Props) => {
-  const [name, setName] = React.useState(me.name);
-  const [url, setUrl] = React.useState(me.url);
-  const [bio, setBio] = React.useState(me.bio);
+  const [name, setName] = React.useState(me.name || "");
+  const [url, setUrl] = React.useState(me.url || "");
+  const [bio, setBio] = React.useState(me.bio || "");
+  const [isSubmittable, setIsSubmittable] = React.useState(false);
+  React.useEffect(() => {
+    setName(me.name || "");
+    setUrl(me.url || "");
+    setBio(me.bio || "");
+  }, [me]);
   const submit = () => {
     localStorage.setItem("name", name);
     localStorage.setItem("url", url);
@@ -27,8 +32,8 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
     const user = { name: name, url, bio, id: me.id };
     onSubmit(user);
     upsertUser(user);
+    setIsSubmittable(false);
   };
-  const isSubmittable = name !== me.name || url !== me.url || bio !== me.bio;
   return (
     <>
       <View
@@ -46,7 +51,10 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           style={textInputStyle}
           placeholder={"Username"}
           value={name}
-          onChangeText={setName}
+          onChangeText={name => {
+            setIsSubmittable(true);
+            setName(name);
+          }}
           onSubmitEditing={submit}
         />
 
@@ -57,7 +65,10 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           style={textInputStyle}
           placeholder={"Bio"}
           value={bio}
-          onChangeText={setBio}
+          onChangeText={bio => {
+            setIsSubmittable(true);
+            setBio(bio);
+          }}
           onSubmitEditing={submit}
         />
 
@@ -68,7 +79,10 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           style={textInputStyle}
           placeholder={"Twitter/Github/Medium/..."}
           value={url}
-          onChangeText={setUrl}
+          onChangeText={url => {
+            setIsSubmittable(true);
+            setUrl(url);
+          }}
           onSubmitEditing={submit}
         />
 

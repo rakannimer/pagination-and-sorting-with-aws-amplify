@@ -1,15 +1,24 @@
 import { API, graphqlOperation } from "aws-amplify";
 
 import { getMessageList } from "./custom-queries";
-
 import {
   createMessage as createMessageQuery,
   updateChannel
 } from "../graphql/mutations";
-import { UpdateChannelInput, CreateMessageInput } from "../API";
-import { MessageType, List } from "../types";
+import {
+  onCreateMessageInChannel,
+  onCreateMessage as onCreateMessageQuery
+} from "../graphql/subscriptions";
+import {
+  UpdateChannelInput,
+  CreateMessageInput,
+  OnCreateMessageInChannelSubscription
+} from "../API";
+import { MessageType, List, Listener } from "../types";
 
-export const createMessage = async (message: CreateMessageInput) => {
+export const createMessage = async (
+  message: CreateMessageInput & { messageChannelId: string }
+) => {
   try {
     await (API.graphql(
       graphqlOperation(createMessageQuery, { input: message })
@@ -49,4 +58,10 @@ export const getChannelMessages = async (
     console.warn("Failed to get messages ", err);
     return { items: [], nextToken: "" };
   }
+};
+export const onCreateMessage = (channelId: string) => {
+  const listener: Listener<OnCreateMessageInChannelSubscription> = API.graphql(
+    graphqlOperation(onCreateMessageInChannel, { messageChannelId: channelId })
+  );
+  return listener;
 };
