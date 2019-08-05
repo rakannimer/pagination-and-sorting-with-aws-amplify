@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "graphiql": "npx parcel ./graphiql/index.html -p 1235",
-    "dev": "npx parcel src/index.html",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "parcel": "npx parcel src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,6 +24,7 @@
     "@types/react-router": "^5.0.3",
     "@types/react-router-dom": "^4.3.4",
     "graphiql": "^0.13.2",
+    "next": "^9.0.3",
     "parcel": "^1.12.3",
     "prettier": "^1.18.2",
     "typescript": "^3.5.3"

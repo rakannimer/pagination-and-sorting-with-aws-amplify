@@ -40,7 +40,16 @@ export const Message = ({ message }: { message: MessageType }) => {
         marginRight: 30,
         display: "flex",
         flexDirection: "row",
-        borderRadius: 12
+        borderRadius: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 7
+        },
+        shadowOpacity: 0.43,
+        shadowRadius: 9.51,
+
+        elevation: 5
       }}
     >
       <View style={{ flex: 10 }}>
@@ -80,6 +89,7 @@ export const Channel = ({
     const onCreateListener = onCreateMessage(channelId).subscribe(message => {
       const newMessage = message.value.data.onCreateMessageInChannel;
       if (newMessage === null || newMessage.senderId === me.id) return;
+      //@ts-ignore
       dispatch({ type: "prepend-message", payload: newMessage });
     });
     getChannelMessages(channelId, "").then(messages => {

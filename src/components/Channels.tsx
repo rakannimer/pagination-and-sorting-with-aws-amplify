@@ -42,6 +42,7 @@ const ChannelCard = (props: Props) => {
         if (senderId === myId) {
           return;
         }
+        //@ts-ignore
         dispatch({ type: "prepend-message", payload: newMessage });
       },
       () => {
@@ -65,7 +66,16 @@ const ChannelCard = (props: Props) => {
         marginRight: 30,
         display: "flex",
         flexDirection: "row",
-        borderRadius: 12
+        borderRadius: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 7
+        },
+        shadowOpacity: 0.43,
+        shadowRadius: 9.51,
+
+        elevation: 10
       }}
       accessibilityRole="link"
       {...{

@@ -13,6 +13,7 @@ export type State = {
       text: string;
       createdAt: string;
       senderId: string;
+      messageChannelId: string;
     }>;
     creatorId: string;
     name: string;
@@ -39,7 +40,7 @@ export type Action =
     }
   | {
       type: "prepend-message";
-      payload: CreateMessageInput;
+      payload: MessageType;
     }
   | { type: "set-my-info"; payload: State["me"] }
   | { type: "move-to-front"; payload: { channelId: string } }

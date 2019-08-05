@@ -16,7 +16,14 @@ import {
   onUpdateChannelInList,
   onUpdateChannel as onUpdateChannelQuery
 } from "../graphql/subscriptions";
-import { State, ChannelType, List, Listener, Observable } from "../types";
+import {
+  State,
+  ChannelType,
+  List,
+  Listener,
+  Observable,
+  MessageType
+} from "../types";
 // @ts-ignore
 import config from "../aws-exports.js";
 import { getChannelList as getChannelListQuery } from "./custom-queries";
@@ -33,12 +40,7 @@ type CustomChannelList = {
         createdAt: string;
         updatedAt: string;
         creatorId: string;
-        messages: List<{
-          id: string;
-          text: string;
-          createdAt: string;
-          senderId: string;
-        }>;
+        messages: List<MessageType>;
       }>;
     };
   };

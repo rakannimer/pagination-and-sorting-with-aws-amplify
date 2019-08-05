@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { View } from "react-native-web";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter, StaticRouter, Route } from "react-router-dom";
 
 import { ChannelRoute } from "./components/Channel";
 import { ChannelsRoute } from "./components/Channels";
@@ -15,8 +15,64 @@ import {
   DispatcherContext
 } from "./state";
 import { colors } from "./theme";
+import { State, Dispatcher } from "./types";
 
-const App = () => {
+export const AppWithoutRouter = ({
+  state,
+  dispatch
+}: {
+  state: State;
+  dispatch: Dispatcher;
+}) => {
+  return (
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        backgroundColor: colors.primaryLight
+      }}
+    >
+      <Header />
+      <Route
+        exact
+        path="/"
+        render={() => <ChannelsRoute channels={state.channels} me={state.me} />}
+      />
+      <Route
+        exact
+        path="/me"
+        render={() => (
+          <MyProfile
+            me={state.me}
+            onSubmit={me => {
+              dispatch({ type: "set-my-info", payload: me });
+            }}
+          />
+        )}
+      />
+      <Route
+        exact
+        path="/channels"
+        render={() => <ChannelsRoute channels={state.channels} me={state.me} />}
+      />
+      <Route
+        exact
+        path="/channel/:id"
+        render={({ match }) => {
+          const channelId = match.params.id;
+          return (
+            <ChannelRoute
+              me={state.me}
+              channels={state.channels}
+              channelId={channelId}
+            />
+          );
+        }}
+      />
+    </View>
+  );
+};
+const App = ({ url }: { url: string }) => {
   const initialState = getInitialState();
   const [state, dispatch] = React.useReducer(withCache(reducer), initialState);
 
@@ -35,62 +91,28 @@ const App = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
-  return (
+  }, [state.me.id]);
+  const isServer = typeof window === "undefined";
+  // const Router = (isServer ? StaticRouter : BrowserRouter)
+
+  return isServer ? (
     <DispatcherContext.Provider value={dispatch}>
-      <Router>
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: colors.primaryLight
-          }}
-        >
-          <Header />
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <ChannelsRoute channels={state.channels} me={state.me} />
-            )}
-          />
-          <Route
-            exact
-            path="/me"
-            render={() => (
-              <MyProfile
-                me={state.me}
-                onSubmit={me => {
-                  dispatch({ type: "set-my-info", payload: me });
-                }}
-              />
-            )}
-          />
-          <Route
-            exact
-            path="/channels"
-            render={() => (
-              <ChannelsRoute channels={state.channels} me={state.me} />
-            )}
-          />
-          <Route
-            exact
-            path="/channel/:id"
-            render={({ match }) => {
-              const channelId = match.params.id;
-              return (
-                <ChannelRoute
-                  me={state.me}
-                  channels={state.channels}
-                  channelId={channelId}
-                />
-              );
-            }}
-          />
-        </View>
-      </Router>
+      <StaticRouter location={url}>
+        <AppWithoutRouter state={state} dispatch={dispatch} />
+      </StaticRouter>
+    </DispatcherContext.Provider>
+  ) : (
+    <DispatcherContext.Provider value={dispatch}>
+      <BrowserRouter>
+        <AppWithoutRouter state={state} dispatch={dispatch} />
+      </BrowserRouter>
     </DispatcherContext.Provider>
   );
 };
-
-render(<App />, document.getElementById("root"));
+//@ts-ignore
+App.getInitialProps = async (ctx: any) => {
+  return {
+    url: ctx.req.url
+  };
+};
+export default App;

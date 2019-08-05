@@ -170,6 +170,10 @@ export function parseJson<T = unknown>(
 const STATE_KEY = "my-state-9" + Date.now();
 
 export const getInitialState = () => {
+  const isServer = typeof window === "undefined";
+  if (isServer) {
+    return { me: { id: "" }, channels: { items: [], nextToken: "" } };
+  }
   const state = parseJson<State>(localStorage.getItem(STATE_KEY), {
     me: {
       id: localStorage.getItem("user-id") || nanoid()

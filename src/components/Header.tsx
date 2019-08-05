@@ -17,41 +17,43 @@ const Link: React.ComponentType<LinkProps> = props => (
   <TouchableOpacity {...props} />
 );
 
-export const Header = withRouter(props => (
-  <View style={styles.header}>
-    <Link
-      style={[
-        styles.headerLink,
-        props.history.location.pathname === "/me" && styles.headerSelected
-      ]}
-      href="/me"
-      accessible={true}
-      onPress={() => {
-        props.history.push("/me");
-      }}
-      accessibilityRole="link"
-    >
-      <Text style={styles.headerText}>My Profile</Text>
-    </Link>
+export const Header = withRouter(props => {
+  return (
+    <View style={styles.header}>
+      <Link
+        style={[
+          styles.headerLink,
+          props.history.location.pathname === "/me" && styles.headerSelected
+        ]}
+        href="/me"
+        accessible={true}
+        onPress={() => {
+          props.history.push("/me");
+        }}
+        accessibilityRole="link"
+      >
+        <Text style={styles.headerText}>My Profile</Text>
+      </Link>
 
-    <Link
-      style={[
-        styles.headerLink,
-        (props.history.location.pathname === "/channels" ||
-          props.history.location.pathname === "/") &&
-          styles.headerSelected
-      ]}
-      href="/channels"
-      accessible={true}
-      onPress={() => {
-        props.history.push("/channels");
-      }}
-      accessibilityRole="link"
-    >
-      <Text style={styles.headerText}>Channels</Text>
-    </Link>
-  </View>
-));
+      <Link
+        style={[
+          styles.headerLink,
+          (props.history.location.pathname === "/channels" ||
+            props.history.location.pathname === "/") &&
+            styles.headerSelected
+        ]}
+        href="/channels"
+        accessible={true}
+        onPress={() => {
+          props.history.push("/channels");
+        }}
+        accessibilityRole="link"
+      >
+        <Text style={styles.headerText}>Channels</Text>
+      </Link>
+    </View>
+  );
+});
 
 const styles: { [key: string]: StyleProp<ViewStyle | TextStyle> } = {
   container: {
