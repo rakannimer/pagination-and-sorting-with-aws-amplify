@@ -5,10 +5,30 @@ import { FlatList, Text, View, ActivityIndicator } from "react-native-web";
 import { colors } from "../theme";
 import { MessageType, Dispatcher, State } from "../types";
 import { InputZone } from "./InputZone";
-import { createMessage, getChannelMessages } from "../models/Channel";
+import {
+  createMessage,
+  getChannelMessages,
+  onCreateMessage
+} from "../models/Channel";
+import { getUsername } from "../models/User";
 import { DispatcherContext } from "../state";
 
 export const Message = ({ message }: { message: MessageType }) => {
+  const [username, setUsername] = React.useState("");
+  React.useEffect(() => {
+    let isMounted = false;
+    getUsername(message.senderId).then(v => {
+      if (isMounted === true) return;
+      if (v.data.getUser.name) {
+        setUsername(v.data.getUser.name);
+      } else {
+        setUsername("Anonymous");
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   return (
     <View
       style={{
@@ -27,9 +47,7 @@ export const Message = ({ message }: { message: MessageType }) => {
         <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
           {message.text}
         </Text>
-        <Text style={{ color: "white" }}>
-          Sent by Username {message.senderId}
-        </Text>
+        <Text style={{ color: "white" }}>Sent by {username}</Text>
         <Text style={{ color: "white" }}>
           Created at: {new Date(Number(message.createdAt)).toLocaleString()}
         </Text>
@@ -41,11 +59,13 @@ export const Message = ({ message }: { message: MessageType }) => {
 export const Channel = ({
   messages = { items: [], nextToken: "" },
   shouldScrollDown,
-  channelId
+  channelId,
+  me
 }: {
   messages: State["channels"]["items"][0]["messages"];
   shouldScrollDown?: number;
   channelId: string;
+  me: State["me"];
 }) => {
   const dispatch = React.useContext(DispatcherContext);
   const flatlistRef = React.useRef<null | FlatList<MessageType>>(null);
@@ -55,11 +75,22 @@ export const Channel = ({
   }, [shouldScrollDown]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   React.useEffect(() => {
+    let isMounted = true;
     setIsLoading(true);
+    const onCreateListener = onCreateMessage(channelId).subscribe(message => {
+      const newMessage = message.value.data.onCreateMessageInChannel;
+      if (newMessage === null || newMessage.senderId === me.id) return;
+      dispatch({ type: "prepend-message", payload: newMessage });
+    });
     getChannelMessages(channelId, "").then(messages => {
+      if (!isMounted) return;
       setIsLoading(false);
       dispatch({ type: "append-messages", payload: { channelId, messages } });
     });
+    () => {
+      isMounted = false;
+      onCreateListener.unsubscribe();
+    };
   }, [channelId]);
   return (
     <View
@@ -146,6 +177,7 @@ export const ChannelRoute = ({
         messages={messages}
         shouldScrollDown={shouldScrollDown}
         channelId={channelId}
+        me={me}
       />
       <InputZone
         placeholder={"Create a new message"}

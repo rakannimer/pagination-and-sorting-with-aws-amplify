@@ -30,12 +30,7 @@ const App = () => {
       if (isMounted === false) return;
       let meFromServer = getUserResponse.data.getUser;
       if (meFromServer === null) return;
-      console.warn("set-my-info", meFromServer);
-
       dispatch({ type: "set-my-info", payload: meFromServer });
-      // setName(meFromServer.name || "");
-      // setUrl(meFromServer.url || "");
-      // setBio(meFromServer.bio || "");
     });
     return () => {
       isMounted = false;

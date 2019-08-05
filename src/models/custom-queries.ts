@@ -86,4 +86,10 @@ query GetChannel($id: ID!) {
 }
 `;
 
-export const onCreateChannel = () => {};
+export const getUsername = gql`
+  query GetUserName($id: ID!) {
+    getUser(id: $id) {
+      name
+    }
+  }
+`;

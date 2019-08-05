@@ -1,7 +1,9 @@
 import { API, graphqlOperation } from "aws-amplify";
+import memoize from "lodash.memoize";
 
 import { getUser as getUserQuery } from "../graphql/queries";
 import { updateUser, createUser } from "../graphql/mutations";
+import { getUsername as getUsernameQuery } from "./custom-queries";
 import { GetUserQuery, CreateUserInput } from "../API";
 import config from "../aws-exports.js";
 
@@ -48,3 +50,21 @@ export const getUser = async (userId: string) => {
   ) as Promise<{ data: GetUserQuery }>);
   return userQueryResult;
 };
+
+export const getUsername = memoize(
+  async (userId: string) => {
+    const userQueryResult = await (API.graphql(
+      graphqlOperation(getUsernameQuery, { id: userId })
+    ) as Promise<{
+      data: {
+        getUser: {
+          name?: string;
+        };
+      };
+    }>);
+    return userQueryResult;
+  },
+  (userId: string) => {
+    return userId;
+  }
+);
