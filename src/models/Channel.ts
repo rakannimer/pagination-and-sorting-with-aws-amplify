@@ -48,12 +48,15 @@ type ChannelMessageReturnType = {
   };
 };
 export const getChannelMessages = async (
-  channelId: string,
+  channelId: string | undefined,
   nextToken: string
 ): Promise<{
   messages: ChannelMessageReturnType["data"]["getChannel"]["messages"];
   channel: Partial<ChannelMessageReturnType["data"]["getChannel"]>;
 }> => {
+  if (!channelId) {
+    return { messages: { items: [], nextToken: "" }, channel: {} };
+  }
   try {
     const query = getMessageList({
       // messageLimit: 5,

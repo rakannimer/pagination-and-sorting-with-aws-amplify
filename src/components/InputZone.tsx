@@ -8,6 +8,7 @@ type Props = {
   placeholder: string;
   buttonText: string;
 };
+
 export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
   const textinputRef = React.useRef<TextInput>(null);
   const [value, setValue] = React.useState("");
@@ -50,6 +51,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
         onSubmitEditing={() => {
           submit();
         }}
+        accessibilityLabel={placeholder}
       />
       <FlexSpacer />
       <View

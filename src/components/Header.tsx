@@ -20,7 +20,7 @@ const Link: React.ComponentType<LinkProps> = props => (
 export const Header = () => {
   const router = useRouter();
   return (
-    <View style={styles.header}>
+    <View style={styles.header} accessibilityRole="header" aria-level="1">
       <Link
         style={[
           styles.headerLink,

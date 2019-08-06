@@ -1,10 +1,9 @@
 import nanoid from "nanoid";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import * as React from "react";
-import { FlatList, Text, View, ActivityIndicator } from "react-native-web";
+import { ActivityIndicator, FlatList, Text, View } from "react-native-web";
 
-import { colors } from "../theme";
-import { MessageType, Dispatcher, State } from "../types";
-import { InputZone } from "./InputZone";
 import {
   createMessage,
   getChannelMessages,
@@ -12,10 +11,10 @@ import {
 } from "../models/Channel";
 import { getUsername } from "../models/User";
 import { DispatcherContext, useAppReducer } from "../state";
+import { colors } from "../theme";
+import { Dispatcher, MessageType, State } from "../types";
 import AppShell from "./AppShell";
-import { NextPageContext } from "next";
-import { useRouter } from "next/router";
-import Head from "next/head";
+import { InputZone } from "./InputZone";
 
 export const Message = ({ message }: { message: MessageType }) => {
   const [username, setUsername] = React.useState("");
@@ -71,25 +70,20 @@ export const Message = ({ message }: { message: MessageType }) => {
 
 export const Channel = ({
   messages = { items: [], nextToken: "" },
-  shouldScrollDown,
   channelId,
   me
 }: {
   messages: State["channels"]["items"][0]["messages"];
-  shouldScrollDown?: number;
   channelId: string;
   me: State["me"];
 }) => {
   const dispatch = React.useContext(DispatcherContext);
   const flatlistRef = React.useRef<null | FlatList<MessageType>>(null);
-  React.useEffect(() => {
-    if (flatlistRef.current === null) return;
-    // flatlistRef.current.scrollToEnd();
-  }, [shouldScrollDown]);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   React.useEffect(() => {
     let isMounted = true;
+    if (!channelId) return;
     setIsLoading(true);
     const onCreateListener = onCreateMessage(channelId).subscribe(message => {
       const newMessage = message.value.data.onCreateMessageInChannel;
@@ -97,12 +91,20 @@ export const Channel = ({
       //@ts-ignore
       dispatch({ type: "prepend-message", payload: newMessage });
     });
-    getChannelMessages(channelId, "").then(({ messages, channel }) => {
-      if (!isMounted) return;
-      setIsLoading(false);
-      dispatch({ type: "append-messages", payload: { channelId, messages } });
-      dispatch({ type: "update-channel", payload: channel });
-    });
+    getChannelMessages(channelId, "")
+      .then(({ messages, channel }) => {
+        if (!isMounted) return;
+        setIsLoading(false);
+        dispatch({ type: "append-messages", payload: { channelId, messages } });
+        dispatch({ type: "update-channel", payload: channel });
+      })
+      .catch(err => {
+        console.warn(
+          "Failed to retrieve channel messages for channel ",
+          channelId
+        );
+        setIsLoading(false);
+      });
     () => {
       isMounted = false;
       onCreateListener.unsubscribe();
@@ -114,6 +116,8 @@ export const Channel = ({
       style={{
         height: "80%"
       }}
+      //@ts-ignore
+      accessibilityRole="main"
     >
       {!isServer && (
         <FlatList
@@ -153,18 +157,10 @@ export const Channel = ({
   );
 };
 
-type ChannelRouteProps = {
-  channelId: string;
-  channels: State["channels"];
-  me: State["me"];
-};
-
 export const ChannelRoute = () => {
   const router = useRouter();
   const [state, dispatch] = useAppReducer();
-  const [shouldScrollDown, setScrollDown] = React.useState(0);
   const channelId = (router.query && router.query.id) as string;
-  if (!channelId) return <Text> Could not parse channelId from url</Text>;
   const channelIndex = state.channels.items.findIndex(
     channel => channel.id === channelId
   );
@@ -184,7 +180,7 @@ export const ChannelRoute = () => {
       type: "move-to-front",
       payload: { channelId }
     });
-    setScrollDown(Date.now());
+    // setScrollDown(Date.now());
     createMessage(message);
   };
 
@@ -199,12 +195,7 @@ export const ChannelRoute = () => {
       <Head>
         <title>Channel {channel.name} </title>
       </Head>
-      <Channel
-        messages={messages}
-        shouldScrollDown={shouldScrollDown}
-        channelId={channelId}
-        me={state.me}
-      />
+      <Channel messages={messages} channelId={channelId} me={state.me} />
       <InputZone
         placeholder={"Create a new message"}
         onSubmit={content => {
@@ -215,7 +206,3 @@ export const ChannelRoute = () => {
     </AppShell>
   );
 };
-
-// ChannelRoute.getInitialProps = ({ query }: NextPageContext) => {
-//   return { query };
-// };

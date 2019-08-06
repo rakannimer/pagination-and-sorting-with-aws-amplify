@@ -61,6 +61,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
             setName(name);
           }}
           onSubmitEditing={submit}
+          accessibilityLabel={"Username"}
         />
 
         <StaticSpacer />
@@ -75,6 +76,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
             setBio(bio);
           }}
           onSubmitEditing={submit}
+          accessibilityLabel={"Bio"}
         />
 
         <StaticSpacer />
@@ -89,6 +91,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
             setUrl(url);
           }}
           onSubmitEditing={submit}
+          accessibilityLabel={"Link"}
         />
 
         <StaticSpacer />
@@ -110,6 +113,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           onPress={() => {
             submit();
           }}
+          accessibilityLabel="Submit changes"
         >
           <NormalText style={{ textAlign: "center" }}>Save</NormalText>
         </TouchableOpacity>

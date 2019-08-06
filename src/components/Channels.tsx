@@ -88,7 +88,7 @@ const ChannelCard = (props: Props) => {
         router.push(`/channel?id=${channel.id}`);
       }}
     >
-      <View style={{ flex: 10 }}>
+      <View>
         <View style={{ display: "flex", flexDirection: "row" }}>
           <Text style={{ color: "white" }}>Channel name: </Text>
           <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
@@ -185,53 +185,51 @@ export const Channels = ({
     };
   }, []);
   return (
-    <>
-      <FlatList
-        inverted={false}
-        style={{
-          height: "80%"
-        }}
-        ListHeaderComponent={() => (
-          <View style={{ height: 30 }}>
-            {isLoadingPosition === "top" && (
-              <ActivityIndicator
-                style={{ height: 30 }}
-                animating={true}
-                color={colors.highlight}
-              />
-            )}
-          </View>
-        )}
-        ListFooterComponent={() => (
-          <View style={{ height: 30 }}>
-            {isLoadingPosition === "bottom" && (
-              <ActivityIndicator
-                style={{ height: 30 }}
-                animating={true}
-                color={colors.highlight}
-              />
-            )}
-          </View>
-        )}
-        ref={flatlistRef}
-        keyExtractor={item => {
-          return item.id;
-        }}
-        data={channels.items}
-        renderItem={({ item: channel }) => (
-          <ChannelCard channel={channel} me={me} />
-        )}
-        onEndReached={() => {
-          if (channels.nextToken === null) return;
-          setIsLoadingPosition("bottom");
-          getChannels(channels.nextToken).then(nextChannels => {
-            setIsLoadingPosition("none");
-            dispatch({ type: "append-channels", payload: nextChannels });
-          });
-        }}
-        onEndReachedThreshold={0.1}
-      />
-    </>
+    <FlatList
+      inverted={false}
+      style={{
+        height: "100%"
+      }}
+      ListHeaderComponent={() => (
+        <View style={{ height: 30 }}>
+          {isLoadingPosition === "top" && (
+            <ActivityIndicator
+              style={{ height: 30 }}
+              animating={true}
+              color={colors.highlight}
+            />
+          )}
+        </View>
+      )}
+      ListFooterComponent={() => (
+        <View style={{ height: 30 }}>
+          {isLoadingPosition === "bottom" && (
+            <ActivityIndicator
+              style={{ height: 30 }}
+              animating={true}
+              color={colors.highlight}
+            />
+          )}
+        </View>
+      )}
+      ref={flatlistRef}
+      keyExtractor={item => {
+        return item.id;
+      }}
+      data={channels.items}
+      renderItem={({ item: channel }) => (
+        <ChannelCard channel={channel} me={me} />
+      )}
+      onEndReached={() => {
+        if (channels.nextToken === null) return;
+        setIsLoadingPosition("bottom");
+        getChannels(channels.nextToken).then(nextChannels => {
+          setIsLoadingPosition("none");
+          dispatch({ type: "append-channels", payload: nextChannels });
+        });
+      }}
+      onEndReachedThreshold={0.1}
+    />
   );
 };
 
@@ -244,7 +242,9 @@ export const ChannelsRoute = () => {
         <title>Channels</title>
       </Head>
       <AppShell state={state} dispatch={dispatch}>
-        <Channels channels={state.channels} me={state.me} />
+        <main style={{ width: "100%", height: "80%" }}>
+          <Channels channels={state.channels} me={state.me} />
+        </main>
         <InputZone
           placeholder={"Create a new channel"}
           onSubmit={content => {

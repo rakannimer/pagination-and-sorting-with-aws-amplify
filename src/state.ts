@@ -171,7 +171,7 @@ export function parseJson<T = unknown>(
   }
 }
 
-const STATE_KEY = "my-state-9"; // + Date.now();
+const STATE_KEY = "my-state-10"; // + Date.now();
 
 export const getInitialState = () => {
   const isServer = typeof window === "undefined";
