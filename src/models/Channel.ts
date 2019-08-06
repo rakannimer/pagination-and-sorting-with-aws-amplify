@@ -35,10 +35,25 @@ export const createMessage = async (
   }
 };
 
+type ChannelMessageReturnType = {
+  data: {
+    getChannel: {
+      id: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+      creatorId: string;
+      messages: List<MessageType>;
+    };
+  };
+};
 export const getChannelMessages = async (
   channelId: string,
   nextToken: string
-) => {
+): Promise<{
+  messages: ChannelMessageReturnType["data"]["getChannel"]["messages"];
+  channel: Partial<ChannelMessageReturnType["data"]["getChannel"]>;
+}> => {
   try {
     const query = getMessageList({
       // messageLimit: 5,
@@ -46,17 +61,14 @@ export const getChannelMessages = async (
     });
     const messages = (await API.graphql(
       graphqlOperation(query, { id: channelId })
-    )) as {
-      data: {
-        getChannel: {
-          messages: List<MessageType>;
-        };
-      };
+    )) as ChannelMessageReturnType;
+    return {
+      messages: messages.data.getChannel.messages,
+      channel: messages.data.getChannel
     };
-    return messages.data.getChannel.messages;
   } catch (err) {
     console.warn("Failed to get messages ", err);
-    return { items: [], nextToken: "" };
+    return { messages: { items: [], nextToken: "" }, channel: {} };
   }
 };
 export const onCreateMessage = (channelId: string) => {

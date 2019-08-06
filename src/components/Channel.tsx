@@ -11,7 +11,11 @@ import {
   onCreateMessage
 } from "../models/Channel";
 import { getUsername } from "../models/User";
-import { DispatcherContext } from "../state";
+import { DispatcherContext, useAppReducer } from "../state";
+import AppShell from "./AppShell";
+import { NextPageContext } from "next";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 export const Message = ({ message }: { message: MessageType }) => {
   const [username, setUsername] = React.useState("");
@@ -82,6 +86,7 @@ export const Channel = ({
     if (flatlistRef.current === null) return;
     // flatlistRef.current.scrollToEnd();
   }, [shouldScrollDown]);
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   React.useEffect(() => {
     let isMounted = true;
@@ -92,52 +97,58 @@ export const Channel = ({
       //@ts-ignore
       dispatch({ type: "prepend-message", payload: newMessage });
     });
-    getChannelMessages(channelId, "").then(messages => {
+    getChannelMessages(channelId, "").then(({ messages, channel }) => {
       if (!isMounted) return;
       setIsLoading(false);
       dispatch({ type: "append-messages", payload: { channelId, messages } });
+      dispatch({ type: "update-channel", payload: channel });
     });
     () => {
       isMounted = false;
       onCreateListener.unsubscribe();
     };
   }, [channelId]);
+  const isServer = typeof window === "undefined";
   return (
     <View
       style={{
         height: "80%"
       }}
     >
-      <FlatList
-        inverted={true}
-        ref={flatlistRef}
-        ListFooterComponent={() =>
-          isLoading ? (
-            <ActivityIndicator
-              animating={true}
-              color={colors.highlight}
-              style={{ marginTop: 15, marginBottom: 15, height: 30 }}
-            />
-          ) : (
-            <View style={{ height: 30 }}></View>
-          )
-        }
-        keyExtractor={item => item.id}
-        data={messages.items}
-        renderItem={({ item }) => <Message key={item.id} message={item} />}
-        onEndReached={() => {
-          if (messages.nextToken === null) return;
-          setIsLoading(true);
-          getChannelMessages(channelId, messages.nextToken).then(messages => {
-            setIsLoading(false);
-            dispatch({
-              type: "append-messages",
-              payload: { channelId, messages }
-            });
-          });
-        }}
-        onEndReachedThreshold={0.01}
-      />
+      {!isServer && (
+        <FlatList
+          inverted={true}
+          ref={flatlistRef}
+          ListFooterComponent={() =>
+            isLoading ? (
+              <ActivityIndicator
+                animating={true}
+                color={colors.highlight}
+                style={{ marginTop: 15, marginBottom: 15, height: 30 }}
+              />
+            ) : (
+              <View style={{ height: 30 }}></View>
+            )
+          }
+          keyExtractor={item => item.id}
+          data={messages.items}
+          renderItem={({ item }) => <Message key={item.id} message={item} />}
+          onEndReached={() => {
+            if (messages.nextToken === null) return;
+            setIsLoading(true);
+            getChannelMessages(channelId, messages.nextToken).then(
+              ({ messages }) => {
+                setIsLoading(false);
+                dispatch({
+                  type: "append-messages",
+                  payload: { channelId, messages }
+                });
+              }
+            );
+          }}
+          onEndReachedThreshold={0.01}
+        />
+      )}
     </View>
   );
 };
@@ -148,23 +159,21 @@ type ChannelRouteProps = {
   me: State["me"];
 };
 
-export const ChannelRoute = ({
-  channelId,
-  channels,
-  me
-}: ChannelRouteProps) => {
-  const dispatch = React.useContext(DispatcherContext);
+export const ChannelRoute = () => {
+  const router = useRouter();
+  const [state, dispatch] = useAppReducer();
   const [shouldScrollDown, setScrollDown] = React.useState(0);
-  const channelIndex = channels.items.findIndex(
+  const channelId = (router.query && router.query.id) as string;
+  if (!channelId) return <Text> Could not parse channelId from url</Text>;
+  const channelIndex = state.channels.items.findIndex(
     channel => channel.id === channelId
   );
-
   const addMessage = (content: string, dispatch: Dispatcher) => {
     const message = {
       text: content,
       createdAt: `${Date.now()}`,
       id: nanoid(),
-      senderId: me.id,
+      senderId: state.me.id,
       messageChannelId: channelId
     };
     dispatch({
@@ -178,18 +187,23 @@ export const ChannelRoute = ({
     setScrollDown(Date.now());
     createMessage(message);
   };
+
   const messages =
     channelIndex === -1
       ? { items: [], nextToken: "" }
-      : channels.items[channelIndex].messages;
-
+      : state.channels.items[channelIndex].messages;
+  const channel =
+    channelIndex === -1 ? { name: "" } : state.channels.items[channelIndex];
   return (
-    <>
+    <AppShell state={state} dispatch={dispatch}>
+      <Head>
+        <title>Channel {channel.name} </title>
+      </Head>
       <Channel
         messages={messages}
         shouldScrollDown={shouldScrollDown}
         channelId={channelId}
-        me={me}
+        me={state.me}
       />
       <InputZone
         placeholder={"Create a new message"}
@@ -198,6 +212,10 @@ export const ChannelRoute = ({
         }}
         buttonText={"Send message"}
       />
-    </>
+    </AppShell>
   );
 };
+
+// ChannelRoute.getInitialProps = ({ query }: NextPageContext) => {
+//   return { query };
+// };

@@ -88,7 +88,6 @@ export const reducer = (state: State, action: Action) => {
       const channelIndex = state.channels.items.findIndex(
         channel => channel.id === channelId
       );
-      // console.warn("appending messages ", channelIndex, action.payload);
 
       return produce(state, s => {
         if (channelIndex === -1) {
@@ -126,9 +125,14 @@ export const reducer = (state: State, action: Action) => {
         return state;
       }
       return produce(state, s => {
-        s.channels.items[channelIndex].updatedAt = action.payload.updatedAt;
-        s.channels.items[channelIndex].name = action.payload.name;
-        s.channels.items[channelIndex].creatorId = action.payload.creatorId;
+        s.channels.items[channelIndex].id = action.payload.id || "";
+        s.channels.items[channelIndex].createdAt =
+          action.payload.createdAt || "";
+        s.channels.items[channelIndex].updatedAt =
+          action.payload.updatedAt || "";
+        s.channels.items[channelIndex].name = action.payload.name || "";
+        s.channels.items[channelIndex].creatorId =
+          action.payload.creatorId || "";
       });
     }
     case "move-to-front": {
@@ -167,7 +171,7 @@ export function parseJson<T = unknown>(
   }
 }
 
-const STATE_KEY = "my-state-9" + Date.now();
+const STATE_KEY = "my-state-9"; // + Date.now();
 
 export const getInitialState = () => {
   const isServer = typeof window === "undefined";
@@ -193,3 +197,7 @@ export const withCache = (reducer: React.Reducer<State, Action>) => {
 };
 
 export const DispatcherContext = React.createContext<Dispatcher>(() => {});
+
+export const useAppReducer = () => {
+  return React.useReducer(withCache(reducer), getInitialState());
+};

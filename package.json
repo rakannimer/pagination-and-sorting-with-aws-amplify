@@ -7,6 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "export": "next build && next export -o build/",
     "parcel": "npx parcel src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

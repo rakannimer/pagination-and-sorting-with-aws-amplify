@@ -8,7 +8,7 @@ import {
   ViewStyle,
   TextStyle
 } from "react-native-web";
-import { withRouter } from "react-router-dom";
+import { useRouter } from "next/router";
 
 import { colors } from "../theme";
 
@@ -17,18 +17,19 @@ const Link: React.ComponentType<LinkProps> = props => (
   <TouchableOpacity {...props} />
 );
 
-export const Header = withRouter(props => {
+export const Header = () => {
+  const router = useRouter();
   return (
     <View style={styles.header}>
       <Link
         style={[
           styles.headerLink,
-          props.history.location.pathname === "/me" && styles.headerSelected
+          router.pathname === "/me" && styles.headerSelected
         ]}
         href="/me"
         accessible={true}
         onPress={() => {
-          props.history.push("/me");
+          router.push("/me");
         }}
         accessibilityRole="link"
       >
@@ -38,14 +39,13 @@ export const Header = withRouter(props => {
       <Link
         style={[
           styles.headerLink,
-          (props.history.location.pathname === "/channels" ||
-            props.history.location.pathname === "/") &&
+          (router.pathname === "/channels" || router.pathname === "/") &&
             styles.headerSelected
         ]}
         href="/channels"
         accessible={true}
         onPress={() => {
-          props.history.push("/channels");
+          router.push("/channels");
         }}
         accessibilityRole="link"
       >
@@ -53,7 +53,7 @@ export const Header = withRouter(props => {
       </Link>
     </View>
   );
-});
+};
 
 const styles: { [key: string]: StyleProp<ViewStyle | TextStyle> } = {
   container: {

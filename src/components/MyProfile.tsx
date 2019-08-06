@@ -5,6 +5,9 @@ import { upsertUser } from "../models/User";
 import { colors } from "../theme";
 import { State } from "../types";
 import { ImportantText, NormalText, StaticSpacer } from "./utils";
+import AppShell from "./AppShell";
+import { useAppReducer } from "../state";
+import Head from "next/head";
 
 const textInputStyle = {
   backgroundColor: "white",
@@ -36,6 +39,9 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
   };
   return (
     <>
+      <Head>
+        <title>{name ? `${name}'s Profile` : "My Profile"}</title>
+      </Head>
       <View
         style={{
           padding: 20,
@@ -43,7 +49,6 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
         }}
       >
         <ImportantText accessibilityRole={"header"}>My profile</ImportantText>
-
         <StaticSpacer />
         <NormalText>Username</NormalText>
         <StaticSpacer />
@@ -110,5 +115,19 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
         </TouchableOpacity>
       </View>
     </>
+  );
+};
+
+export const MyProfileRoute = () => {
+  const [state, dispatch] = useAppReducer();
+  return (
+    <AppShell state={state} dispatch={dispatch}>
+      <MyProfile
+        me={state.me}
+        onSubmit={me => {
+          dispatch({ type: "set-my-info", payload: me });
+        }}
+      />
+    </AppShell>
   );
 };

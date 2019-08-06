@@ -58,7 +58,7 @@ export type Action =
     }
   | {
       type: "update-channel";
-      payload: Omit<ChannelType, "messages">;
+      payload: Partial<Omit<ChannelType, "messages">>;
     }
   | {
       type: "append-message";

@@ -1,2 +1,2 @@
-import App from "../src/index";
-export default App;
+import { ChannelsRoute } from "../src/components/Channels";
+export default ChannelsRoute;

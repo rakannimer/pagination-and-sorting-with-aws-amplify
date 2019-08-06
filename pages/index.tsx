@@ -1,2 +1,2 @@
-import App from "../src/index";
-export default App;
+import Channels from "./channels";
+export default Channels;

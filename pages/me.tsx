@@ -1,2 +1,2 @@
-import App from "../src/index";
-export default App;
+import { MyProfileRoute } from "../src/components/MyProfile";
+export default MyProfileRoute;

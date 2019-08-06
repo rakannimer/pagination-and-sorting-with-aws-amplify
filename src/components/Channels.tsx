@@ -1,3 +1,5 @@
+import Head from "next/head";
+import { useRouter } from "next/router";
 import * as React from "react";
 import {
   ActivityIndicator,
@@ -6,18 +8,18 @@ import {
   TouchableOpacity,
   View
 } from "react-native-web";
-import { __RouterContext } from "react-router";
 
 import { getActions } from "../actions";
+import { onCreateMessage } from "../models/Channel";
 import {
   getChannels,
   onCreateChannel,
   onUpdateChannel
 } from "../models/Channels";
-import { onCreateMessage } from "../models/Channel";
-import { DispatcherContext } from "../state";
+import { DispatcherContext, useAppReducer } from "../state";
 import { colors } from "../theme";
 import { ChannelType, State } from "../types";
+import AppShell from "./AppShell";
 import { InputZone } from "./InputZone";
 
 type Props = { channel: ChannelType; me: State["me"] };
@@ -29,7 +31,7 @@ const ChannelCard = (props: Props) => {
     me: { id: myId }
   } = props;
   const { messages = { items: [] }, id: channelId } = channel;
-  const router = React.useContext(__RouterContext);
+  const router = useRouter();
   const lastMessage = messages.items.length > 0 ? messages.items[0].text : "";
   React.useEffect(() => {
     const subscription = onCreateMessage(channelId).subscribe(
@@ -83,13 +85,16 @@ const ChannelCard = (props: Props) => {
         href: `/channel/${1}`
       }}
       onPress={() => {
-        router.history.push(`/channel/${channel.id}`);
+        router.push(`/channel?id=${channel.id}`);
       }}
     >
       <View style={{ flex: 10 }}>
-        <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
-          {channel.name}
-        </Text>
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <Text style={{ color: "white" }}>Channel name: </Text>
+          <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
+            {channel.name}
+          </Text>
+        </View>
         <Text
           style={{
             color: "white",
@@ -98,9 +103,9 @@ const ChannelCard = (props: Props) => {
             marginBottom: 5
           }}
         >
-          Last updated on {new Date(Number(channel.updatedAt)).toLocaleString()}
+          Last updated: {new Date(Number(channel.updatedAt)).toLocaleString()}
         </Text>
-        <Text style={{ color: "white", marginTop: 5 }}>{lastMessage}</Text>
+        <Text style={{ color: "white", marginTop: 15 }}>{lastMessage}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -158,8 +163,8 @@ export const Channels = ({
           payload: { channelId: channel.id }
         });
       },
-      () => {
-        console.error("Error onUpdateChannelSubscription");
+      err => {
+        console.error("Error onUpdateChannelSubscription", err);
       }
     );
 
@@ -186,28 +191,28 @@ export const Channels = ({
         style={{
           height: "80%"
         }}
-        ListHeaderComponent={() =>
-          isLoadingPosition === "top" ? (
-            <ActivityIndicator
-              style={{ height: 30 }}
-              animating={true}
-              color={colors.highlight}
-            />
-          ) : (
-            <View style={{ height: 30 }}></View>
-          )
-        }
-        ListFooterComponent={() =>
-          isLoadingPosition === "bottom" ? (
-            <ActivityIndicator
-              style={{ marginTop: 15, height: 30 }}
-              animating={true}
-              color={colors.highlight}
-            />
-          ) : (
-            <View style={{ height: 30 }}></View>
-          )
-        }
+        ListHeaderComponent={() => (
+          <View style={{ height: 30 }}>
+            {isLoadingPosition === "top" && (
+              <ActivityIndicator
+                style={{ height: 30 }}
+                animating={true}
+                color={colors.highlight}
+              />
+            )}
+          </View>
+        )}
+        ListFooterComponent={() => (
+          <View style={{ height: 30 }}>
+            {isLoadingPosition === "bottom" && (
+              <ActivityIndicator
+                style={{ height: 30 }}
+                animating={true}
+                color={colors.highlight}
+              />
+            )}
+          </View>
+        )}
         ref={flatlistRef}
         keyExtractor={item => {
           return item.id;
@@ -230,25 +235,24 @@ export const Channels = ({
   );
 };
 
-export const ChannelsRoute = ({
-  channels,
-  me
-}: {
-  channels: State["channels"];
-  me: State["me"];
-}) => {
-  const dispatch = React.useContext(DispatcherContext);
+export const ChannelsRoute = () => {
+  const [state, dispatch] = useAppReducer();
   const actions = getActions(dispatch);
   return (
     <>
-      <Channels channels={channels} me={me} />
-      <InputZone
-        placeholder={"Create a new channel"}
-        onSubmit={content => {
-          actions.addChannel(content, me.id);
-        }}
-        buttonText={"Create channel"}
-      />
+      <Head>
+        <title>Channels</title>
+      </Head>
+      <AppShell state={state} dispatch={dispatch}>
+        <Channels channels={state.channels} me={state.me} />
+        <InputZone
+          placeholder={"Create a new channel"}
+          onSubmit={content => {
+            actions.addChannel(content, state.me.id);
+          }}
+          buttonText={"Create channel"}
+        />
+      </AppShell>
     </>
   );
 };
