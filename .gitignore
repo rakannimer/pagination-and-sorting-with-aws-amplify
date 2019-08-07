@@ -27,6 +27,6 @@ amplify/backend/awscloudformation
 build/
 dist/
 node_modules/
-src/aws-exports.js
+# src/aws-exports.js
 awsconfiguration.json
 .cache
