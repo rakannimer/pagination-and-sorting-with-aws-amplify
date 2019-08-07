@@ -10,9 +10,15 @@ The app consists of 3 routes:
 
 - `me` A form that a user can fill to share more about themselves.
 
+### Clone the repo
+
+```sh
+git clone https://github.com/rakannimer/pagination-and-sorting-with-aws-amplify
+```
+
 ### Run locally
 
-```
+```sh
 npm install
 npm run dev
 # or
@@ -22,8 +28,19 @@ yarn dev
 
 ### Deploy your own
 
-```
+[![amplifybutton](https://oneclick.amplifyapp.com/button.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/rakannimer/pagination-and-sorting-with-aws-amplify)
+
+### From the amplify cli
+
+```sh
+rm src/aws-exports.js
+rm -rf amplify
+
 amplify init
+
+amplify add api
+
+# When prompted for a schema answer : ./schema.graphql
 
 amplify push
 ```
