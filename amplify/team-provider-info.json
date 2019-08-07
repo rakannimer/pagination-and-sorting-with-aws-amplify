@@ -1,14 +1,14 @@
 {
     "prod": {
         "awscloudformation": {
-            "AuthRoleName": "paginationandsorting-prod-20190807111233-authRole",
-            "UnauthRoleArn": "arn:aws:iam::534592782540:role/paginationandsorting-prod-20190807111233-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::534592782540:role/paginationandsorting-prod-20190807111233-authRole",
+            "AuthRoleName": "pagnsor-prod-20190807113236-authRole",
+            "UnauthRoleArn": "arn:aws:iam::534592782540:role/pagnsor-prod-20190807113236-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::534592782540:role/pagnsor-prod-20190807113236-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "paginationandsorting-prod-20190807111233-deployment",
-            "UnauthRoleName": "paginationandsorting-prod-20190807111233-unauthRole",
-            "StackName": "paginationandsorting-prod-20190807111233",
-            "StackId": "arn:aws:cloudformation:us-east-1:534592782540:stack/paginationandsorting-prod-20190807111233/1ced4d50-b8eb-11e9-8adb-0a16600979f0"
+            "DeploymentBucketName": "pagnsor-prod-20190807113236-deployment",
+            "UnauthRoleName": "pagnsor-prod-20190807113236-unauthRole",
+            "StackName": "pagnsor-prod-20190807113236",
+            "StackId": "arn:aws:cloudformation:us-east-1:534592782540:stack/pagnsor-prod-20190807113236/e99fe180-b8ed-11e9-b42f-0a55ab548dc0"
         }
     }
 }

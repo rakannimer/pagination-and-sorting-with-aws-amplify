@@ -167,6 +167,7 @@ export type CreateMessageMutation = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -198,6 +199,7 @@ export type UpdateMessageMutation = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -229,6 +231,7 @@ export type DeleteMessageMutation = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -252,6 +255,7 @@ export type CreateChannelMutation = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -287,6 +291,7 @@ export type UpdateChannelMutation = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -322,6 +327,7 @@ export type DeleteChannelMutation = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -479,6 +485,7 @@ export type GetMessageQuery = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -506,6 +513,7 @@ export type ListMessagesQuery = {
         creatorId: string | null,
         channelChannelListId: string | null,
       } | null,
+      messageChannelId: string | null,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -531,6 +539,7 @@ export type GetChannelQuery = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -675,6 +684,7 @@ export type OnCreateChannelInListSubscription = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -710,6 +720,7 @@ export type OnUpdateChannelInListSubscription = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -753,6 +764,7 @@ export type OnCreateMessageInChannelSubscription = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -780,6 +792,7 @@ export type OnCreateMessageSubscription = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -807,6 +820,7 @@ export type OnUpdateMessageSubscription = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -834,6 +848,7 @@ export type OnDeleteMessageSubscription = {
       } | null,
       channelChannelListId: string | null,
     } | null,
+    messageChannelId: string | null,
   } | null,
 };
 
@@ -853,6 +868,7 @@ export type OnCreateChannelSubscription = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -884,6 +900,7 @@ export type OnUpdateChannelSubscription = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
@@ -915,6 +932,7 @@ export type OnDeleteChannelSubscription = {
         text: string,
         createdAt: string | null,
         senderId: string | null,
+        messageChannelId: string | null,
       } | null > | null,
       nextToken: string | null,
     } | null,
