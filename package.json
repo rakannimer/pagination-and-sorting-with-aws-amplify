@@ -1,49 +1,29 @@
 {
   "name": "pagination-and-sorting",
-  "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "graphiql": "npx parcel ./graphiql/index.html -p 1235",
     "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "export": "next build && next export -o build/ && cp static/robots.txt build/robots.txt",
-    "parcel": "npx parcel src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@aws-amplify/cli": "^1.10.0",
-    "@types/lodash.memoize": "^4.1.6",
-    "@types/memoize-one": "^4.1.1",
-    "@types/nanoid": "^2.0.0",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.5",
-    "@types/react-native-web": "npm:@types/react-native@^0.60.3",
-    "@types/react-router": "^5.0.3",
-    "@types/react-router-dom": "^4.3.4",
-    "typescript": "^3.5.3"
+    "build": "next build && next export -o build/",
+    "start": "next start"
   },
   "dependencies": {
-    "aws-amplify": "^1.1.33",
-    "immer": "^3.1.3",
+    "aws-amplify": "^1.1.36",
+    "immer": "^3.2.0",
     "lodash.memoize": "^4.1.2",
     "nanoid": "^2.0.3",
     "next": "^9.0.3",
     "next-offline": "^4.0.3",
-    "react": ">=16.5.1",
-    "react-dom": ">=16.5.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-native-web": "^0.11.5"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rakannimer/pagination-and-sorting-aws-amplify.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rakannimer/pagination-and-sorting-aws-amplify/issues"
-  },
-  "homepage": "https://github.com/rakannimer/pagination-and-sorting-aws-amplify#readme",
-  "description": ""
+  "devDependencies": {
+    "@aws-amplify/cli": "^1.10.0",
+    "@types/lodash.memoize": "^4.1.6",
+    "@types/nanoid": "^2.0.0",
+    "@types/node": "^12.7.0",
+    "@types/react": "^16.8.24",
+    "@types/react-router": "^5.0.3",
+    "@types/react-router-dom": "^4.3.4",
+    "typescript": "^3.5.3"
+  }
 }
