@@ -1,0 +1,44 @@
+type Message @model {
+  id: ID!
+  text: String!
+  createdAt: String
+  senderId: String
+  channel: Channel @connection(name: "SortedMessages")
+  messageChannelId: String
+}
+
+type Channel @model {
+  id: ID!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+  creatorId: String
+  messages: [Message]
+    @connection(name: "SortedMessages", sortField: "createdAt")
+  channelList: ChannelList @connection(name: "SortedChannels")
+  channelChannelListId: String
+}
+
+type ChannelList @model {
+  id: ID!
+  channels: [Channel]
+    @connection(name: "SortedChannels", sortField: "updatedAt")
+}
+
+type User @model {
+  id: ID!
+  name: String
+  bio: String
+  url: String
+}
+
+type Subscription {
+  onCreateChannelInList(channelChannelListId: ID!): Channel
+    @aws_subscribe(mutations: ["createChannel"])
+
+  onUpdateChannelInList(channelChannelListId: ID!): Channel
+    @aws_subscribe(mutations: ["updateChannel"])
+
+  onCreateMessageInChannel(messageChannelId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
+}
