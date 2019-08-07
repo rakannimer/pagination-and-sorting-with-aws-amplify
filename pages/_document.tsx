@@ -58,6 +58,10 @@ export default class MyDocument extends Document {
           />
           <meta name="msapplication-TileColor" content="black" />
           <meta name="theme-color" content="black" />
+          <meta
+            name="Description"
+            content="Public group chat room built with AWS Amplify."
+          />
         </Head>
         <body style={{ height: "100%", overflow: "hidden" }}>
           <Main />
