@@ -47,8 +47,8 @@ const ChannelCard = (props: Props) => {
         //@ts-ignore
         dispatch({ type: "prepend-message", payload: newMessage });
       },
-      () => {
-        console.error("Error onCreateMessage");
+      err => {
+        console.error("Error onCreateMessage ", err);
       }
     );
     return () => {
@@ -126,6 +126,7 @@ export const Channels = ({
   React.useEffect(() => {
     let isMounted = true;
     setIsLoadingPosition("top");
+    onCreateChannel();
     const onCreateSubscription = onCreateChannel().subscribe(
       response => {
         const channel = response.value.data.onCreateChannelInList;

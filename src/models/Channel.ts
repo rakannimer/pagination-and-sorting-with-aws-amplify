@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from "aws-amplify";
+import { API, PubSub, graphqlOperation } from "aws-amplify";
 
 import { getMessageList } from "./custom-queries";
 import {
@@ -15,6 +15,10 @@ import {
   OnCreateMessageInChannelSubscription
 } from "../API";
 import { MessageType, List, Listener } from "../types";
+import config from "../aws-exports.js";
+
+API.configure(config);
+PubSub.configure(config);
 
 export const createMessage = async (
   message: CreateMessageInput & { messageChannelId: string }

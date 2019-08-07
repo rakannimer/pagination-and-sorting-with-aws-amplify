@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, PubSub } from "aws-amplify";
 import memoize from "lodash.memoize";
 
 import {
@@ -12,7 +12,7 @@ import {
 } from "../graphql/mutations";
 import {
   onCreateChannelInList,
-  onUpdateChannelInList
+  onCreateMessage
 } from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, MessageType } from "../types";
 
@@ -20,6 +20,7 @@ import config from "../aws-exports.js";
 import { getChannelList as getChannelListQuery } from "./custom-queries";
 
 API.configure(config);
+PubSub.configure(config);
 
 type CustomChannelList = {
   data: {
@@ -90,7 +91,7 @@ export const onCreateChannel = (channelListId: string = "global") => {
 
 export const onUpdateChannel = (channelListId: string = "global") => {
   const listener: Listener<OnUpdateChannelInListSubscription> = API.graphql(
-    graphqlOperation(onUpdateChannelInList, {
+    graphqlOperation(onCreateMessage, {
       channelChannelListId: channelListId
     })
   );

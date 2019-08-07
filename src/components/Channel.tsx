@@ -131,7 +131,7 @@ export const Channel = ({
                 style={{ marginTop: 15, marginBottom: 15, height: 30 }}
               />
             ) : (
-              <View style={{ height: 30 }}></View>
+              <View style={{ height: 30 }} />
             )
           }
           keyExtractor={item => item.id}
