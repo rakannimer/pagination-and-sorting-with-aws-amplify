@@ -1,0 +1,14 @@
+{
+    "prod": {
+        "awscloudformation": {
+            "AuthRoleName": "paginationandsorting-prod-20190807111233-authRole",
+            "UnauthRoleArn": "arn:aws:iam::534592782540:role/paginationandsorting-prod-20190807111233-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::534592782540:role/paginationandsorting-prod-20190807111233-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "paginationandsorting-prod-20190807111233-deployment",
+            "UnauthRoleName": "paginationandsorting-prod-20190807111233-unauthRole",
+            "StackName": "paginationandsorting-prod-20190807111233",
+            "StackId": "arn:aws:cloudformation:us-east-1:534592782540:stack/paginationandsorting-prod-20190807111233/1ced4d50-b8eb-11e9-8adb-0a16600979f0"
+        }
+    }
+}
