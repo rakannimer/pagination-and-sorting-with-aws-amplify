@@ -64,7 +64,7 @@ export const getChannels = memoize(
 
     return channelList.data.getChannelList.channels;
   },
-  n => n
+  n => (n ? n : Math.random())
 );
 
 export const createChannel = async (channel: ChannelType) => {

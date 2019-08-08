@@ -36,7 +36,15 @@ export const createUserIfNotExists = async (userInput: CreateUserInput) => {
   const userQueryResult = await getUser(userId);
   if (userQueryResult.data.getUser === null) {
     try {
-      await API.graphql(graphqlOperation(createUser, { input: userInput }));
+      const userInputWithoutEmptyFields = {
+        id: userInput.id,
+        bio: userInput.bio === "" ? undefined : userInput.bio,
+        url: userInput.url === "" ? undefined : userInput.url,
+        name: userInput.name === "" ? undefined : userInput.name
+      };
+      await API.graphql(
+        graphqlOperation(createUser, { input: userInputWithoutEmptyFields })
+      );
     } catch (err) {
       console.warn("Failed to create user ", err);
     }
