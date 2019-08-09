@@ -14,7 +14,7 @@ import {
   CreateMessageInput,
   OnCreateMessageInChannelSubscription
 } from "../API";
-import { MessageType, List, Listener } from "../types";
+import { MessageType, List, Listener, ChannelType } from "../types";
 import config from "../aws-exports.js";
 
 API.configure(config);
@@ -55,11 +55,14 @@ export const getChannelMessages = async (
   channelId: string | undefined,
   nextToken: string
 ): Promise<{
-  messages: ChannelMessageReturnType["data"]["getChannel"]["messages"];
-  channel: Partial<ChannelMessageReturnType["data"]["getChannel"]>;
+  messages: List<MessageType>;
+  channel: ChannelType;
 }> => {
   if (!channelId) {
-    return { messages: { items: [], nextToken: "" }, channel: {} };
+    return {
+      messages: { items: [], nextToken: "" },
+      channel: {} as ChannelType
+    };
   }
   try {
     const query = getMessageList({
@@ -69,13 +72,17 @@ export const getChannelMessages = async (
     const messages = (await API.graphql(
       graphqlOperation(query, { id: channelId })
     )) as ChannelMessageReturnType;
+    const channel = messages.data.getChannel;
     return {
       messages: messages.data.getChannel.messages,
-      channel: messages.data.getChannel
+      channel
     };
   } catch (err) {
     console.warn("Failed to get messages ", err);
-    return { messages: { items: [], nextToken: "" }, channel: {} };
+    return {
+      messages: { items: [], nextToken: "" },
+      channel: {} as ChannelType
+    };
   }
 };
 export const onCreateMessage = (channelId: string) => {

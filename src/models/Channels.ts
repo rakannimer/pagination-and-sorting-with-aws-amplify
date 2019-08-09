@@ -10,14 +10,14 @@ import {
   createChannelList,
   createChannel as createChannelQuery
 } from "../graphql/mutations";
-import {
-  onCreateChannelInList,
-  onUpdateChannelInList
-} from "../graphql/subscriptions";
+import { onCreateChannelInList } from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, MessageType } from "../types";
 
 import config from "../aws-exports.js";
-import { getChannelList as getChannelListQuery } from "./custom-queries";
+import {
+  getChannelList as getChannelListQuery,
+  onUpdateChannelInList
+} from "./custom-queries";
 
 API.configure(config);
 PubSub.configure(config);

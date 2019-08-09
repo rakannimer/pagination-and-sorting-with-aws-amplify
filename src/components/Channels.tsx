@@ -81,7 +81,7 @@ const ChannelCard = (props: Props) => {
       accessibilityRole="link"
       {...{
         // Being dishonest with typescript because of the lack of react-native-web types
-        href: `/channel?id=${1}`
+        href: `/channel?id=${channel.id}`
       }}
       onPress={() => {
         router.push(`/channel?id=${channel.id}`);
@@ -151,7 +151,9 @@ export const Channels = ({
 
     const onUpdateChannelSubscription = onUpdateChannel().subscribe(
       response => {
+        console.warn("Channel updated ", response);
         const channel = response.value.data.onUpdateChannelInList;
+        console.warn("Channel updated ", channel.messages.items);
         if (channel === null) return;
         dispatch({
           type: "update-channel",
@@ -159,7 +161,7 @@ export const Channels = ({
         });
         dispatch({
           type: "move-to-front",
-          payload: { channelId: channel.id }
+          payload: { ...channel, creatorId: channel.creatorId || "" }
         });
       },
       err => {

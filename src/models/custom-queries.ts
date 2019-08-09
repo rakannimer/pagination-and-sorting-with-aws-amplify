@@ -93,3 +93,31 @@ export const getUsername = gql`
     }
   }
 `;
+
+export const onUpdateChannelInList = `subscription OnUpdateChannelInList($channelChannelListId: ID!) {
+  onUpdateChannelInList(channelChannelListId: $channelChannelListId) {
+    id
+    name
+    createdAt
+    updatedAt
+    creatorId
+    messages(limit:1, sortDirection: DESC) {
+      items {
+        id
+        text
+        createdAt
+        senderId
+        messageChannelId
+      }
+      nextToken
+    }
+    channelList {
+      id
+      channels {
+        nextToken
+      }
+    }
+    channelChannelListId
+  }
+}
+`;

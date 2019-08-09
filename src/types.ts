@@ -43,7 +43,7 @@ export type Action =
       payload: MessageType;
     }
   | { type: "set-my-info"; payload: State["me"] }
-  | { type: "move-to-front"; payload: { channelId: string } }
+  | { type: "move-to-front"; payload: ChannelType }
   | {
       type: "append-channels";
       payload: State["channels"];
@@ -58,7 +58,7 @@ export type Action =
     }
   | {
       type: "update-channel";
-      payload: Partial<Omit<ChannelType, "messages">>;
+      payload: ChannelType;
     }
   | {
       type: "append-message";

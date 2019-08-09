@@ -182,9 +182,8 @@ export const ChannelRoute = () => {
     });
     dispatch({
       type: "move-to-front",
-      payload: { channelId }
+      payload: state.channels.items[channelIndex]
     });
-    // setScrollDown(Date.now());
     createMessage(message);
   };
 

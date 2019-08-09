@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Action, State, Dispatcher } from "./types";
 
-const STATE_KEY = "my-state-23" + Date.now();
+const STATE_KEY = "my-state-25" + Date.now();
 
 const addOrUpdate = <T extends { id: string }>(
   list: T[],
@@ -37,7 +37,12 @@ export const reducer = (state: State, action: Action) => {
     }
     case "prepend-channel": {
       return produce(state, s => {
-        s.channels.items.unshift(action.payload);
+        addOrUpdate(
+          s.channels.items,
+          action.payload.id,
+          action.payload,
+          "unshift"
+        );
       });
     }
     case "set-channels": {
@@ -50,7 +55,7 @@ export const reducer = (state: State, action: Action) => {
         const nextToken = action.payload.nextToken;
         s.channels.nextToken = nextToken;
         for (let channel of channels) {
-          addOrUpdate(s.channels.items, channel.id, channel, "push");
+          addOrUpdate(s.channels.items, channel.id, channel, "unshift");
         }
       });
     }
@@ -81,7 +86,12 @@ export const reducer = (state: State, action: Action) => {
       );
       if (channelIndex === -1) return state;
       return produce(state, s => {
-        s.channels.items[channelIndex].messages.items.unshift(action.payload);
+        addOrUpdate(
+          s.channels.items[channelIndex].messages.items,
+          action.payload.id,
+          action.payload,
+          "unshift"
+        );
       });
     }
     case "append-messages": {
@@ -123,10 +133,12 @@ export const reducer = (state: State, action: Action) => {
       const channelIndex = state.channels.items.findIndex(
         v => v.id === action.payload.id
       );
-      if (channelIndex === -1) {
-        return state;
-      }
+
       return produce(state, s => {
+        if (channelIndex === -1) {
+          s.channels.items.unshift(action.payload);
+          return;
+        }
         s.channels.items[channelIndex].id = action.payload.id || "";
         s.channels.items[channelIndex].createdAt =
           action.payload.createdAt || "";
@@ -139,12 +151,14 @@ export const reducer = (state: State, action: Action) => {
     }
     case "move-to-front": {
       const channelIndex = state.channels.items.findIndex(
-        v => v.id === action.payload.channelId
+        v => v.id === action.payload.id
       );
-      if (channelIndex === -1) {
-        return state;
-      }
+
       return produce(state, s => {
+        if (channelIndex === -1) {
+          s.channels.items.unshift(action.payload);
+          return;
+        }
         const [channel] = s.channels.items.splice(channelIndex, 1);
         s.channels.items.unshift(channel);
       });
@@ -178,26 +192,19 @@ export const getInitialState = () => {
   if (isServer) {
     return { me: { id: "" }, channels: { items: [], nextToken: "" } };
   }
+  const userId = localStorage.getItem("user-id") || nanoid();
   const state = parseJson<State>(localStorage.getItem(STATE_KEY), {
     me: {
-      id: localStorage.getItem("user-id") || nanoid()
+      id: userId
     },
     channels: { items: [], nextToken: "" }
   });
-  localStorage.setItem("user-id", state.me.id);
+  localStorage.setItem("user-id", userId);
   return state;
-};
-
-export const withCache = (reducer: React.Reducer<State, Action>) => {
-  return (state: State, action: Action) => {
-    const newState = reducer(state, action);
-    localStorage.setItem(STATE_KEY, JSON.stringify(newState));
-    return newState;
-  };
 };
 
 export const DispatcherContext = React.createContext<Dispatcher>(() => {});
 
 export const useAppReducer = () => {
-  return React.useReducer(withCache(reducer), getInitialState());
+  return React.useReducer(reducer, getInitialState());
 };
