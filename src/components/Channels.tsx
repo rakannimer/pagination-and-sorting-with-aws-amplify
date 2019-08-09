@@ -105,7 +105,7 @@ const ChannelCard = (props: Props) => {
               <Text
                 style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}
               >
-                {channel.name} {inView ? "IN VIEW" : "NOT IN VIEW"}
+                {channel.name}
               </Text>
             </View>
             <Text
