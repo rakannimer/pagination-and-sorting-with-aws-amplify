@@ -151,9 +151,7 @@ export const Channels = ({
 
     const onUpdateChannelSubscription = onUpdateChannel().subscribe(
       response => {
-        console.warn("Channel updated ", response);
         const channel = response.value.data.onUpdateChannelInList;
-        console.warn("Channel updated ", channel.messages.items);
         if (channel === null) return;
         dispatch({
           type: "update-channel",

@@ -1,10 +1,7 @@
 import { API, PubSub, graphqlOperation } from "aws-amplify";
 
-import { getMessageList } from "./custom-queries";
-import {
-  createMessage as createMessageQuery,
-  updateChannel
-} from "../graphql/mutations";
+import { getMessageList, updateChannel } from "./custom-queries";
+import { createMessage as createMessageQuery } from "../graphql/mutations";
 import {
   onCreateMessageInChannel,
   onCreateMessage as onCreateMessageQuery

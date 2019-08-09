@@ -10,14 +10,14 @@ import {
   createChannelList,
   createChannel as createChannelQuery
 } from "../graphql/mutations";
-import { onCreateChannelInList } from "../graphql/subscriptions";
+import {
+  onCreateChannelInList,
+  onUpdateChannelInList
+} from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, MessageType } from "../types";
 
 import config from "../aws-exports.js";
-import {
-  getChannelList as getChannelListQuery,
-  onUpdateChannelInList
-} from "./custom-queries";
+import { getChannelList as getChannelListQuery } from "./custom-queries";
 
 API.configure(config);
 PubSub.configure(config);
@@ -64,7 +64,8 @@ export const getChannels = memoize(
 
     return channelList.data.getChannelList.channels;
   },
-  n => (n ? n : Math.random())
+  // Only memoize when a next token is provided
+  n => (n ? n : Date.now())
 );
 
 export const createChannel = async (channel: ChannelType) => {
