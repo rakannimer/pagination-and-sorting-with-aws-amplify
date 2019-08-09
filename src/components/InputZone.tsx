@@ -16,10 +16,10 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
     onSubmit(value);
     setValue("");
   };
-  React.useEffect(() => {
-    if (textinputRef.current === null) return;
-    if (value === "") textinputRef.current.focus();
-  }, [value]);
+  // React.useEffect(() => {
+  //   if (textinputRef.current === null) return;
+  //   if (value === "") textinputRef.current.focus();
+  // }, [value]);
   const isSubmittable = value !== "";
   return (
     <View
