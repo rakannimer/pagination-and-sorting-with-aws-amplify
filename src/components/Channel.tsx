@@ -3,6 +3,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native-web";
+import { Animated } from "react-animated-css";
+import { useInView } from "react-intersection-observer";
 
 import {
   createMessage,
@@ -32,6 +34,10 @@ export const Message = ({ message }: { message: MessageType }) => {
       isMounted = false;
     };
   }, []);
+  const [ref, inView] = useInView({
+    threshold: 0,
+    triggerOnce: true
+  });
   return (
     <View
       style={{
@@ -55,15 +61,25 @@ export const Message = ({ message }: { message: MessageType }) => {
         elevation: 5
       }}
     >
-      <View style={{ flex: 10 }}>
-        <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
-          {message.text}
-        </Text>
-        <Text style={{ color: "white" }}>Sent by {username}</Text>
-        <Text style={{ color: "white" }}>
-          Created at: {new Date(Number(message.createdAt)).toLocaleString()}
-        </Text>
-      </View>
+      <div ref={ref}>
+        <Animated
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          isVisible={inView}
+        >
+          <View style={{ flex: 10 }}>
+            <Text
+              style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}
+            >
+              {message.text}
+            </Text>
+            <Text style={{ color: "white" }}>Sent by {username}</Text>
+            <Text style={{ color: "white" }}>
+              Created at: {new Date(Number(message.createdAt)).toLocaleString()}
+            </Text>
+          </View>
+        </Animated>
+      </div>
     </View>
   );
 };

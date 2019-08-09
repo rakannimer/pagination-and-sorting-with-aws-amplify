@@ -14,7 +14,9 @@
     "next": "^9.0.3",
     "next-offline": "^4.0.3",
     "react": "^16.8.6",
+    "react-animated-css": "^1.2.1",
     "react-dom": "^16.8.6",
+    "react-intersection-observer": "^8.24.1",
     "react-native-web": "^0.11.5"
   },
   "devDependencies": {

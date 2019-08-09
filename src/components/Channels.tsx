@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   View
 } from "react-native-web";
+import { Animated } from "react-animated-css";
+import { useInView } from "react-intersection-observer";
 
 import { getActions } from "../actions";
 import { onCreateMessage } from "../models/Channel";
@@ -54,6 +56,10 @@ const ChannelCard = (props: Props) => {
       subscription.unsubscribe();
     };
   }, [channelId]);
+  const [ref, inView] = useInView({
+    threshold: 0,
+    triggerOnce: true
+  });
   return (
     <TouchableOpacity
       style={{
@@ -87,25 +93,36 @@ const ChannelCard = (props: Props) => {
         router.push(`/channel?id=${channel.id}`);
       }}
     >
-      <View>
-        <View style={{ display: "flex", flexDirection: "row" }}>
-          <Text style={{ color: "white" }}>Channel name: </Text>
-          <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
-            {channel.name}
-          </Text>
-        </View>
-        <Text
-          style={{
-            color: "white",
-            // fontWeight: "bold",
-            marginTop: 5,
-            marginBottom: 5
-          }}
+      <div ref={ref}>
+        <Animated
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          isVisible={inView}
         >
-          Last updated: {new Date(Number(channel.updatedAt)).toLocaleString()}
-        </Text>
-        <Text style={{ color: "white", marginTop: 15 }}>{lastMessage}</Text>
-      </View>
+          <View>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <Text style={{ color: "white" }}>Channel name: </Text>
+              <Text
+                style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}
+              >
+                {channel.name} {inView ? "IN VIEW" : "NOT IN VIEW"}
+              </Text>
+            </View>
+            <Text
+              style={{
+                color: "white",
+                // fontWeight: "bold",
+                marginTop: 5,
+                marginBottom: 5
+              }}
+            >
+              Last updated:{" "}
+              {new Date(Number(channel.updatedAt)).toLocaleString()}
+            </Text>
+            <Text style={{ color: "white", marginTop: 15 }}>{lastMessage}</Text>
+          </View>
+        </Animated>
+      </div>
     </TouchableOpacity>
   );
 };

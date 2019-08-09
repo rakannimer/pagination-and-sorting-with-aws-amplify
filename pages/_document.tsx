@@ -62,6 +62,10 @@ export default class MyDocument extends Document {
             name="Description"
             content="Public group chat room built with AWS Amplify."
           />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
+          />
         </Head>
         <body style={{ height: "100%", overflow: "hidden" }}>
           <Main />
