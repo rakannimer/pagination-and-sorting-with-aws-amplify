@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Action, State, Dispatcher } from "./types";
 
-const STATE_KEY = "my-state-22"; // + Date.now();
+const STATE_KEY = "my-state-23"; // + Date.now();
 
 const addOrUpdate = <T extends { id: string }>(
   list: T[],

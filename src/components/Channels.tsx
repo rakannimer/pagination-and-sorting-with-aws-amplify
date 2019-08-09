@@ -44,7 +44,6 @@ const ChannelCard = (props: Props) => {
         if (senderId === myId) {
           return;
         }
-        //@ts-ignore
         dispatch({ type: "prepend-message", payload: newMessage });
       },
       err => {
@@ -82,7 +81,7 @@ const ChannelCard = (props: Props) => {
       accessibilityRole="link"
       {...{
         // Being dishonest with typescript because of the lack of react-native-web types
-        href: `/channel/${1}`
+        href: `/channel?id=${1}`
       }}
       onPress={() => {
         router.push(`/channel?id=${channel.id}`);
@@ -120,13 +119,12 @@ export const Channels = ({
 }) => {
   const dispatch = React.useContext(DispatcherContext);
   const flatlistRef = React.useRef<null | FlatList<ChannelType>>(null);
-  const [isLoadingPosition, setIsLoadingPosition] = React.useState<
-    "none" | "top" | "bottom"
-  >("none");
+  const [isLoading, setisLoading] = React.useState(false);
   React.useEffect(() => {
     let isMounted = true;
-    setIsLoadingPosition("top");
-    onCreateChannel();
+    if (channels.items && channels.items.length === 0) {
+      setisLoading(true);
+    }
     const onCreateSubscription = onCreateChannel().subscribe(
       response => {
         const channel = response.value.data.onCreateChannelInList;
@@ -172,7 +170,7 @@ export const Channels = ({
     getChannels()
       .then(channels => {
         if (!isMounted) return;
-        setIsLoadingPosition("none");
+        setisLoading(false);
         dispatch({ type: "set-channels", payload: channels });
       })
       .catch(err => {
@@ -191,20 +189,9 @@ export const Channels = ({
       style={{
         height: "100%"
       }}
-      ListHeaderComponent={() => (
-        <View style={{ height: 30 }}>
-          {isLoadingPosition === "top" && (
-            <ActivityIndicator
-              style={{ height: 30 }}
-              animating={true}
-              color={colors.highlight}
-            />
-          )}
-        </View>
-      )}
       ListFooterComponent={() => (
         <View style={{ height: 30 }}>
-          {isLoadingPosition === "bottom" && (
+          {isLoading && (
             <ActivityIndicator
               style={{ height: 30 }}
               animating={true}
@@ -223,9 +210,9 @@ export const Channels = ({
       )}
       onEndReached={() => {
         if (channels.nextToken === null) return;
-        setIsLoadingPosition("bottom");
+        setisLoading(true);
         getChannels(channels.nextToken).then(nextChannels => {
-          setIsLoadingPosition("none");
+          setisLoading(false);
           dispatch({ type: "append-channels", payload: nextChannels });
         });
       }}
