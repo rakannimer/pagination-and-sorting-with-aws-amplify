@@ -180,6 +180,9 @@ export const ChannelRoute = () => {
       type: "prepend-message",
       payload: message
     });
+    if (channelIndex === -1) {
+      return;
+    }
     dispatch({
       type: "move-to-front",
       payload: state.channels.items[channelIndex]

@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Action, State, Dispatcher } from "./types";
 
-const STATE_KEY = "my-state-25" + Date.now();
+const STATE_KEY = "my-state-26"; // + Date.now();
 
 const addOrUpdate = <T extends { id: string }>(
   list: T[],
@@ -202,9 +202,16 @@ export const getInitialState = () => {
   localStorage.setItem("user-id", userId);
   return state;
 };
+export const withCache = (reducer: React.Reducer<State, Action>) => {
+  return (state: State, action: Action) => {
+    const newState = reducer(state, action);
+    localStorage.setItem(STATE_KEY, JSON.stringify(newState));
+    return newState;
+  };
+};
 
 export const DispatcherContext = React.createContext<Dispatcher>(() => {});
 
 export const useAppReducer = () => {
-  return React.useReducer(reducer, getInitialState());
+  return React.useReducer(withCache(reducer), getInitialState());
 };
