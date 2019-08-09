@@ -85,12 +85,16 @@ export const Channel = ({
     let isMounted = true;
     if (!channelId) return;
     setIsLoading(true);
-    const onCreateListener = onCreateMessage(channelId).subscribe(message => {
-      const newMessage = message.value.data.onCreateMessageInChannel;
-      if (newMessage === null || newMessage.senderId === me.id) return;
-      //@ts-ignore
-      dispatch({ type: "prepend-message", payload: newMessage });
-    });
+    const onCreateListener = onCreateMessage(channelId).subscribe(
+      message => {
+        const newMessage = message.value.data.onCreateMessageInChannel;
+        if (newMessage === null || newMessage.senderId === me.id) return;
+        dispatch({ type: "prepend-message", payload: newMessage });
+      },
+      err => {
+        console.warn("Error listening to onCreateMessage ", err);
+      }
+    );
     getChannelMessages(channelId, "")
       .then(({ messages, channel }) => {
         if (!isMounted) return;

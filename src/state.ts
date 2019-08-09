@@ -4,6 +4,8 @@ import * as React from "react";
 
 import { Action, State, Dispatcher } from "./types";
 
+const STATE_KEY = "my-state-22"; // + Date.now();
+
 const addOrUpdate = <T extends { id: string }>(
   list: T[],
   id: string,
@@ -170,8 +172,6 @@ export function parseJson<T = unknown>(
     return defaultVal;
   }
 }
-
-const STATE_KEY = "my-state-18"; // + Date.now();
 
 export const getInitialState = () => {
   const isServer = typeof window === "undefined";

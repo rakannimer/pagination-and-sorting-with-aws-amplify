@@ -8,7 +8,7 @@ export type GetChannelListInput = {
 const gql = String.raw;
 
 export const getChannelList = ({
-  channelLimit = 10,
+  channelLimit = 5,
   channelNextToken = "",
   messageLimit = 1
 }: GetChannelListInput) => gql`

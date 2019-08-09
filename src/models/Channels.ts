@@ -12,7 +12,7 @@ import {
 } from "../graphql/mutations";
 import {
   onCreateChannelInList,
-  onCreateMessage
+  onUpdateChannelInList
 } from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, MessageType } from "../types";
 
@@ -91,7 +91,7 @@ export const onCreateChannel = (channelListId: string = "global") => {
 
 export const onUpdateChannel = (channelListId: string = "global") => {
   const listener: Listener<OnUpdateChannelInListSubscription> = API.graphql(
-    graphqlOperation(onCreateMessage, {
+    graphqlOperation(onUpdateChannelInList, {
       channelChannelListId: channelListId
     })
   );
