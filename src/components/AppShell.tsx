@@ -18,7 +18,7 @@ const AppShell: React.FC<{ state: State; dispatch: Dispatcher }> = ({
   React.useEffect(() => {
     let isMounted = true;
     getUser(state.me.id).then(getUserResponse => {
-      if (isMounted === false) return;
+      if (getUserResponse === null || isMounted === false) return;
       let meFromServer = getUserResponse.data.getUser;
       if (meFromServer === null) return;
       dispatch({ type: "set-my-info", payload: meFromServer });

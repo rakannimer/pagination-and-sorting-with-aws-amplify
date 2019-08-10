@@ -192,6 +192,7 @@ export const Channels = ({
       })
       .catch(err => {
         console.warn("Error fetching channels ", err);
+        setisLoading(false);
       });
 
     return () => {
@@ -200,6 +201,7 @@ export const Channels = ({
       onUpdateChannelSubscription.unsubscribe();
     };
   }, []);
+  // return null;
   return (
     <FlatList
       inverted={false}
@@ -228,12 +230,18 @@ export const Channels = ({
       onEndReached={() => {
         if (channels.nextToken === null) return;
         setisLoading(true);
-        getChannels(channels.nextToken).then(nextChannels => {
-          setisLoading(false);
-          dispatch({ type: "append-channels", payload: nextChannels });
-        });
+        getChannels(channels.nextToken)
+          .then(nextChannels => {
+            setisLoading(false);
+            dispatch({ type: "append-channels", payload: nextChannels });
+          })
+          .catch(err => {
+            console.warn("onEndReached failed ", err);
+            setisLoading(false);
+          });
       }}
       onEndReachedThreshold={0.1}
+      accessibilityLabel="Channel List"
     />
   );
 };

@@ -33,8 +33,14 @@ export const createUserIfNotExists = async (userInput: CreateUserInput) => {
     console.warn("Cant create a user without an id. Received ", userInput);
     return;
   }
-  const userQueryResult = await getUser(userId);
-  if (userQueryResult.data.getUser === null) {
+  let userQueryResult;
+  try {
+    userQueryResult = await getUser(userId);
+  } catch (err) {
+    userQueryResult = null;
+  }
+
+  if (userQueryResult === null || userQueryResult.data.getUser === null) {
     try {
       const userInputWithoutEmptyFields = {
         id: userInput.id,
@@ -53,10 +59,15 @@ export const createUserIfNotExists = async (userInput: CreateUserInput) => {
 };
 
 export const getUser = async (userId: string) => {
-  const userQueryResult = await (API.graphql(
-    graphqlOperation(getUserQuery, { id: userId })
-  ) as Promise<{ data: GetUserQuery }>);
-  return userQueryResult;
+  try {
+    const userQueryResult = await (API.graphql(
+      graphqlOperation(getUserQuery, { id: userId })
+    ) as Promise<{ data: GetUserQuery }>);
+    return userQueryResult;
+  } catch (err) {
+    console.error("Failed to getUser ", err);
+    return null;
+  }
 };
 
 export const getUsername = memoize(

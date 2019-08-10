@@ -1,4 +1,7 @@
 /// <reference types="Cypress" />
+let i = 0;
+let id = () => i++;
+const nanoid = require("nanoid");
 
 describe("Channels", () => {
   beforeEach(() => {
@@ -13,7 +16,15 @@ describe("Channels", () => {
     createNewChannel.input().should("be.visible");
     createNewChannel.button().should("be.visible");
     // cy.getByLabelText("Create a new channel").type("Test Channel");
-    createNewChannel.input().type("Test Channel");
+    const newChannelName = "Test Channel " + nanoid();
+    createNewChannel.input().type(newChannelName);
+    createNewChannel.button().click();
+    createNewChannel.input().should("be.empty");
+    cy.getByLabelText("Channel List")
+      .should("be.visible")
+      .getByText(newChannelName)
+      .should("be.visible");
+    // cy.getByText(newChannelName).should("be.visible");
   });
 });
 

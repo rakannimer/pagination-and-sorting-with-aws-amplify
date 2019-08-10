@@ -3,10 +3,10 @@
   "scripts": {
     "build": "next build && next export -o build/",
     "dev": "next",
-    "e2e": "kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && cypress open",
+    "e2e": "(amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && cypress open",
     "graphiql": "npx parcel ./graphiql/index.html -p 1235",
     "jest": "jest --runInBand --env jsdom",
-    "mock": "amplify mock api",
+    "mock:api": "amplify mock api",
     "start": "next start"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
     "@testing-library/cypress": "^4.1.0",
     "@types/lodash.memoize": "^4.1.6",
     "@types/nanoid": "^2.0.0",
-    "@types/node": "^12.7.0",
+    "@types/node": "^12.7.1",
     "@types/react": "^16.8.24",
     "@types/react-native-web": "npm:@types/react-native",
     "@types/react-router": "^5.0.3",
