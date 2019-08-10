@@ -30,3 +30,6 @@ node_modules/
 # src/aws-exports.js
 awsconfiguration.json
 .cache
+
+tmp
+amplify/mock-data
