@@ -1,13 +1,11 @@
 /// <reference types="Cypress" />
-let i = 0;
-let id = () => i++;
 const nanoid = require("nanoid");
 
 describe("Channels", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/");
   });
-  it("Can add a new channel", () => {
+  it("Can add a new channel and send a message in it", () => {
     expect(true).to.equal(true);
     const createNewChannel = {
       input: () => cy.getByLabelText("Create a new channel"),
@@ -23,8 +21,31 @@ describe("Channels", () => {
     cy.getByLabelText("Channel List")
       .should("be.visible")
       .getByText(newChannelName)
+      .should("be.visible")
+      .click();
+
+    cy.title().should("include", newChannelName);
+    const newMessage = "Test Message " + nanoid();
+    const createNewMessage = {
+      input: () => cy.getByLabelText("Create a new message"),
+      button: () => cy.getByLabelText("Send message")
+    };
+
+    createNewMessage.input().should("be.visible");
+    createNewMessage.button().should("be.visible");
+    createNewMessage.input().type(newMessage);
+    createNewMessage.button().click();
+    createNewMessage.input().should("be.empty");
+    cy.getByLabelText("Message List")
+      .should("be.visible")
+      .getByText(newMessage)
       .should("be.visible");
-    // cy.getByText(newChannelName).should("be.visible");
+
+    cy.reload()
+      .getByLabelText("Message List")
+      .should("be.visible")
+      .getByText(newMessage)
+      .should("be.visible");
   });
 });
 
