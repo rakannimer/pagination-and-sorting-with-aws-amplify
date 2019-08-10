@@ -19,6 +19,7 @@ export type State = {
     name: string;
     createdAt: string;
     updatedAt: string;
+    channelChannelListId?: string;
   }>;
 };
 

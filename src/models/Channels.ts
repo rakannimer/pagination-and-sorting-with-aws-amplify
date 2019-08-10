@@ -1,4 +1,5 @@
-import { API, graphqlOperation, PubSub } from "aws-amplify";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import PubSub from "@aws-amplify/pubsub";
 import memoize from "lodash.memoize";
 
 import {
@@ -70,7 +71,7 @@ export const getChannels = memoize(
 
 export const createChannel = async (channel: ChannelType) => {
   try {
-    const input = {
+    const input: ChannelType = {
       ...channel,
       messages: undefined,
       channelChannelListId: "global"

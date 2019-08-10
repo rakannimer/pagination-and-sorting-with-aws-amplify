@@ -1,4 +1,5 @@
-import { API, PubSub, graphqlOperation } from "aws-amplify";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import PubSub from "@aws-amplify/pubsub";
 
 import { getMessageList, updateChannel } from "./custom-queries";
 import { createMessage as createMessageQuery } from "../graphql/mutations";

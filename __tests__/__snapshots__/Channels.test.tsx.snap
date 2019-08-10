@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Channels route renders 1`] = `
+<div>
+  <div
+    class="css-view-1dbjc4n"
+    style="background-color: rgb(27, 37, 77); height: 100%; width: 100%;"
+  >
+    <h1
+      aria-level="1"
+      class="css-reset-4rbku5 css-view-1dbjc4n"
+      role="heading"
+      style="background-color: rgb(18, 25, 50); display: flex; flex-direction: row; height: 10%;"
+    >
+      <a
+        class="css-reset-4rbku5 css-cursor-18t94o4 css-view-1dbjc4n r-cursor-1loqt21 r-touchAction-1otgn73 r-transitionDuration-eafdt9 r-transitionProperty-1i6wzkk r-userSelect-lrvibr"
+        data-focusable="true"
+        href="/me"
+        role="link"
+        style="align-items: center; justify-content: center; width: 50%;"
+      >
+        <div
+          class="css-text-901oao"
+          dir="auto"
+          style="color: rgb(255, 255, 255); font-size: 20px; font-weight: 800;"
+        >
+          My Profile
+        </div>
+      </a>
+      <a
+        class="css-reset-4rbku5 css-cursor-18t94o4 css-view-1dbjc4n r-cursor-1loqt21 r-touchAction-1otgn73 r-transitionDuration-eafdt9 r-transitionProperty-1i6wzkk r-userSelect-lrvibr"
+        data-focusable="true"
+        href="/channels"
+        role="link"
+        style="align-items: center; border-bottom-width: 2px; justify-content: center; width: 50%;"
+      >
+        <div
+          class="css-text-901oao"
+          dir="auto"
+          style="color: rgb(255, 255, 255); font-size: 20px; font-weight: 800;"
+        >
+          Channels
+        </div>
+      </a>
+    </h1>
+    <main
+      style="width: 100%; height: 80%;"
+    >
+      <div
+        class="css-view-1dbjc4n r-WebkitOverflowScrolling-150rngu r-flexDirection-eqz5dr r-flexGrow-16y2uox r-flexShrink-1wbh5a2 r-overflowX-11yh6sk r-overflowY-1rnoaur r-transform-1sncvnh"
+        style="height: 100%;"
+      >
+        <div
+          class="css-view-1dbjc4n"
+        >
+          <div
+            class="css-view-1dbjc4n"
+          >
+            <div
+              class="css-view-1dbjc4n"
+              style="height: 30px;"
+            >
+              <div
+                aria-valuemax="1"
+                aria-valuemin="0"
+                class="css-view-1dbjc4n r-alignItems-1awozwy r-justifyContent-1777fci"
+                role="progressbar"
+                style="height: 30px;"
+              >
+                <div
+                  class="css-view-1dbjc4n r-animationDuration-17bb2tj r-animationIterationCount-1muvv40 r-animationKeyframes-127358a r-animationTimingFunction-1ldzwu0 r-height-z80fyv r-width-19wmn03"
+                >
+                  <svg
+                    height="100%"
+                    viewBox="0 0 32 32"
+                    width="100%"
+                  >
+                    <circle
+                      cx="16"
+                      cy="16"
+                      fill="none"
+                      r="14"
+                      stroke-width="4"
+                      style="stroke: #61dafb; opacity: 0.2;"
+                    />
+                    <circle
+                      cx="16"
+                      cy="16"
+                      fill="none"
+                      r="14"
+                      stroke-width="4"
+                      style="stroke: #61dafb; stroke-dasharray: 80; stroke-dashoffset: 60;"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="css-view-1dbjc4n"
+      style="align-items: center; background-color: rgb(14, 20, 43); display: flex; flex-direction: row; height: 10%;"
+    >
+      <div
+        class="css-view-1dbjc4n"
+        style="flex-grow: 0.1; flex-shrink: 1; flex-basis: 0%;"
+      />
+      <input
+        aria-label="Create a new channel"
+        autocapitalize="sentences"
+        autocomplete="on"
+        autocorrect="on"
+        class="css-textinput-1cwyjr8 r-placeholderTextColor-1877jhj"
+        data-focusable="true"
+        dir="auto"
+        placeholder="Create a new channel"
+        spellcheck="true"
+        style="background-color: rgb(255, 255, 255); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; color: rgb(14, 20, 43); flex-grow: 3; flex-shrink: 1; flex-basis: 0%; height: 50%; padding: 10px 10px 10px 10px;"
+        type="text"
+        value=""
+      />
+      <div
+        class="css-view-1dbjc4n"
+        style="flex-grow: 0.1; flex-shrink: 1; flex-basis: 0%;"
+      />
+      <div
+        class="css-view-1dbjc4n"
+        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0%; height: 50%;"
+      >
+        <div
+          aria-label="Create channel"
+          class="css-view-1dbjc4n r-cursor-1loqt21 r-touchAction-1otgn73 r-transitionDuration-eafdt9 r-transitionProperty-1i6wzkk r-userSelect-lrvibr"
+          data-focusable="true"
+          style="align-items: center; background-color: rgba(97, 218, 251, 0.3); border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; display: flex; height: 100%; justify-content: center;"
+          tabindex="0"
+        >
+          <div
+            class="css-text-901oao"
+            dir="auto"
+            style="color: rgb(255, 255, 255); text-align: center;"
+          >
+            Create channel
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-view-1dbjc4n"
+        style="flex-grow: 0.1; flex-shrink: 1; flex-basis: 0%;"
+      />
+    </div>
+  </div>
+</div>
+`;

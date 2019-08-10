@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from "aws-amplify";
+import API, { graphqlOperation } from "@aws-amplify/api";
 import memoize from "lodash.memoize";
 
 import { getUser as getUserQuery } from "../graphql/queries";

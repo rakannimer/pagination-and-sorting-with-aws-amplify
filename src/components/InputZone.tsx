@@ -75,6 +75,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
             borderRadius: 15,
             justifyContent: "center"
           }}
+          accessibilityLabel={buttonText}
         >
           <Text
             style={{
