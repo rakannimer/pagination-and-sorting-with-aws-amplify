@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View
 } from "react-native-web";
-import { Animated } from "react-animated-css";
 import { useInView } from "react-intersection-observer";
 
 import { getActions } from "../actions";
@@ -94,34 +93,27 @@ const ChannelCard = (props: Props) => {
       }}
     >
       <div ref={ref}>
-        <Animated
-          animationIn="fadeIn"
-          animationOut="fadeOut"
-          isVisible={inView}
-        >
-          <View>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Text style={{ color: "white" }}>Channel name: </Text>
-              <Text
-                style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}
-              >
-                {channel.name}
-              </Text>
-            </View>
+        <View>
+          <View style={{ display: "flex", flexDirection: "row" }}>
+            <Text style={{ color: "white" }}>Channel name: </Text>
             <Text
-              style={{
-                color: "white",
-                // fontWeight: "bold",
-                marginTop: 5,
-                marginBottom: 5
-              }}
+              style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}
             >
-              Last updated:{" "}
-              {new Date(Number(channel.updatedAt)).toLocaleString()}
+              {channel.name}
             </Text>
-            <Text style={{ color: "white", marginTop: 15 }}>{lastMessage}</Text>
           </View>
-        </Animated>
+          <Text
+            style={{
+              color: "white",
+              // fontWeight: "bold",
+              marginTop: 5,
+              marginBottom: 5
+            }}
+          >
+            Last updated: {new Date(Number(channel.updatedAt)).toLocaleString()}
+          </Text>
+          <Text style={{ color: "white", marginTop: 15 }}>{lastMessage}</Text>
+        </View>
       </div>
     </TouchableOpacity>
   );

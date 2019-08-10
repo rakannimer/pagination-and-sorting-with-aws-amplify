@@ -3,7 +3,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native-web";
-import { Animated } from "react-animated-css";
 import { useInView } from "react-intersection-observer";
 
 import {
@@ -62,23 +61,15 @@ export const Message = ({ message }: { message: MessageType }) => {
       }}
     >
       <div ref={ref}>
-        <Animated
-          animationIn="fadeIn"
-          animationOut="fadeOut"
-          isVisible={inView}
-        >
-          <View style={{ flex: 10 }}>
-            <Text
-              style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}
-            >
-              {message.text}
-            </Text>
-            <Text style={{ color: "white" }}>Sent by {username}</Text>
-            <Text style={{ color: "white" }}>
-              Created at: {new Date(Number(message.createdAt)).toLocaleString()}
-            </Text>
-          </View>
-        </Animated>
+        <View style={{ flex: 10 }}>
+          <Text style={{ color: "white", fontWeight: "bold", marginBottom: 5 }}>
+            {message.text}
+          </Text>
+          <Text style={{ color: "white" }}>Sent by {username}</Text>
+          <Text style={{ color: "white" }}>
+            Created at: {new Date(Number(message.createdAt)).toLocaleString()}
+          </Text>
+        </View>
       </div>
     </View>
   );
