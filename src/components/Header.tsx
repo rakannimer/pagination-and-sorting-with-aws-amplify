@@ -24,7 +24,7 @@ export const Header = () => {
 
   // if (router)
   return (
-    <View style={styles.header} accessibilityRole="header" aria-level="1">
+    <View style={styles.header} accessibilityLabel="Header Navigation">
       <Link
         style={[
           styles.headerLink,

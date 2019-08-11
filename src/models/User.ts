@@ -65,7 +65,6 @@ export const getUser = async (userId: string) => {
     ) as Promise<{ data: GetUserQuery }>);
     return userQueryResult;
   } catch (err) {
-    console.error("Failed to getUser ", err);
     return null;
   }
 };

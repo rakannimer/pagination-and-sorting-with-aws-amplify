@@ -59,6 +59,7 @@ export const Message = ({ message }: { message: MessageType }) => {
 
         elevation: 5
       }}
+      accessibilityLabel="Message"
     >
       <div ref={ref}>
         <View style={{ flex: 10 }}>

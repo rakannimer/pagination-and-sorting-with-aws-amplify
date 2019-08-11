@@ -24,10 +24,10 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
   const [bio, setBio] = React.useState(me.bio || "");
   const [isSubmittable, setIsSubmittable] = React.useState(false);
   React.useEffect(() => {
-    setName(me.name || "");
-    setUrl(me.url || "");
-    setBio(me.bio || "");
-  }, [me]);
+    if (name === "") setName(me.name || "");
+    if (url === "") setUrl(me.url || "");
+    if (bio === "") setBio(me.bio || "");
+  }, [me, name, url, bio]);
   const submit = () => {
     localStorage.setItem("name", name);
     localStorage.setItem("url", url);
@@ -47,6 +47,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           padding: 20,
           height: "75%"
         }}
+        accessibilityLabel="Profile Form"
       >
         <ImportantText accessibilityRole={"header"}>My profile</ImportantText>
         <StaticSpacer />
@@ -91,7 +92,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
             setUrl(url);
           }}
           onSubmitEditing={submit}
-          accessibilityLabel={"Link"}
+          accessibilityLabel={"Url"}
         />
 
         <StaticSpacer />
@@ -101,6 +102,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           padding: 20,
           height: "15%"
         }}
+        accessibilityLabel="Profile Form Submit Button"
       >
         <TouchableOpacity
           style={{
