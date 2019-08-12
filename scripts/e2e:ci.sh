@@ -1,0 +1,1 @@
+yarn amplify init --amplify "{ \"envName\":\"ci\" }" --yes && yarn amplify mock api
