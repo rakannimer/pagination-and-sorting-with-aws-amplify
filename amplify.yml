@@ -6,7 +6,7 @@ frontend:
         - yarn install
     build:
       commands:
-        - yarn run build && yarn run e2e:ci
+        - yarn run e2e:ci
   artifacts:
     baseDirectory: build
     files:

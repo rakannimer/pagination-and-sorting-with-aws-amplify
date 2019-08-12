@@ -6,7 +6,7 @@
     "kill-amplify-mock-api": "kill-port 20002 && kill-port 20003",
     "e2e:dev": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && PORT=3000 cypress open --env PORT=3000",
     "e2e": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 5000 && yarn build && (npx serve build/ &) && wait-on http-get://localhost:5000 && cypress open --env PORT=5000",
-    "e2e:ci": "(amplify mock api &) && wait-on http-get://localhost:20002 && cat src/aws-exports.js ",
+    "e2e:ci": "amplify mock api",
     "e2e:ci:backup": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 5000 && yarn build && (npx serve build/ &) && wait-on http-get://localhost:5000 && PORT=5000 cypress run --env PORT=5000",
     "mock:api": "amplify mock api",
     "start": "next start"
