@@ -3,9 +3,9 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "yarn install"
         - yum -y install java-1.8.0-openjdk
-        - java -v
+        - java -version
+        - yarn install
     build:
       commands:
         - yarn run e2e:ci
