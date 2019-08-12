@@ -4,7 +4,7 @@ frontend:
     preBuild:
       commands:
         - echo "yarn install"
-        - yum install java-1.8.0-openjdk
+        - yum -y install java-1.8.0-openjdk
         - java -v
     build:
       commands:
