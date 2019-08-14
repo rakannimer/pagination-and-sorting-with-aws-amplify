@@ -30,7 +30,6 @@ jobs:
       - run: "sudo apt-get update && sudo apt-get install default-jre default-jdk && sudo apt-get install lsof"
       # - run: curl -k -L -o dynamodb-local.tgz http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz
       # - run: tar -xzf dynamodb-local.tgz
-      #- run: java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -port 62224
 
       - save_cache:
           paths:
