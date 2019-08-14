@@ -99,7 +99,7 @@ yarn amplify init \
 --providers $PROVIDERS \
 --amplify "{ \"envName\":\"ci\" }" \
 --yes
-exit
+
 #yarn amplify init --amplify "{ \"envName\":\"ci\" }" --yes 
 yarn kill-amplify-mock-api
 yarn kill-port 62224
