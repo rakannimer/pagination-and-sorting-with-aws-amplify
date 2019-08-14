@@ -102,4 +102,4 @@ yarn amplify init \
 
 /bin/bash ./scripts/e2e.sh
 
-yarn amplify delete
+yarn amplify delete --yes
