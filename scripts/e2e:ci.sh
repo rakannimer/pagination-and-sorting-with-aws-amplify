@@ -97,7 +97,7 @@ PROVIDERS="{\
 
 yarn amplify init \
 --providers $PROVIDERS \
---amplify "{ \"envName\":\"ci\" }" \
+--amplify "{ \"envName\":\"prod\" }" \
 --yes
 
 /bin/bash ./scripts/e2e.sh
