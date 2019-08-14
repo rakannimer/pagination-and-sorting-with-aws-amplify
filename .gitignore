@@ -33,3 +33,4 @@ awsconfiguration.json
 
 tmp
 amplify/mock-data
+iam-credentials.csv
