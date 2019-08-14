@@ -1,12 +1,17 @@
 #!/bin/bash
 
-REACTCONFIG="{\
-\"SourceDir\":\"src\",\
-\"DistributionDir\":\"build\",\
-\"BuildCommand\":\"npm run-script build\",\
-\"StartCommand\":\"npm run-script start\"\
-}"
+# REACTCONFIG="{\
+# \"SourceDir\":\"src\",\
+# \"DistributionDir\":\"build\",\
+# \"BuildCommand\":\"npm run-script build\",\
+# \"StartCommand\":\"npm run-script start\"\
+# }"
 
+#FRONTEND="{\
+# \"frontend\":\"javascript\",\
+# \"framework\":\"react\",\
+# \"config\":$REACTCONFIG\
+# }"
 AWSCLOUDFORMATIONCONFIG="{\
 \"configLevel\":\"project\",\
 \"useProfile\":true,\
@@ -20,18 +25,18 @@ PROVIDERS="{\
 \"awscloudformation\":$AWSCLOUDFORMATIONCONFIG\
 }"
 AMPLIFY="{\
-\"projectName\":\"headlessProjectName\",\
+\"projectName\":\"pagnsor\",\
 \"defaultEditor\":\"code\"\
 }"
-FRONTEND="{\
-\"frontend\":\"javascript\",\
-\"framework\":\"react\",\
-\"config\":$REACTCONFIG\
-}"
+
+
 yarn amplify configure project \
 --amplify $AMPLIFY \
---frontend $FRONTEND \
 --providers $PROVIDERS \
+--yes
+# --frontend $FRONTEND \
+
+# exit 
 
 yarn amplify init \
 --providers $PROVIDERS \
