@@ -1,17 +1,54 @@
 #!/bin/bash
 
+
+set -e
+IFS='|'
+
+REACTCONFIG="{\
+\"SourceDir\":\"src\",\
+\"DistributionDir\":\"build\",\
+\"BuildCommand\":\"npm run-script build\",\
+\"StartCommand\":\"npm run-script start\"\
+}"
+AWSCLOUDFORMATIONCONFIG="{\
+\"configLevel\":\"project\",\
+\"useProfile\":true,\
+\"profileName\":\"default\",\
+\"accessKeyId\":\"$AWS_ACCESS_KEY_ID\",\
+\"secretAccessKey\":\"$AWS_ACCESS_KEY_ID\",\
+\"region\":\"us-east-1\"\
+}"
+AMPLIFY="{\
+\"projectName\":\"pagnsor\",\
+\"defaultEditor\":\"code\"\
+}"
+FRONTEND="{\
+\"frontend\":\"javascript\",\
+\"framework\":\"react\",\
+\"config\":$REACTCONFIG\
+}"
+PROVIDERS="{\
+\"awscloudformation\":$AWSCLOUDFORMATIONCONFIG\
+}"
+
+amplify configure project \
+--amplify $AMPLIFY \
+--frontend $FRONTEND \
+--providers $PROVIDERS \
+
+exit
 # REACTCONFIG="{\
 # \"SourceDir\":\"src\",\
 # \"DistributionDir\":\"build\",\
 # \"BuildCommand\":\"npm run-script build\",\
 # \"StartCommand\":\"npm run-script start\"\
 # }"
-
-#FRONTEND="{\
-# \"frontend\":\"javascript\",\
-# \"framework\":\"react\",\
-# \"config\":$REACTCONFIG\
-# }"
+REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"build\",\"BuildCommand\":\"npm run-script build\", \"StartCommand\":\"npm run-script start\"}"
+FRONTEND="{\
+\"frontend\":\"javascript\",\
+\"framework\":\"react\",\
+\"config\":$REACTCONFIG\
+}"
 AWSCLOUDFORMATIONCONFIG="{\
 \"configLevel\":\"project\",\
 \"useProfile\":true,\
@@ -33,10 +70,9 @@ AMPLIFY="{\
 yarn amplify configure project \
 --amplify $AMPLIFY \
 --providers $PROVIDERS \
---yes
-# --frontend $FRONTEND \
+--frontend $FRONTEND \
 
-# exit 
+exit 
 
 yarn amplify init \
 --providers $PROVIDERS \
