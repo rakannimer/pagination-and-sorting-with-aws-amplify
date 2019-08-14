@@ -100,6 +100,6 @@ yarn amplify init \
 --amplify "{ \"envName\":\"ci\" }" \
 --yes
 
-/bin/bash ./e2e.sh
+/bin/bash ./scripts/e2e.sh
 
-yarn amplify env remove ci
+yarn amplify delete
