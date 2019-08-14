@@ -15,7 +15,7 @@ PROVIDERS="{\
 
 yarn amplify init \
 --providers $PROVIDERS \
---amplify "{ \"envName\":\"ci\" }"\
+--amplify "{ \"envName\":\"ci\" }" \
 --yes
 #yarn amplify init --amplify "{ \"envName\":\"ci\" }" --yes 
 yarn kill-amplify-mock-api
