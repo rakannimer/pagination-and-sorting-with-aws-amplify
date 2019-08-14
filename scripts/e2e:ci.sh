@@ -1,5 +1,12 @@
 #!/bin/bash
 
+REACTCONFIG="{\
+\"SourceDir\":\"src\",\
+\"DistributionDir\":\"build\",\
+\"BuildCommand\":\"npm run-script build\",\
+\"StartCommand\":\"npm run-script start\"\
+}"
+
 AWSCLOUDFORMATIONCONFIG="{\
 \"configLevel\":\"project\",\
 \"useProfile\":true,\
@@ -12,6 +19,19 @@ AWSCLOUDFORMATIONCONFIG="{\
 PROVIDERS="{\
 \"awscloudformation\":$AWSCLOUDFORMATIONCONFIG\
 }"
+AMPLIFY="{\
+\"projectName\":\"headlessProjectName\",\
+\"defaultEditor\":\"code\"\
+}"
+FRONTEND="{\
+\"frontend\":\"javascript\",\
+\"framework\":\"react\",\
+\"config\":$REACTCONFIG\
+}"
+yarn amplify configure project \
+--amplify $AMPLIFY \
+--frontend $FRONTEND \
+--providers $PROVIDERS \
 
 yarn amplify init \
 --providers $PROVIDERS \
