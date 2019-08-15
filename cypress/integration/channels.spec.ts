@@ -34,7 +34,7 @@ const channels = {
   links: () => cy.get("main a"), //.within(() => cy.get("a")),
   input: () => cy.getByLabelText("Create a new channel").should("be.visible"),
   button: () => cy.getByLabelText("Create channel").should("be.visible"),
-  list: () => cy.get('[aria-label="Channel List"]') //getByLabelText("Channel List") //.should("be.visible")
+  list: () => cy.get('[aria-label="Channel List"]', { timeout: 7000 }) //getByLabelText("Channel List") //.should("be.visible")
 };
 
 const messages = {
@@ -55,9 +55,9 @@ const createNewMessage = () => "Test Message " + nanoid();
 // const a:number = 2
 const createChannel = async (
   channelName = createChannelName(),
+  channelId = nanoid(),
   creatorId = nanoid()
 ) => {
-  const channelId = nanoid();
   await Channels.createChannel({
     name: channelName,
     id: channelId,
@@ -92,7 +92,10 @@ describe("Channels", () => {
   beforeEach(() => {
     cy.visit(BASE_URL);
   });
-
+  afterEach(() => {
+    // For video to better capture what happened
+    cy.wait(1000);
+  });
   it("Can visit profile and set information", () => {
     header.me().click();
     cy.location("href").should("contain", "/me");
@@ -139,13 +142,12 @@ describe("Channels", () => {
       .within(() => cy.getByText(newMessage))
       .should("be.visible");
   });
-  it("Can scroll and load more in channels list", async () => {
-    // Make sure there is at least enough channels for 2 pages.
-    let createChannelsPromises: Promise<unknown>[] = [];
+  it("Can scroll and load more in channels list", () => {
+    // Make sure there is enough channels for at least 2 pages.
     for (let i = 0; i < 15; i++) {
-      createChannelsPromises.push(createChannel());
+      createChannel();
     }
-    await Promise.all(createChannelsPromises);
+    // Promise.all(createChannelsPromises);
     cy.clearLocalStorage();
     cy.reload();
     channels.links().should("have.length", 5);
@@ -156,26 +158,23 @@ describe("Channels", () => {
   });
   it("Can scroll and load more in messages list", () => {
     const channelName = createChannelName();
-    const main = async () => {
-      const channelId = await createChannel(channelName);
-      channels
-        .list()
-        .within(() => cy.getByText(channelName))
-        .click();
-      cy.location("href").should("contain", "/channel?id=" + channelId);
-      let createMesagePromises: Promise<unknown>[] = [];
-      for (let i = 0; i < 15; i++) {
-        createMesagePromises.push(createMessage(undefined, channelId));
-      }
-      await Promise.all(createMesagePromises);
-      cy.clearLocalStorage();
 
-      cy.reload();
+    const channelId = nanoid();
+    createChannel(channelName, channelId);
+    channels
+      .list()
+      .within(() => cy.getByText(channelName))
+      .click();
+    cy.location("href").should("contain", "/channel?id=" + channelId);
+    for (let i = 0; i < 15; i++) {
+      createMessage(undefined, channelId);
+    }
 
-      messages.messageList().should("have.length", 10);
-      messages.list().scrollTo("bottom");
-      messages.messageList().should("have.length", 15);
-    };
-    main();
+    cy.clearLocalStorage();
+    cy.reload();
+
+    messages.messageList().should("have.length", 10);
+    messages.list().scrollTo("bottom");
+    messages.messageList().should("have.length", 15);
   });
 });
