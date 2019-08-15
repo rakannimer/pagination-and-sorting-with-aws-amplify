@@ -11,12 +11,7 @@ import {
 import { useInView } from "react-intersection-observer";
 
 import { getActions } from "../actions";
-import { onCreateMessage } from "../models/Channel";
-import {
-  getChannels,
-  onCreateChannel,
-  onUpdateChannel
-} from "../models/Channels";
+import { useModels } from "../models/ModelsContext";
 import { DispatcherContext, useAppReducer } from "../state";
 import { colors } from "../theme";
 import { ChannelType, State } from "../types";
@@ -27,6 +22,7 @@ type Props = { channel: ChannelType; me: State["me"] };
 
 const ChannelCard = (props: Props) => {
   const dispatch = React.useContext(DispatcherContext);
+  const { Channel } = useModels();
   const {
     channel,
     me: { id: myId }
@@ -35,7 +31,7 @@ const ChannelCard = (props: Props) => {
   const router = useRouter();
   const lastMessage = messages.items.length > 0 ? messages.items[0].text : "";
   React.useEffect(() => {
-    const subscription = onCreateMessage(channelId).subscribe(
+    const subscription = Channel.onCreateMessage(channelId).subscribe(
       data => {
         const newMessage = data.value.data.onCreateMessageInChannel;
         if (newMessage === null) {
@@ -129,12 +125,13 @@ export const Channels = ({
   const dispatch = React.useContext(DispatcherContext);
   const flatlistRef = React.useRef<null | FlatList<ChannelType>>(null);
   const [isLoading, setisLoading] = React.useState(false);
+  const { Channels } = useModels();
   React.useEffect(() => {
     let isMounted = true;
     if (channels.items && channels.items.length === 0) {
       setisLoading(true);
     }
-    const onCreateSubscription = onCreateChannel().subscribe(
+    const onCreateSubscription = Channels.onCreateChannel().subscribe(
       response => {
         const channel = response.value.data.onCreateChannelInList;
         if (channel === null || channel.creatorId === me.id) return;
@@ -158,7 +155,7 @@ export const Channels = ({
       }
     );
 
-    const onUpdateChannelSubscription = onUpdateChannel().subscribe(
+    const onUpdateChannelSubscription = Channels.onUpdateChannel().subscribe(
       response => {
         const channel = response.value.data.onUpdateChannelInList;
         if (channel === null) return;
@@ -175,9 +172,12 @@ export const Channels = ({
         console.error("Error onUpdateChannelSubscription", err);
       }
     );
+    console.warn("Getting channels");
+    console.warn(Channels.getChannels());
 
-    getChannels()
+    Channels.getChannels()
       .then(channels => {
+        console.warn("Got channels");
         if (!isMounted) return;
         setisLoading(false);
         dispatch({ type: "set-channels", payload: channels });
@@ -193,7 +193,6 @@ export const Channels = ({
       onUpdateChannelSubscription.unsubscribe();
     };
   }, []);
-  // return null;
   return (
     <FlatList
       inverted={false}
@@ -222,7 +221,7 @@ export const Channels = ({
       onEndReached={() => {
         if (channels.nextToken === null) return;
         setisLoading(true);
-        getChannels(channels.nextToken)
+        Channels.getChannels(channels.nextToken)
           .then(nextChannels => {
             setisLoading(false);
             dispatch({ type: "append-channels", payload: nextChannels });
@@ -241,6 +240,7 @@ export const Channels = ({
 export const ChannelsRoute = () => {
   const [state, dispatch] = useAppReducer();
   const actions = getActions(dispatch);
+
   return (
     <>
       <Head>

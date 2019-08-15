@@ -60,7 +60,6 @@ export const getChannels = memoize(
     }
 
     if (channelList === null || channelList.data.getChannelList === null) {
-      console.warn("creating channel list");
       try {
         await API.graphql(
           graphqlOperation(createChannelList, { input: { id: "global" } })

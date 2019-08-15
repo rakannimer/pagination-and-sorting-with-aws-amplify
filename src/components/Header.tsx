@@ -33,9 +33,11 @@ export const Header = () => {
         href="/me"
         accessible={true}
         onPress={() => {
+          console.warn("asjdhasjkdhjkashdkjashjd");
           router.push("/me");
         }}
         accessibilityRole="link"
+        accessibilityLabel="Go to Profile"
       >
         <Text style={styles.headerText}>My Profile</Text>
       </Link>
@@ -52,6 +54,7 @@ export const Header = () => {
           router.push("/channels");
         }}
         accessibilityRole="link"
+        accessibilityLabel="Go to Channels"
       >
         <Text style={styles.headerText}>Channels</Text>
       </Link>

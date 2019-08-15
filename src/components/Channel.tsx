@@ -5,24 +5,21 @@ import * as React from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native-web";
 import { useInView } from "react-intersection-observer";
 
-import {
-  createMessage,
-  getChannelMessages,
-  onCreateMessage
-} from "../models/Channel";
-import { getUsername } from "../models/User";
+import { useModels } from "../models/ModelsContext";
 import { DispatcherContext, useAppReducer } from "../state";
 import { colors } from "../theme";
 import { Dispatcher, MessageType, State } from "../types";
 import AppShell from "./AppShell";
 import { InputZone } from "./InputZone";
+import { ModelsContext } from "../models/ModelsContext";
 
 export const Message = ({ message }: { message: MessageType }) => {
   const [username, setUsername] = React.useState("");
+  const { User } = useModels();
   React.useEffect(() => {
     let isMounted = false;
 
-    getUsername(message.senderId)
+    User.getUsername(message.senderId)
       .then(v => {
         if (isMounted === true) return;
         if (v.data.getUser.name) {
@@ -92,13 +89,13 @@ export const Channel = ({
 }) => {
   const dispatch = React.useContext(DispatcherContext);
   const flatlistRef = React.useRef<null | FlatList<MessageType>>(null);
-
+  const { Channel } = useModels();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   React.useEffect(() => {
     let isMounted = true;
     if (!channelId) return;
     setIsLoading(true);
-    const onCreateListener = onCreateMessage(channelId).subscribe(
+    const onCreateListener = Channel.onCreateMessage(channelId).subscribe(
       message => {
         const newMessage = message.value.data.onCreateMessageInChannel;
         if (newMessage === null || newMessage.senderId === me.id) return;
@@ -108,7 +105,7 @@ export const Channel = ({
         console.warn("Error listening to onCreateMessage ", err);
       }
     );
-    getChannelMessages(channelId, "")
+    Channel.getChannelMessages(channelId, "")
       .then(({ messages, channel }) => {
         if (!isMounted) return;
         setIsLoading(false);
@@ -157,7 +154,7 @@ export const Channel = ({
           onEndReached={() => {
             if (messages.nextToken === null) return;
             setIsLoading(true);
-            getChannelMessages(channelId, messages.nextToken).then(
+            Channel.getChannelMessages(channelId, messages.nextToken).then(
               ({ messages }) => {
                 setIsLoading(false);
                 dispatch({
@@ -178,6 +175,7 @@ export const Channel = ({
 export const ChannelRoute = () => {
   const router = useRouter();
   const [state, dispatch] = useAppReducer();
+  const { Channel: ChannelModel } = useModels();
   const channelId = (router.query && router.query.id) as string;
   const channelIndex = state.channels.items.findIndex(
     channel => channel.id === channelId
@@ -201,7 +199,7 @@ export const ChannelRoute = () => {
       type: "move-to-front",
       payload: state.channels.items[channelIndex]
     });
-    createMessage(message);
+    ChannelModel.createMessage(message);
   };
 
   const messages =
