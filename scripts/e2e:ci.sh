@@ -1,79 +1,5 @@
 #!/bin/bash
 
-
-# set -e
-# IFS='|'
-
-# REACTCONFIG="{\
-# \"SourceDir\":\"src\",\
-# \"DistributionDir\":\"build\",\
-# \"BuildCommand\":\"npm run-script build\",\
-# \"StartCommand\":\"npm run-script start\"\
-# }"
-# AWSCLOUDFORMATIONCONFIG="{\
-# \"configLevel\":\"project\",\
-# \"useProfile\":true,\
-# \"profileName\":\"default\",\
-# \"accessKeyId\":\"$AWS_ACCESS_KEY_ID\",\
-# \"secretAccessKey\":\"$AWS_ACCESS_KEY_ID\",\
-# \"region\":\"us-east-1\"\
-# }"
-# AMPLIFY="{\
-# \"projectName\":\"pagnsor\",\
-# \"defaultEditor\":\"code\"\
-# }"
-# FRONTEND="{\
-# \"frontend\":\"javascript\",\
-# \"framework\":\"react\",\
-# \"config\":$REACTCONFIG\
-# }"
-# PROVIDERS="{\
-# \"awscloudformation\":$AWSCLOUDFORMATIONCONFIG\
-# }"
-
-# amplify configure project \
-# --amplify $AMPLIFY \
-# --frontend $FRONTEND \
-# --providers $PROVIDERS \
-
-# exit
-# # REACTCONFIG="{\
-# # \"SourceDir\":\"src\",\
-# # \"DistributionDir\":\"build\",\
-# # \"BuildCommand\":\"npm run-script build\",\
-# # \"StartCommand\":\"npm run-script start\"\
-# # }"
-# REACTCONFIG="{\"SourceDir\":\"src\",\"DistributionDir\":\"build\",\"BuildCommand\":\"npm run-script build\", \"StartCommand\":\"npm run-script start\"}"
-# FRONTEND="{\
-# \"frontend\":\"javascript\",\
-# \"framework\":\"react\",\
-# \"config\":$REACTCONFIG\
-# }"
-# AWSCLOUDFORMATIONCONFIG="{\
-# \"configLevel\":\"project\",\
-# \"useProfile\":true,\
-# \"profileName\":\"default\",\
-# \"accessKeyId\":\"$AWS_ACCESS_KEY_ID\",\
-# \"secretAccessKey\":\"$AWS_SECRET_ACCESS_KEY\",\
-# \"region\":\"us-east-1\"\
-# }"
-
-# PROVIDERS="{\
-# \"awscloudformation\":$AWSCLOUDFORMATIONCONFIG\
-# }"
-# AMPLIFY="{\
-# \"projectName\":\"pagnsor\",\
-# \"defaultEditor\":\"code\"\
-# }"
-
-
-# yarn amplify configure project \
-# --amplify $AMPLIFY \
-# --providers $PROVIDERS \
-# --frontend $FRONTEND \
-
-# exit 
-
 curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
 unzip awscli-bundle.zip
 ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
@@ -101,5 +27,3 @@ yarn amplify init \
 --yes
 
 /bin/bash ./scripts/e2e.sh
-
-yarn amplify delete --yes

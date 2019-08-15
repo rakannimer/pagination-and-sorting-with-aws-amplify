@@ -1,4 +1,7 @@
+import * as React from 'react';
+
 type OrNull<T> = T | null;
+
 export type State = {
   me: {
     id: string;
@@ -30,7 +33,6 @@ export type List<T extends unknown> = {
 export type UserType = State["me"];
 export type ChannelType = State["channels"]["items"][0];
 export type MessageType = ChannelType["messages"]["items"][0];
-import { CreateMessageInput } from "./API";
 export type Action =
   | {
       type: "append-messages";

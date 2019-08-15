@@ -21,14 +21,19 @@ export const Message = ({ message }: { message: MessageType }) => {
   const [username, setUsername] = React.useState("");
   React.useEffect(() => {
     let isMounted = false;
-    getUsername(message.senderId).then(v => {
-      if (isMounted === true) return;
-      if (v.data.getUser.name) {
-        setUsername(v.data.getUser.name);
-      } else {
-        setUsername("Anonymous");
-      }
-    });
+
+    getUsername(message.senderId)
+      .then(v => {
+        if (isMounted === true) return;
+        if (v.data.getUser.name) {
+          setUsername(v.data.getUser.name);
+        } else {
+          setUsername("Anonymous");
+        }
+      })
+      .catch(err => {
+        console.error("Failed to get username for message ", message);
+      });
     return () => {
       isMounted = false;
     };

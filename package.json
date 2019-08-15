@@ -5,7 +5,7 @@
     "dev": "next",
     "kill-amplify-mock-api": "kill-port 20002 && kill-port 20003",
     "e2e:dev": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && PORT=3000 cypress open --env PORT=3000",
-    "e2e": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 5000 && yarn build && (npx serve build/ &) && wait-on http-get://localhost:5000 && cypress open --env PORT=5000",
+    "e2e": "/bin/bash ./scripts/e2e.sh",
     "e2e:ci": "/bin/bash ./scripts/e2e:ci.sh",
     "e2e:ci:backup": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 5000 && yarn build && (npx serve build/ &) && wait-on http-get://localhost:5000 && PORT=5000 cypress run --env PORT=5000",
     "mock:api": "amplify mock api",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@aws-amplify/cli": "^1.11.0",
+    "@bahmutov/add-typescript-to-cypress": "^2.1.2",
     "@testing-library/cypress": "^4.1.0",
     "@types/lodash.memoize": "^4.1.6",
     "@types/nanoid": "^2.0.0",

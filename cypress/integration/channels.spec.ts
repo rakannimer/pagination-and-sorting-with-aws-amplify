@@ -1,8 +1,9 @@
 /// <reference types="Cypress" />
-const nanoid = require("nanoid");
-
+import nanoid from "nanoid";
+import * as Channels from "../../src/models/Channels";
+import * as Channel from "../../src/models/Channel";
 const PORT = Cypress.env("PORT") || 3000;
-const BASE_URL = `http://localhost:${PORT}/`;
+const BASE_URL: string = `http://localhost:${PORT}/`;
 
 const header = {
   root: () => cy.getByLabelText("Header Navigation").should("be.visible"),
@@ -51,15 +52,37 @@ const user = {
 
 const createChannelName = () => "Test Channel " + nanoid();
 const createNewMessage = () => "Test Message " + nanoid();
-
-const createChannel = (channelName = createChannelName()) => {
-  channels.input().type(channelName);
-  channels.button().click();
+// const a:number = 2
+const createChannel = async (
+  channelName = createChannelName(),
+  creatorId = nanoid()
+) => {
+  const channelId = nanoid();
+  await Channels.createChannel({
+    name: channelName,
+    id: channelId,
+    createdAt: `${Date.now()}`,
+    updatedAt: `${Date.now()}`,
+    creatorId,
+    messages: {
+      items: [],
+      nextToken: ""
+    }
+  });
+  return channelId;
 };
 
-const createMessage = (message = createNewMessage()) => {
-  messages.input().type(message);
-  messages.button().click();
+const createMessage = async (
+  message = createNewMessage(),
+  channelId: string
+) => {
+  await Channel.createMessage({
+    messageChannelId: channelId,
+    id: nanoid(),
+    createdAt: `${Date.now()}`,
+    senderId: nanoid(),
+    text: message
+  });
 };
 
 const newMessage = createNewMessage();
@@ -116,11 +139,13 @@ describe("Channels", () => {
       .within(() => cy.getByText(newMessage))
       .should("be.visible");
   });
-  it("Can scroll and load more in channels list", () => {
+  it("Can scroll and load more in channels list", async () => {
     // Make sure there is at least enough channels for 2 pages.
-    for (let i = 0; i < 1; i++) {
-      createChannel();
+    let createChannelsPromises: Promise<unknown>[] = [];
+    for (let i = 0; i < 15; i++) {
+      createChannelsPromises.push(createChannel());
     }
+    await Promise.all(createChannelsPromises);
     cy.clearLocalStorage();
     cy.reload();
     channels.links().should("have.length", 5);
@@ -129,25 +154,28 @@ describe("Channels", () => {
     channels.list().scrollTo("bottom");
     channels.links().should("have.length", 15);
   });
-  // });
   it("Can scroll and load more in messages list", () => {
     const channelName = createChannelName();
-    createChannel(channelName);
-    channels
-      .list()
-      .within(() => cy.getByText(channelName))
-      .click();
-    cy.location("href").should("contain", "/channel?id=");
-    for (let i = 0; i < 15; i++) {
-      messages.input().type(`${createMessage()}{enter}`, { delay: 0 });
-    }
-    cy.clearLocalStorage();
+    const main = async () => {
+      const channelId = await createChannel(channelName);
+      channels
+        .list()
+        .within(() => cy.getByText(channelName))
+        .click();
+      cy.location("href").should("contain", "/channel?id=" + channelId);
+      let createMesagePromises: Promise<unknown>[] = [];
+      for (let i = 0; i < 15; i++) {
+        createMesagePromises.push(createMessage(undefined, channelId));
+      }
+      await Promise.all(createMesagePromises);
+      cy.clearLocalStorage();
 
-    cy.reload();
+      cy.reload();
 
-    cy.visit(BASE_URL + "channel?id=h1V9Hfp71rXCvB67rIKke");
-    messages.messageList().should("have.length", 10);
-    messages.list().scrollTo("bottom");
-    messages.messageList().should("have.length", 15);
+      messages.messageList().should("have.length", 10);
+      messages.list().scrollTo("bottom");
+      messages.messageList().should("have.length", 15);
+    };
+    main();
   });
 });
