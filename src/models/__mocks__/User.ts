@@ -9,35 +9,14 @@ import config from "../../aws-exports.js";
 
 API.configure(config);
 
-export const upsertUser = async (userInput: CreateUserInput) => {
-  await createUserIfNotExists(userInput);
-  try {
-    // Remove fields with empty strings
-    const userInputWithoutEmptyFields = {
-      id: userInput.id,
-      bio: userInput.bio === "" ? undefined : userInput.bio,
-      url: userInput.url === "" ? undefined : userInput.url,
-      name: userInput.name === "" ? undefined : userInput.name
-    };
-    await API.graphql(
-      graphqlOperation(updateUser, { input: userInputWithoutEmptyFields })
-    );
-  } catch (err) {
-    console.warn("Failed to update user ", err);
-  }
-};
+export const upsertUser = jest.fn();
 
-export const createUserIfNotExists = async (userInput: CreateUserInput) => {};
+export const createUserIfNotExists = jest
+  .fn()
+  .mockImplementation(async (userInput: CreateUserInput) => {});
 
-export const getUser = async (userId: string) => {
+export const getUser = jest.fn().mockImplementation(async (userId: string) => {
   return null;
-};
+});
 
-export const getUsername = memoize(
-  async (userId: string) => {
-    return { username: "TEST_USERNAME" };
-  },
-  (userId: string) => {
-    return userId;
-  }
-);
+export const getUsername = jest.fn();

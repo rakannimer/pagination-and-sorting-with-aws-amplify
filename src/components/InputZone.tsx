@@ -1,5 +1,6 @@
 import * as React from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native-web";
+
 import { colors } from "../theme";
 import { FlexSpacer } from "./utils";
 
@@ -16,10 +17,7 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
     onSubmit(value);
     setValue("");
   };
-  // React.useEffect(() => {
-  //   if (textinputRef.current === null) return;
-  //   if (value === "") textinputRef.current.focus();
-  // }, [value]);
+
   const isSubmittable = value !== "";
   return (
     <View
@@ -61,9 +59,11 @@ export const InputZone = ({ onSubmit, placeholder, buttonText }: Props) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => {
-            if (!isSubmittable) return;
-            submit();
+          {...{
+            onClick: () => {
+              if (!isSubmittable) return;
+              submit();
+            }
           }}
           style={{
             backgroundColor: isSubmittable

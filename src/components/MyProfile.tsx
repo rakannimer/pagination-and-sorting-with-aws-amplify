@@ -1,13 +1,14 @@
 import * as React from "react";
 import { TextInput, TouchableOpacity, View } from "react-native-web";
 
-import { upsertUser } from "../models/User";
+// import { upsertUser } from "../models/User";
 import { colors } from "../theme";
 import { State } from "../types";
 import { ImportantText, NormalText, StaticSpacer } from "./utils";
 import AppShell from "./AppShell";
 import { useAppReducer } from "../state";
 import Head from "next/head";
+import { useModels } from "../models/ModelsContext";
 
 const textInputStyle = {
   backgroundColor: "white",
@@ -19,6 +20,7 @@ const textInputStyle = {
 
 type Props = { me: State["me"]; onSubmit: (me: State["me"]) => void };
 export const MyProfile = ({ me, onSubmit }: Props) => {
+  const models = useModels();
   const [name, setName] = React.useState(me.name || "");
   const [url, setUrl] = React.useState(me.url || "");
   const [bio, setBio] = React.useState(me.bio || "");
@@ -34,7 +36,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
     localStorage.setItem("bio", bio);
     const user = { name: name, url, bio, id: me.id };
     onSubmit(user);
-    upsertUser(user);
+    models.User.upsertUser(user);
     setIsSubmittable(false);
   };
   return (
@@ -112,10 +114,13 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
             padding: 20,
             borderRadius: 12
           }}
-          onPress={() => {
-            submit();
+          {...{
+            onClick: () => {
+              submit();
+            }
           }}
-          accessibilityLabel="Submit changes"
+          //accessibilityLabel="Submit changes"
+          aria-label="Submit changes"
         >
           <NormalText style={{ textAlign: "center" }}>Save</NormalText>
         </TouchableOpacity>

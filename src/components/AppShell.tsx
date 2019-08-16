@@ -4,20 +4,21 @@ import * as React from "react";
 import { Header } from "./Header";
 import { colors } from "../theme";
 import { State, Dispatcher } from "../types";
-import { createUserIfNotExists, getUser } from "../models/User";
 import { DispatcherContext } from "../state";
+import { useModels } from "../models/__mocks__/ModelsContext";
 
 const AppShell: React.FC<{ state: State; dispatch: Dispatcher }> = ({
   state,
   dispatch,
   children
 }) => {
+  const models = useModels();
   React.useEffect(() => {
-    createUserIfNotExists(state.me);
+    models.User.createUserIfNotExists(state.me);
   }, []);
   React.useEffect(() => {
     let isMounted = true;
-    getUser(state.me.id).then(getUserResponse => {
+    models.User.getUser(state.me.id).then(getUserResponse => {
       if (getUserResponse === null || isMounted === false) return;
       let meFromServer = getUserResponse.data.getUser;
       if (meFromServer === null) return;

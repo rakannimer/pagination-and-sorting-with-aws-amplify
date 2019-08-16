@@ -177,4 +177,14 @@ describe("channels", () => {
     expect(push.mock.calls.length).toEqual(1);
     expect(push.mock.calls[0][0].indexOf("/channel?id=")).toEqual(0);
   });
+  it("can add a channel", () => {
+    const push = jest.fn();
+    const newChannelName = "New channel name";
+
+    const testUtils = render(<ChannelsTestRoute push={push} />);
+    fireEvent.change(channels.input(testUtils) as any, {
+      target: { value: newChannelName }
+    });
+    fireEvent.click(channels.button(testUtils) as any);
+  });
 });

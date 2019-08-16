@@ -9,22 +9,18 @@ export const header = {
     within(header.root(utils)).getByLabelText("Go to Channels")
 };
 
-// const profile = {
-//   form: () => cy.getByLabelText("Profile Form").should("be.visible"),
-//   submit: () =>
-//     cy.getByLabelText("Profile Form Submit Button").should("be.visible"),
-//   username: () =>
-//     cy.get('[aria-label="Username"]', { timeout: 5000 }).should("be.visible"),
-//   bio: () =>
-//     cy.get('[aria-label="Bio"]', { timeout: 5000 }).should("be.visible"),
-//   url: () =>
-//     cy.get('[aria-label="Url"]', { timeout: 5000 }).should("be.visible")
-// };
+export const profile = {
+  form: (utils: U) => utils.getByLabelText("Profile Form"),
+  submit: (utils: U) => utils.getByLabelText("Submit changes"),
+  username: (utils: U) => utils.getByLabelText("Username"),
+  bio: (utils: U) => utils.getByLabelText("Bio"),
+  url: (utils: U) => utils.getByLabelText("Url")
+};
 
 export const channels = {
-  links: (utils: U) => utils.getAllByLabelText("Channel Card") //.within(() => cy.get("a")),
-  // input: () => cy.getByLabelText("Create a new channel").should("be.visible"),
-  // button: () => cy.getByLabelText("Create channel").should("be.visible"),
+  links: (utils: U) => utils.getAllByLabelText("Channel Card"), //.within(() => cy.get("a")),
+  input: (utils: U) => utils.getByLabelText("Create a new channel"),
+  button: (utils: U) => utils.getByLabelText("Create channel")
   // list: () => cy.get('[aria-label="Channel List"]', { timeout: 7000 }) //getByLabelText("Channel List") //.should("be.visible")
 };
 
