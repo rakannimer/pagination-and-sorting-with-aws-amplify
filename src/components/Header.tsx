@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   Text,
   TouchableOpacity,
@@ -19,50 +20,47 @@ const Link: React.ComponentType<LinkProps> = props => (
 
 export const Header = () => {
   const router = useRouter();
-  // throw "here " + router;
-  // return null;
 
-  // if (router)
   return (
     <View style={styles.header} accessibilityLabel="Header Navigation">
-      <Link
-        style={[
-          styles.headerLink,
-          router.pathname === "/me" && styles.headerSelected
-        ]}
+      <a
+        style={{
+          ...styles.headerLink,
+          ...(router.pathname === "/me" && styles.headerSelected),
+          textDecoration: "none"
+        }}
         href="/me"
-        accessible={true}
-        onPress={() => {
-          console.warn("asjdhasjkdhjkashdkjashjd");
+        onClick={() => {
           router.push("/me");
         }}
-        accessibilityRole="link"
-        accessibilityLabel="Go to Profile"
+        role="link"
+        aria-label="Go to Profile"
       >
         <Text style={styles.headerText}>My Profile</Text>
-      </Link>
+      </a>
 
-      <Link
-        style={[
-          styles.headerLink,
-          (router.pathname === "/channels" || router.pathname === "/") &&
-            styles.headerSelected
-        ]}
+      <a
+        style={{
+          ...styles.headerLink,
+          ...((router.pathname === "/channels" || router.pathname === "/") &&
+            styles.headerSelected)
+        }}
         href="/channels"
-        accessible={true}
-        onPress={() => {
+        onClick={() => {
           router.push("/channels");
         }}
-        accessibilityRole="link"
-        accessibilityLabel="Go to Channels"
+        role="link"
+        aria-label="Go to Channels"
       >
         <Text style={styles.headerText}>Channels</Text>
-      </Link>
+      </a>
     </View>
   );
 };
 
-const styles: { [key: string]: StyleProp<ViewStyle | TextStyle> } = {
+const styles: {
+  [key: string]: StyleProp<ViewStyle | TextStyle | unknown>;
+} = {
   container: {
     width: "100%",
     height: "100%",
@@ -74,10 +72,15 @@ const styles: { [key: string]: StyleProp<ViewStyle | TextStyle> } = {
     height: "10%",
     backgroundColor: colors.primary
   },
-  headerLink: { width: "50%", alignItems: "center", justifyContent: "center" },
+  headerLink: {
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    textDecoration: "none"
+  },
   headerSelected: {
-    borderBottomColor: colors.highlight,
-    borderBottomWidth: 2
+    borderBottom: `${colors.highlight} 3px solid`
   },
   headerText: {
     color: "white",

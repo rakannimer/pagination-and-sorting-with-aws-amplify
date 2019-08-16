@@ -38,6 +38,7 @@ const ChannelCard = (props: Props) => {
           return;
         }
         const senderId = newMessage.senderId;
+
         if (senderId === myId) {
           return;
         }
@@ -51,12 +52,14 @@ const ChannelCard = (props: Props) => {
       subscription.unsubscribe();
     };
   }, [channelId]);
+
   const [ref, inView] = useInView({
     threshold: 0,
     triggerOnce: true
   });
   return (
-    <TouchableOpacity
+    <a
+      aria-label="Channel Card"
       style={{
         padding: 20,
         backgroundColor: colors.primaryDark,
@@ -69,22 +72,21 @@ const ChannelCard = (props: Props) => {
         display: "flex",
         flexDirection: "row",
         borderRadius: 12,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 7
-        },
-        shadowOpacity: 0.43,
-        shadowRadius: 9.51,
+        textDecoration: "none",
+        boxShadow: "0 0 10px black"
 
-        elevation: 10
+        // shadowColor: "#000",
+        // shadowOffset: {
+        //   width: 0,
+        //   height: 7
+        // },
+        // shadowOpacity: 0.43,
+        // shadowRadius: 9.51,
+
+        // elevation: 10
       }}
-      accessibilityRole="link"
-      {...{
-        // Being dishonest with typescript because of the lack of react-native-web types
-        href: `/channel?id=${channel.id}`
-      }}
-      onPress={() => {
+      href={`/channel?id=${channel.id}`}
+      onClick={() => {
         router.push(`/channel?id=${channel.id}`);
       }}
     >
@@ -108,10 +110,15 @@ const ChannelCard = (props: Props) => {
           >
             Last updated: {new Date(Number(channel.updatedAt)).toLocaleString()}
           </Text>
-          <Text style={{ color: "white", marginTop: 15 }}>{lastMessage}</Text>
+          <Text
+            style={{ color: "white", marginTop: 15 }}
+            accessibilityLabel="Last message"
+          >
+            {lastMessage}
+          </Text>
         </View>
       </div>
-    </TouchableOpacity>
+    </a>
   );
 };
 
@@ -172,12 +179,8 @@ export const Channels = ({
         console.error("Error onUpdateChannelSubscription", err);
       }
     );
-    console.warn("Getting channels");
-    console.warn(Channels.getChannels());
-
     Channels.getChannels()
       .then(channels => {
-        console.warn("Got channels");
         if (!isMounted) return;
         setisLoading(false);
         dispatch({ type: "set-channels", payload: channels });

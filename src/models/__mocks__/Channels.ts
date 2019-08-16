@@ -44,41 +44,10 @@ export let resolveGetChannels;
 
 export const getGetChannelsResolver = () => resolveGetChannels;
 
-export const getChannels = jest
-  .fn()
-  .mockImplementation(() => Promise.resolve({ items: [], nextToken: "" }));
+export const getChannels = jest.fn();
 
-// memoize(
-//   (nextToken: string = ""): Promise<State["channels"]> => {
-//     return new Promise(resolve => {
-//       resolveGetChannels = () => {
-//         console.warn("RESOLVING");
-//         resolve({ items: [], nextToken: "" });
-//       };
-//     });
-//   },
-//   // Only memoize when a next token is provided
-//   n => (n ? n : Date.now())
-// );
+export const createChannel = jest.fn();
 
-export const createChannel = async (channel: ChannelType) => {};
+export const onCreateChannel = jest.fn();
 
-export const onCreateChannel = (channelListId: string = "global") => {
-  return {
-    subscribe: () => {
-      return {
-        unsubscribe: () => {}
-      };
-    }
-  };
-};
-
-export const onUpdateChannel = (channelListId: string = "global") => {
-  return {
-    subscribe: () => {
-      return {
-        unsubscribe: () => {}
-      };
-    }
-  };
-};
+export const onUpdateChannel = jest.fn();

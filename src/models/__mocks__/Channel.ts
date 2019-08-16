@@ -85,11 +85,16 @@ export const getChannelMessages = async (
   //   };
   // }
 };
-export const onCreateMessage = (channelId: string) => {
-  // const listener: Listener<OnCreateMessageInChannelSubscription> = API.graphql(
-  //   graphqlOperation(onCreateMessageInChannel, { messageChannelId: channelId })
-  // );
-  // return listener;
-};
+export const onCreateMessage = jest
+  .fn()
+  .mockImplementation((channelId: string) => {
+    return {
+      subscribe: () => {
+        return {
+          unsubscribe: () => {}
+        };
+      }
+    };
+  });
 
 export const isMock = true;

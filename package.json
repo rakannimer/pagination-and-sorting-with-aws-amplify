@@ -25,7 +25,7 @@
     "react-animated-css": "^1.2.1",
     "react-dom": "^16.9.0",
     "react-intersection-observer": "^8.24.1",
-    "react-native-web": "^0.11.5"
+    "react-native-web": "^0.11.6"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -48,6 +48,7 @@
     "jest": "^24.8.0",
     "kill-port": "^1.5.1",
     "prettier": "^1.18.2",
+    "rxjs": "^6.5.2",
     "typescript": "^3.5.3",
     "wait-on": "^3.3.0"
   }
