@@ -5,7 +5,7 @@ import { Header } from "./Header";
 import { colors } from "../theme";
 import { State, Dispatcher } from "../types";
 import { DispatcherContext } from "../state";
-import { useModels } from "../models/__mocks__/ModelsContext";
+import { useModels } from "../models/ModelsContext";
 
 const AppShell: React.FC<{ state: State; dispatch: Dispatcher }> = ({
   state,

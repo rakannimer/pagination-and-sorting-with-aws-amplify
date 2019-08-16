@@ -19,22 +19,7 @@ import { MessageType, List, Listener, ChannelType } from "../../types";
 
 export const createMessage = async (
   message: CreateMessageInput & { messageChannelId: string }
-) => {
-  // try {
-  //   await (API.graphql(
-  //     graphqlOperation(createMessageQuery, { input: message })
-  //   ) as Promise<unknown>);
-  //   const updateChannelInput: UpdateChannelInput = {
-  //     id: message.messageChannelId,
-  //     updatedAt: `${Date.now()}`
-  //   };
-  //   await (API.graphql(
-  //     graphqlOperation(updateChannel, { input: updateChannelInput })
-  //   ) as Promise<unknown>);
-  // } catch (err) {
-  //   console.warn("Failed to create message ", err);
-  // }
-};
+) => {};
 
 type ChannelMessageReturnType = {
   data: {
@@ -53,38 +38,7 @@ type ReturnType = {
   messages: List<MessageType>;
   channel: ChannelType;
 };
-export const getChannelMessages = async (
-  channelId: string | undefined,
-  nextToken: string
-): Promise<ReturnType> => {
-  return null;
-  // if (!channelId) {
-  //   return {
-  //     messages: { items: [], nextToken: "" },
-  //     channel: {} as ChannelType
-  //   };
-  // }
-  // try {
-  //   const query = getMessageList({
-  //     // messageLimit: 5,
-  //     messageNextToken: nextToken
-  //   });
-  //   const messages = (await API.graphql(
-  //     graphqlOperation(query, { id: channelId })
-  //   )) as ChannelMessageReturnType;
-  //   const channel = messages.data.getChannel;
-  //   return {
-  //     messages: messages.data.getChannel.messages,
-  //     channel
-  //   };
-  // } catch (err) {
-  //   console.warn("Failed to get messages ", err);
-  //   return {
-  //     messages: { items: [], nextToken: "" },
-  //     channel: {} as ChannelType
-  //   };
-  // }
-};
+export const getChannelMessages = jest.fn();
 export const onCreateMessage = jest
   .fn()
   .mockImplementation((channelId: string) => {

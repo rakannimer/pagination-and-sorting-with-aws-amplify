@@ -67,3 +67,20 @@ export const createMessage = (
     messageChannelId: channelId
   };
 };
+
+export const createGetChannelMessagesEmission = channelId => {
+  return {
+    messages: { items: [createMessage(channelId)], nextToken: "" },
+    channel: createChannel(channelId)
+  };
+};
+
+export const getUsernameEmission = (username = nanoid()) => {
+  return {
+    data: {
+      getUser: {
+        name: username
+      }
+    }
+  };
+};

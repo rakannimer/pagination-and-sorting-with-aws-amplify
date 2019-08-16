@@ -24,9 +24,9 @@ export const channels = {
   // list: () => cy.get('[aria-label="Channel List"]', { timeout: 7000 }) //getByLabelText("Channel List") //.should("be.visible")
 };
 
-// const messages = {
-//   messageList: () => cy.get('[aria-label="Message"]', { timeout: 7000 }),
-//   input: () => cy.getByLabelText("Create a new message").should("be.visible"),
-//   button: () => cy.getByLabelText("Send message").should("be.visible"),
-//   list: () => cy.getByLabelText("Message List").should("be.visible")
-// };
+export const messages = {
+  messageList: (utils: U) => utils.getByLabelText("Message"),
+  input: (utils: U) => utils.getByLabelText("Create a new message"),
+  button: (utils: U) => utils.getByLabelText("Send message"),
+  list: (utils: U) => utils.getByLabelText("Message List")
+};

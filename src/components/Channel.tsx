@@ -108,6 +108,7 @@ export const Channel = ({
     Channel.getChannelMessages(channelId, "")
       .then(({ messages, channel }) => {
         if (!isMounted) return;
+        console.warn({ messages, channel });
         setIsLoading(false);
         dispatch({ type: "append-messages", payload: { channelId, messages } });
         dispatch({ type: "update-channel", payload: channel });
@@ -206,6 +207,7 @@ export const ChannelRoute = () => {
     channelIndex === -1
       ? { items: [], nextToken: "" }
       : state.channels.items[channelIndex].messages;
+
   const channel =
     channelIndex === -1 ? { name: "" } : state.channels.items[channelIndex];
   return (

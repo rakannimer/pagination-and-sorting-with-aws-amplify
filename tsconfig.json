@@ -13,13 +13,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "types": ["jest"]
   },
-  "exclude": ["node_modules", "cypress"],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "__tests__/Channels.test.js"
-  ]
+
+  "exclude": [
+    "node_modules",
+    "cypress",
+    "src/models/__mocks__/*.ts",
+    "__tests__/*"
+  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

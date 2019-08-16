@@ -27,7 +27,6 @@ describe("my-profile", () => {
   });
 
   it("renders form and submit button", async () => {
-    const push = jest.fn();
     const testUtils = render(<MyProfileTestRoute />);
     expect(models.User.getUser).toBeCalled();
     expect(models.User.createUserIfNotExists).toBeCalled();

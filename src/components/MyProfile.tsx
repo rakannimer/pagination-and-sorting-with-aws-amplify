@@ -116,6 +116,7 @@ export const MyProfile = ({ me, onSubmit }: Props) => {
           }}
           {...{
             onClick: () => {
+              console.warn("TouchableOpacity clicked profile");
               submit();
             }
           }}
