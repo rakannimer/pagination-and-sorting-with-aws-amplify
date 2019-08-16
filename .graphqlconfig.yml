@@ -1,6 +1,6 @@
 projects:
-  pagnsor:
-    schemaPath: amplify/backend/api/pagnsor/build/schema.graphql
+  paginationandsorting:
+    schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.ts
     excludes:

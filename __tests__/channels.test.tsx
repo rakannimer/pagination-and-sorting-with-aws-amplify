@@ -27,7 +27,7 @@ const ChannelsTestRoute = ({ pathname = "/", push = jest.fn() }) => (
   </RouterContext.Provider>
 );
 
-describe("Channels", () => {
+describe("channels", () => {
   //Fixtures
   const channelName1 = "test-channel-" + nanoid();
 
