@@ -6,9 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: cypress/browsers:node12.4.0-chrome76 #circleci/node:8.12 #amazon/dynamodb-local
-
+      - image: circleci/node:8.12
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -27,9 +25,6 @@ jobs:
             - v1-dependencies-
 
       - run: yarn install
-      - run: "apt-get update && apt-get -y install default-jre default-jdk lsof"
-      # - run: curl -k -L -o dynamodb-local.tgz http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz
-      # - run: tar -xzf dynamodb-local.tgz
 
       - save_cache:
           paths:
@@ -37,4 +32,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: npm run e2e:ci #NODE_DEBUG=dynamodb-emulator node index.js
+      - run: npm run test
