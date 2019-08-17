@@ -25,7 +25,7 @@ export const channels = {
 };
 
 export const messages = {
-  messageList: (utils: U) => utils.getByLabelText("Message"),
+  messageList: (utils: U) => utils.getAllByLabelText("Message"),
   input: (utils: U) => utils.getByLabelText("Create a new message"),
   button: (utils: U) => utils.getByLabelText("Send message"),
   list: (utils: U) => utils.getByLabelText("Message List")

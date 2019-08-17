@@ -1,4 +1,5 @@
 import nanoid from "nanoid";
+import { ChannelType } from "../types";
 
 export const createOnCreateChannelEmission = (channelId = nanoid()) => {
   return {
@@ -44,10 +45,13 @@ export const createGetChannelsEmission = (channelId = nanoid()) => {
   };
 };
 
-export const createChannel = (id = nanoid()) => {
+export const createChannel = (id = nanoid()): ChannelType => {
   return {
     id,
     name: id,
+    creatorId: "",
+    createdAt: "",
+    updatedAt: "",
     messages: {
       items: [],
       nextToken: ""
@@ -64,6 +68,7 @@ export const createMessage = (
     id,
     text: id,
     senderId,
+    createdAt: "0",
     messageChannelId: channelId
   };
 };

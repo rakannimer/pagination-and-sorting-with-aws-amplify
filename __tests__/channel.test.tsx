@@ -7,7 +7,7 @@ import { act } from "react-dom/test-utils";
 
 import { ChannelRoute } from "../src/components/Channel";
 import { models } from "../src/models/__mocks__/ModelsContext";
-import { header, channels, messages } from "../src/test-utils/selectors";
+import { messages } from "../src/test-utils/selectors";
 import {
   createOnCreateMessageEmission,
   createGetChannelMessagesEmission,
@@ -90,6 +90,28 @@ describe("channels", () => {
     await act(async () => {
       resolveUsername();
     });
+    let renderedMessages = messages.messageList(testUtils);
+    expect(renderedMessages.length).toEqual(1);
+    act(() => {
+      fireOnCreateMessage();
+    });
+    renderedMessages = messages.messageList(testUtils);
+    expect(renderedMessages.length).toEqual(2);
   });
-  it("can add a message to channel", () => {});
+  it("can add a message to channel", () => {
+    const newMessage = "Test message";
+    const push = jest.fn();
+    const testUtils = render(<ChannelTestRoute push={push} />);
+    expect(models.Channel.onCreateMessage).toBeCalled();
+    const input = messages.input(testUtils);
+    const submit = messages.button(testUtils);
+    fireEvent.change(input, { target: { value: newMessage } });
+    expect(input.value).toEqual(newMessage);
+    act(() => {
+      fireEvent.click(submit);
+    });
+    expect(input.value).toEqual("");
+    const renderedMessages = messages.messageList(testUtils);
+    expect(renderedMessages.length).toEqual(1);
+  });
 });

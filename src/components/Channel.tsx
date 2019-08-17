@@ -108,7 +108,6 @@ export const Channel = ({
     Channel.getChannelMessages(channelId, "")
       .then(({ messages, channel }) => {
         if (!isMounted) return;
-        console.warn({ messages, channel });
         setIsLoading(false);
         dispatch({ type: "append-messages", payload: { channelId, messages } });
         dispatch({ type: "update-channel", payload: channel });
@@ -189,6 +188,7 @@ export const ChannelRoute = () => {
       senderId: state.me.id,
       messageChannelId: channelId
     };
+
     dispatch({
       type: "prepend-message",
       payload: message

@@ -81,11 +81,25 @@ export const reducer = (state: State, action: Action) => {
       });
     }
     case "prepend-message": {
-      const channelIndex = state.channels.items.findIndex(
+      let channelIndex = state.channels.items.findIndex(
         channel => channel.id === action.payload.messageChannelId
       );
-      if (channelIndex === -1) return state;
+
       return produce(state, s => {
+        if (channelIndex === -1) {
+          s.channels.items.unshift({
+            id: action.payload.messageChannelId,
+            name: "",
+            createdAt: "",
+            updatedAt: "",
+            creatorId: "",
+            messages: {
+              items: [],
+              nextToken: ""
+            }
+          });
+          channelIndex = 0;
+        }
         addOrUpdate(
           s.channels.items[channelIndex].messages.items,
           action.payload.id,
