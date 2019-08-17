@@ -98,6 +98,7 @@ describe("channels", () => {
     renderedMessages = messages.messageList(testUtils);
     expect(renderedMessages.length).toEqual(2);
   });
+
   it("can add a message to channel", () => {
     const newMessage = "Test message";
     const push = jest.fn();
