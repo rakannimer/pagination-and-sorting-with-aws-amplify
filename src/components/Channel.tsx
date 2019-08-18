@@ -130,8 +130,6 @@ export const Channel = ({
       style={{
         height: "80%"
       }}
-      //@ts-ignore
-      accessibilityRole="main"
     >
       {!isServer && (
         <FlatList

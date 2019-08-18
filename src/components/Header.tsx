@@ -13,14 +13,8 @@ import { useRouter } from "next/router";
 
 import { colors } from "../theme";
 
-type LinkProps = { href: string } & TouchableOpacityProps;
-const Link: React.ComponentType<LinkProps> = props => (
-  <TouchableOpacity {...props} />
-);
-
 export const Header = () => {
   const router = useRouter();
-
   return (
     <View style={styles.header} accessibilityLabel="Header Navigation">
       <a

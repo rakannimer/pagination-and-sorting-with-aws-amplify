@@ -17,7 +17,6 @@ import {
 } from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, MessageType } from "../types";
 
-//@ts-ignore
 import config from "../aws-exports.js";
 import { getChannelList as getChannelListQuery } from "./custom-queries";
 
@@ -41,7 +40,7 @@ type CustomChannelList = {
 };
 
 export const getChannels = memoize(
-  async (nextToken: string = ""): Promise<State["channels"]> => {
+  async (nextToken = ""): Promise<State["channels"]> => {
     let channelList;
     try {
       channelList = await (API.graphql(
@@ -89,7 +88,7 @@ export const createChannel = async (channel: ChannelType) => {
   }
 };
 
-export const onCreateChannel = (channelListId: string = "global") => {
+export const onCreateChannel = (channelListId = "global") => {
   const listener: Listener<OnCreateChannelInListSubscription> = API.graphql(
     graphqlOperation(onCreateChannelInList, {
       channelChannelListId: channelListId
@@ -98,7 +97,7 @@ export const onCreateChannel = (channelListId: string = "global") => {
   return listener;
 };
 
-export const onUpdateChannel = (channelListId: string = "global") => {
+export const onUpdateChannel = (channelListId = "global") => {
   const listener: Listener<OnUpdateChannelInListSubscription> = API.graphql(
     graphqlOperation(onUpdateChannelInList, {
       channelChannelListId: channelListId

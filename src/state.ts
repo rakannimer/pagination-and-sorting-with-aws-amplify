@@ -29,7 +29,7 @@ export const reducer = (state: State, action: Action) => {
     case "append-channels": {
       const { items, nextToken } = action.payload;
       return produce(state, s => {
-        for (let channel of items) {
+        for (const channel of items) {
           addOrUpdate(s.channels.items, channel.id, channel, "push");
         }
         s.channels.nextToken = nextToken;
@@ -54,7 +54,7 @@ export const reducer = (state: State, action: Action) => {
         const channels = action.payload.items;
         const nextToken = action.payload.nextToken;
         s.channels.nextToken = nextToken;
-        for (let channel of channels) {
+        for (const channel of channels) {
           addOrUpdate(s.channels.items, channel.id, channel, "unshift");
         }
       });
@@ -127,7 +127,7 @@ export const reducer = (state: State, action: Action) => {
           });
           return;
         }
-        for (let message of messages.items) {
+        for (const message of messages.items) {
           addOrUpdate(
             s.channels.items[channelIndex].messages.items,
             message.id,
