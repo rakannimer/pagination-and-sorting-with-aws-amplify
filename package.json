@@ -61,6 +61,7 @@
     "wait-on": "^3.3.0"
   },
   "husky": {
-    "pre-push": "tsc"
+    "pre-commit": "prettier --write \"src/*.ts\" \"src/**/*.ts*\"",
+    "pre-push": "tsc && yarn lint"
   }
 }
