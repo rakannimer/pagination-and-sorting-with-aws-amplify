@@ -1,12 +1,12 @@
 import * as React from "react";
-import { View, Text } from "react-native-web";
+import { View, Text, ViewProps } from "react-native-web";
 
-export const FlexSpacer = (props: any) => (
+export const FlexSpacer = (props: ViewProps) => (
   <View
     {...props}
     style={{
       flex: 0.1,
-      ...props.style
+      ...(props["style"] as {})
     }}
   />
 );

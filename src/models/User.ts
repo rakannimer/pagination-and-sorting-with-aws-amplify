@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from "aws-amplify";
+import API, { graphqlOperation } from "@aws-amplify/api";
 import memoize from "lodash.memoize";
 
 import { getUser as getUserQuery } from "../graphql/queries";
@@ -9,32 +9,31 @@ import config from "../aws-exports.js";
 
 API.configure(config);
 
-export const upsertUser = async (userInput: CreateUserInput) => {
-  await createUserIfNotExists(userInput);
+export const getUser = async (userId: string) => {
   try {
-    // Remove fields with empty strings
-    const userInputWithoutEmptyFields = {
-      id: userInput.id,
-      bio: userInput.bio === "" ? undefined : userInput.bio,
-      url: userInput.url === "" ? undefined : userInput.url,
-      name: userInput.name === "" ? undefined : userInput.name
-    };
-    await API.graphql(
-      graphqlOperation(updateUser, { input: userInputWithoutEmptyFields })
-    );
+    const userQueryResult = await (API.graphql(
+      graphqlOperation(getUserQuery, { id: userId })
+    ) as Promise<{ data: GetUserQuery }>);
+    return userQueryResult;
   } catch (err) {
-    console.warn("Failed to update user ", err);
+    return null;
   }
 };
-
+const a = 2;
 export const createUserIfNotExists = async (userInput: CreateUserInput) => {
   const userId = userInput.id;
   if (userId === null || userId === undefined) {
     console.warn("Cant create a user without an id. Received ", userInput);
     return;
   }
-  const userQueryResult = await getUser(userId);
-  if (userQueryResult.data.getUser === null) {
+  let userQueryResult;
+  try {
+    userQueryResult = await getUser(userId);
+  } catch (err) {
+    userQueryResult = null;
+  }
+
+  if (userQueryResult === null || userQueryResult.data.getUser === null) {
     try {
       const userInputWithoutEmptyFields = {
         id: userInput.id,
@@ -52,11 +51,22 @@ export const createUserIfNotExists = async (userInput: CreateUserInput) => {
   }
 };
 
-export const getUser = async (userId: string) => {
-  const userQueryResult = await (API.graphql(
-    graphqlOperation(getUserQuery, { id: userId })
-  ) as Promise<{ data: GetUserQuery }>);
-  return userQueryResult;
+export const upsertUser = async (userInput: CreateUserInput) => {
+  await createUserIfNotExists(userInput);
+  try {
+    // Remove fields with empty strings
+    const userInputWithoutEmptyFields = {
+      id: userInput.id,
+      bio: userInput.bio === "" ? undefined : userInput.bio,
+      url: userInput.url === "" ? undefined : userInput.url,
+      name: userInput.name === "" ? undefined : userInput.name
+    };
+    await API.graphql(
+      graphqlOperation(updateUser, { input: userInputWithoutEmptyFields })
+    );
+  } catch (err) {
+    console.warn("Failed to update user ", err);
+  }
 };
 
 export const getUsername = memoize(

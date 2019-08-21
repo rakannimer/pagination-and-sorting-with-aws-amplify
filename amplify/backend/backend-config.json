@@ -1,6 +1,6 @@
 {
 	"api": {
-		"pagnsor": {
+		"paginationandsorting": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {

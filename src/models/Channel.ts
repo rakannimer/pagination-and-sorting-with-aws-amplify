@@ -1,17 +1,17 @@
-import { API, PubSub, graphqlOperation } from "aws-amplify";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import PubSub from "@aws-amplify/pubsub";
 
 import { getMessageList, updateChannel } from "./custom-queries";
 import { createMessage as createMessageQuery } from "../graphql/mutations";
-import {
-  onCreateMessageInChannel,
-  onCreateMessage as onCreateMessageQuery
-} from "../graphql/subscriptions";
+import { onCreateMessageInChannel } from "../graphql/subscriptions";
 import {
   UpdateChannelInput,
   CreateMessageInput,
   OnCreateMessageInChannelSubscription
 } from "../API";
 import { MessageType, List, Listener, ChannelType } from "../types";
+
+//@ts-ignore
 import config from "../aws-exports.js";
 
 API.configure(config);

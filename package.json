@@ -1,34 +1,67 @@
 {
   "name": "pagination-and-sorting",
   "scripts": {
-    "dev": "next",
     "build": "next build && next export -o build/",
+    "dev": "next",
+    "e2e": "/bin/bash ./scripts/e2e.sh",
+    "e2e:dev": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && PORT=3000 cypress open --env PORT=3000",
+    "lint": "eslint src/**/*.ts*  src/*.ts*",
+    "mock:api": "yarn kill-amplify-mock-api && amplify mock api",
+    "kill-amplify-mock-api": "kill-port 20002 && kill-port 20003",
+    "reset-mock": "yarn kill-amplify-mock-api && amplify mock api",
     "start": "next start",
-    "graphiql": "npx parcel ./graphiql/index.html -p 1235"
+    "test": "tsc && yarn jest"
   },
   "dependencies": {
-    "aws-amplify": "^1.1.36",
+    "@aws-amplify/api": "^1.0.42",
+    "@aws-amplify/pubsub": "^1.1.0",
     "immer": "^3.2.0",
     "lodash.memoize": "^4.1.2",
     "nanoid": "^2.0.3",
     "next": "^9.0.3",
     "next-offline": "^4.0.3",
-    "react": "^16.8.6",
+    "react": "^16.9.0",
     "react-animated-css": "^1.2.1",
-    "react-dom": "^16.8.6",
+    "react-dom": "^16.9.0",
     "react-intersection-observer": "^8.24.1",
-    "react-native-web": "^0.11.5"
+    "react-native-web": "^0.11.6"
   },
   "devDependencies": {
-    "@aws-amplify/cli": "^1.10.0",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@bahmutov/add-typescript-to-cypress": "^2.1.2",
+    "@testing-library/cypress": "^4.1.0",
+    "@testing-library/react": "^9.1.1",
+    "@types/jest": "^24.0.17",
+    "@types/jest-in-case": "^1.0.1",
     "@types/lodash.memoize": "^4.1.6",
     "@types/nanoid": "^2.0.0",
-    "@types/node": "^12.7.0",
+    "@types/node": "^12.7.1",
     "@types/react": "^16.8.24",
+    "@types/react-native-web": "npm:@types/react-native",
     "@types/react-router": "^5.0.3",
     "@types/react-router-dom": "^4.3.4",
-    "graphiql": "^0.13.2",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "babel-jest": "^24.8.0",
+    "cypress": "^3.4.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-cypress": "^2.6.1",
+    "eslint-plugin-jest": "^22.15.1",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.0.4",
+    "jest": "^24.8.0",
+    "jest-in-case": "^1.0.2",
+    "kill-port": "^1.5.1",
     "prettier": "^1.18.2",
-    "typescript": "^3.5.3"
+    "rxjs": "^6.5.2",
+    "typescript": "^3.5.3",
+    "wait-on": "^3.3.0"
+  },
+  "husky": {
+    "pre-commit": "prettier --write \"src/*.ts\" \"src/**/*.ts*\"",
+    "pre-push": "tsc && yarn lint"
   }
 }

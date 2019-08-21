@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Action, State, Dispatcher } from "./types";
 
-const STATE_KEY = "my-state-26"; // + Date.now();
+export const STATE_KEY = "my-state-26"; // + Date.now();
 
 const addOrUpdate = <T extends { id: string }>(
   list: T[],
@@ -29,7 +29,7 @@ export const reducer = (state: State, action: Action) => {
     case "append-channels": {
       const { items, nextToken } = action.payload;
       return produce(state, s => {
-        for (let channel of items) {
+        for (const channel of items) {
           addOrUpdate(s.channels.items, channel.id, channel, "push");
         }
         s.channels.nextToken = nextToken;
@@ -54,7 +54,7 @@ export const reducer = (state: State, action: Action) => {
         const channels = action.payload.items;
         const nextToken = action.payload.nextToken;
         s.channels.nextToken = nextToken;
-        for (let channel of channels) {
+        for (const channel of channels) {
           addOrUpdate(s.channels.items, channel.id, channel, "unshift");
         }
       });
@@ -81,11 +81,25 @@ export const reducer = (state: State, action: Action) => {
       });
     }
     case "prepend-message": {
-      const channelIndex = state.channels.items.findIndex(
+      let channelIndex = state.channels.items.findIndex(
         channel => channel.id === action.payload.messageChannelId
       );
-      if (channelIndex === -1) return state;
+
       return produce(state, s => {
+        if (channelIndex === -1) {
+          s.channels.items.unshift({
+            id: action.payload.messageChannelId,
+            name: "",
+            createdAt: "",
+            updatedAt: "",
+            creatorId: "",
+            messages: {
+              items: [],
+              nextToken: ""
+            }
+          });
+          channelIndex = 0;
+        }
         addOrUpdate(
           s.channels.items[channelIndex].messages.items,
           action.payload.id,
@@ -113,7 +127,7 @@ export const reducer = (state: State, action: Action) => {
           });
           return;
         }
-        for (let message of messages.items) {
+        for (const message of messages.items) {
           addOrUpdate(
             s.channels.items[channelIndex].messages.items,
             message.id,

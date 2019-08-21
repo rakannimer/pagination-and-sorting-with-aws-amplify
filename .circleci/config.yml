@@ -6,9 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/node:8.12 #amazon/dynamodb-local
-
+      - image: circleci/node:8.12
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -20,22 +18,18 @@ jobs:
       - checkout
 
       # Download and cache dependencies
-      # - restore_cache:
-      #     keys:
-      #       - v1-dependencies-{{ checksum "package.json" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v1-dependencies-
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
 
       - run: yarn install
-      - run: "sudo apt-get update && sudo apt-get install default-jre default-jdk && sudo apt-get install lsof"
-      # - run: curl -k -L -o dynamodb-local.tgz http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz
-      # - run: tar -xzf dynamodb-local.tgz
-      #- run: java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -port 62224
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: npm run e2e:ci #NODE_DEBUG=dynamodb-emulator node index.js
+      - run: yarn test
