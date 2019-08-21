@@ -18,14 +18,14 @@ export const profile = {
 };
 
 export const channels = {
-  links: (utils: U) => utils.getAllByLabelText("Channel Card"), //.within(() => cy.get("a")),
+  links: (utils: U) => utils.getAllByTestId("Channel Card"), //.within(() => cy.get("a")),
   input: (utils: U) => utils.getByLabelText("Create a new channel"),
   button: (utils: U) => utils.getByLabelText("Create channel")
   // list: () => cy.get('[aria-label="Channel List"]', { timeout: 7000 }) //getByLabelText("Channel List") //.should("be.visible")
 };
 
 export const messages = {
-  messageList: (utils: U) => utils.getAllByLabelText("Message"),
+  messageList: (utils: U) => utils.getAllByTestId("Message"),
   input: (utils: U) => utils.getByLabelText("Create a new message"),
   button: (utils: U) => utils.getByLabelText("Send message"),
   list: (utils: U) => utils.getByLabelText("Message List")

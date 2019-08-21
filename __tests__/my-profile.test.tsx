@@ -1,17 +1,20 @@
 import * as React from "react";
 import { RouterContext } from "next-server/dist/lib/router-context";
+import { NextRouter } from "next/router";
 import { render, fireEvent } from "@testing-library/react";
+
 import { profile } from "../src/test-utils/selectors";
 import { MyProfileRoute } from "../src/components/MyProfile";
 import { models } from "../src/models/__mocks__/ModelsContext";
 
 const MyProfileTestRoute = ({ pathname = "/", push = jest.fn() }) => (
   <RouterContext.Provider
-    //@ts-ignore
-    value={{
-      pathname,
-      push
-    }}
+    value={
+      ({
+        pathname,
+        push
+      } as unknown) as NextRouter
+    }
   >
     <MyProfileRoute />
   </RouterContext.Provider>

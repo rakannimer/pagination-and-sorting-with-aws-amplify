@@ -10,6 +10,8 @@ import {
   OnCreateMessageInChannelSubscription
 } from "../API";
 import { MessageType, List, Listener, ChannelType } from "../types";
+
+//@ts-ignore
 import config from "../aws-exports.js";
 
 API.configure(config);

@@ -35,7 +35,7 @@ const ChannelTestRoute = ({
   </RouterContext.Provider>
 );
 
-describe("channels", () => {
+describe("channel", () => {
   let resolveGetChannelMessages;
   let fireOnCreateMessage;
   let resolveUsername;

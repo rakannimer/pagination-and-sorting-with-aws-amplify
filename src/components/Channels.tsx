@@ -59,7 +59,7 @@ const ChannelCard = (props: Props) => {
   });
   return (
     <a
-      aria-label="Channel Card"
+      data-testid="Channel Card"
       style={{
         padding: 20,
         backgroundColor: colors.primaryDark,

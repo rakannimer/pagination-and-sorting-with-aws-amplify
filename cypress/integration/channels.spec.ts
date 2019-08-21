@@ -3,7 +3,7 @@ import nanoid from "nanoid";
 import * as Channels from "../../src/models/Channels";
 import * as Channel from "../../src/models/Channel";
 const PORT = Cypress.env("PORT") || 3000;
-const BASE_URL: string = `http://localhost:${PORT}/`;
+const BASE_URL = `http://localhost:${PORT}/`;
 
 const header = {
   root: () => cy.getByLabelText("Header Navigation").should("be.visible"),
@@ -31,14 +31,14 @@ const profile = {
 };
 
 const channels = {
-  links: () => cy.get("main a"), //.within(() => cy.get("a")),
+  links: () => cy.get("main a"),
   input: () => cy.getByLabelText("Create a new channel").should("be.visible"),
   button: () => cy.getByLabelText("Create channel").should("be.visible"),
   list: () => cy.get('[aria-label="Channel List"]', { timeout: 7000 }) //getByLabelText("Channel List") //.should("be.visible")
 };
 
 const messages = {
-  messageList: () => cy.get('[aria-label="Message"]', { timeout: 7000 }),
+  messageList: () => cy.get('[data-testid="Message"]', { timeout: 7000 }), //  cy.get('[aria-label="Message"]', { timeout: 7000 }), //
   input: () => cy.getByLabelText("Create a new message").should("be.visible"),
   button: () => cy.getByLabelText("Send message").should("be.visible"),
   list: () => cy.getByLabelText("Message List").should("be.visible")
@@ -88,7 +88,7 @@ const createMessage = async (
 const newMessage = createNewMessage();
 const newChannelName = createChannelName();
 
-describe("Channels", () => {
+describe("My Profile", () => {
   beforeEach(() => {
     cy.visit(BASE_URL);
   });
@@ -110,6 +110,16 @@ describe("Channels", () => {
     profile.username().should("contain.value", user.name);
     profile.bio().should("contain.value", user.bio);
     profile.url().should("contain.value", user.url);
+  });
+});
+
+describe("Channel", () => {
+  beforeEach(() => {
+    cy.visit(BASE_URL);
+  });
+  afterEach(() => {
+    // For video to better capture what happened
+    cy.wait(1000);
   });
 
   it("Can add a new channel and send a message in it", () => {
@@ -142,20 +152,6 @@ describe("Channels", () => {
       .within(() => cy.getByText(newMessage))
       .should("be.visible");
   });
-  it("Can scroll and load more in channels list", () => {
-    // Make sure there is enough channels for at least 2 pages.
-    for (let i = 0; i < 15; i++) {
-      createChannel();
-    }
-    // Promise.all(createChannelsPromises);
-    cy.clearLocalStorage();
-    cy.reload();
-    channels.links().should("have.length", 5);
-    channels.list().scrollTo("bottom");
-    channels.links().should("have.length", 10);
-    channels.list().scrollTo("bottom");
-    channels.links().should("have.length", 15);
-  });
   it("Can scroll and load more in messages list", () => {
     const channelName = createChannelName();
 
@@ -176,5 +172,30 @@ describe("Channels", () => {
     messages.messageList().should("have.length", 10);
     messages.list().scrollTo("bottom");
     messages.messageList().should("have.length", 15);
+  });
+});
+
+describe("Channels", () => {
+  beforeEach(() => {
+    cy.visit(BASE_URL);
+  });
+  afterEach(() => {
+    // For video to better capture what happened
+    cy.wait(1000);
+  });
+
+  it("Can scroll and load more in channels list", () => {
+    // Make sure there is enough channels for at least 2 pages.
+    for (let i = 0; i < 15; i++) {
+      createChannel();
+    }
+    // Promise.all(createChannelsPromises);
+    cy.clearLocalStorage();
+    cy.reload();
+    channels.links().should("have.length", 5);
+    channels.list().scrollTo("bottom");
+    channels.links().should("have.length", 10);
+    channels.list().scrollTo("bottom");
+    channels.links().should("have.length", 15);
   });
 });

@@ -16,7 +16,7 @@ import {
   onUpdateChannelInList
 } from "../graphql/subscriptions";
 import { State, ChannelType, List, Listener, MessageType } from "../types";
-
+//@ts-ignore
 import config from "../aws-exports.js";
 import { getChannelList as getChannelListQuery } from "./custom-queries";
 

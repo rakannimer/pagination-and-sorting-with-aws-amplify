@@ -1,13 +1,10 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    "jest/globals": true,
+    "cypress/globals": true
   },
-  //   extends: "eslint:recommended",
-  //   globals: {
-  //     Atomics: "readonly",
-  //     SharedArrayBuffer: "readonly"
-  //   },
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -21,10 +18,12 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module"
   },
+
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint", "react"],
+  plugins: ["@typescript-eslint", "react", "jest", "cypress"],
   rules: {
     "@typescript-eslint/explicit-function-return-type": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "@typescript-eslint/ban-ts-ignore": "off"
   }
 };

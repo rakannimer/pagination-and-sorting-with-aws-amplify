@@ -101,6 +101,7 @@ describe("channels", () => {
   it("renders app shell and gets channels", async () => {
     const push = jest.fn();
     const testUtils = render(<ChannelsTestRoute push={push} />);
+
     expect(models.Channels.getChannels).toBeCalled();
     await act(async () => {
       resolveGetChannels();
@@ -171,9 +172,9 @@ describe("channels", () => {
     await act(async () => {
       resolveGetChannels();
     });
-    let allChannels = channels.links(testUtils);
+    const allChannels = channels.links(testUtils);
     expect("length" in allChannels && allChannels.length).toEqual(1);
-    fireEvent.click(testUtils.getByLabelText("Channel Card"));
+    fireEvent.click(allChannels[0]);
     expect(push.mock.calls.length).toEqual(1);
     expect(push.mock.calls[0][0].indexOf("/channel?id=")).toEqual(0);
   });
@@ -182,9 +183,9 @@ describe("channels", () => {
     const newChannelName = "New channel name";
 
     const testUtils = render(<ChannelsTestRoute push={push} />);
-    fireEvent.change(channels.input(testUtils) as any, {
+    fireEvent.change(channels.input(testUtils), {
       target: { value: newChannelName }
     });
-    fireEvent.click(channels.button(testUtils) as any);
+    fireEvent.click(channels.button(testUtils));
   });
 });

@@ -8,6 +8,7 @@ type ReducerTest = {
   state: State;
   action: Action;
   assertions: (newState: State, state: State, action: Action) => void;
+  name?: string;
 };
 const tests: ReducerTest[] = [
   {
@@ -18,9 +19,11 @@ const tests: ReducerTest[] = [
     },
     assertions: (newState, state, action) => {
       expect(newState.channels.items.length).toEqual(1);
-    }
+    },
+    name: "Can append channel to empty state"
   },
   {
+    name: "Can prepend a single channel",
     state: getInitialState(),
     action: {
       type: "prepend-channel",
@@ -31,6 +34,7 @@ const tests: ReducerTest[] = [
     }
   },
   {
+    name: "Can set messages list",
     state: getInitialState(),
     action: {
       type: "set-messages",
@@ -47,6 +51,7 @@ const tests: ReducerTest[] = [
     }
   },
   {
+    name: "Can prepend instead of overwriting when set-channels is invoked",
     state: {
       ...getInitialState(),
       channels: {
