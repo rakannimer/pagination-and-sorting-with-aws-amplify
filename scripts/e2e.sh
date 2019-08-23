@@ -1,6 +1,5 @@
 
 yarn kill-amplify-mock-api
-yarn kill-port 62224
 (amplify mock api &)
 yarn wait-on http-get://localhost:20002
 yarn build

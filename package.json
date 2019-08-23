@@ -3,14 +3,16 @@
   "scripts": {
     "build": "next build && next export -o build/",
     "dev": "next",
-    "e2e": "/bin/bash ./scripts/e2e.sh",
-    "e2e:dev": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && PORT=3000 cypress open --env PORT=3000",
     "lint": "eslint src/**/*.ts*  src/*.ts*",
     "mock:api": "yarn kill-amplify-mock-api && amplify mock api",
     "kill-amplify-mock-api": "kill-port 20002 && kill-port 20003",
     "reset-mock": "yarn kill-amplify-mock-api && amplify mock api",
     "start": "next start",
-    "test": "tsc && yarn jest"
+    "test:static": "yarn lint && yarn tsc",
+    "test:jest": "yarn jest",
+    "test:e2e": "/bin/bash ./scripts/e2e.sh",
+    "test:e2e:dev": "yarn kill-amplify-mock-api && (amplify mock api &) && wait-on http-get://localhost:20002 && kill-port 3000 && (yarn dev &) && wait-on http-get://localhost:3000 && PORT=3000 cypress open --env PORT=3000",
+    "test": "yarn test:static && yarn test:jest"
   },
   "dependencies": {
     "@aws-amplify/api": "^1.0.42",
@@ -62,6 +64,6 @@
   },
   "husky": {
     "pre-commit": "prettier --write \"src/*.ts\" \"src/**/*.ts*\"",
-    "pre-push": "tsc && yarn lint"
+    "pre-push": "yarn test"
   }
 }
