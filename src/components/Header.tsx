@@ -1,17 +1,40 @@
 import * as React from "react";
 
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-  StyleProp,
-  ViewStyle,
-  TextStyle
-} from "react-native-web";
+import { Text, View, StyleProp, ViewStyle, TextStyle } from "react-native-web";
 import { useRouter } from "next/router";
 
 import { colors } from "../theme";
+
+const styles: {
+  [key: string]: StyleProp<ViewStyle | TextStyle | unknown>;
+} = {
+  container: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: colors.primaryLight
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    height: "10%",
+    backgroundColor: colors.primary
+  },
+  headerLink: {
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    textDecoration: "none"
+  },
+  headerSelected: {
+    borderBottom: `${colors.highlight} 3px solid`
+  },
+  headerText: {
+    color: "white",
+    fontWeight: "800",
+    fontSize: 20
+  }
+};
 
 export const Header = () => {
   const router = useRouter();
@@ -50,35 +73,4 @@ export const Header = () => {
       </a>
     </View>
   );
-};
-
-const styles: {
-  [key: string]: StyleProp<ViewStyle | TextStyle | unknown>;
-} = {
-  container: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: colors.primaryLight
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    height: "10%",
-    backgroundColor: colors.primary
-  },
-  headerLink: {
-    width: "50%",
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-    textDecoration: "none"
-  },
-  headerSelected: {
-    borderBottom: `${colors.highlight} 3px solid`
-  },
-  headerText: {
-    color: "white",
-    fontWeight: "800",
-    fontSize: 20
-  }
 };

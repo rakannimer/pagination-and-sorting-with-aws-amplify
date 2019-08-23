@@ -20,7 +20,7 @@ const AppShell: React.FC<{ state: State; dispatch: Dispatcher }> = ({
     let isMounted = true;
     models.User.getUser(state.me.id).then(getUserResponse => {
       if (getUserResponse === null || isMounted === false) return;
-      let meFromServer = getUserResponse.data.getUser;
+      const meFromServer = getUserResponse.data.getUser;
       if (meFromServer === null) return;
       dispatch({ type: "set-my-info", payload: meFromServer });
     });
