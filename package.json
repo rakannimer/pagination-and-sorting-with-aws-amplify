@@ -19,7 +19,7 @@
     "@aws-amplify/pubsub": "^1.1.0",
     "immer": "^3.2.0",
     "lodash.memoize": "^4.1.2",
-    "nanoid": "^2.0.3",
+    "nanoid": "^3.1.31",
     "next": "^9.0.3",
     "next-offline": "^4.0.3",
     "react": "^16.9.0",
